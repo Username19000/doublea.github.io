@@ -1,0 +1,359 @@
+/* Page-specific styles */
+
+.page-hero {
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    background: linear-gradient(180deg, var(--dark-light) 0%, var(--dark) 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+.page-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.page-hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-hero p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Content Section */
+.content-section {
+    padding: 4rem 0;
+}
+
+.content-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Rule Cards */
+.rule-card {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.rule-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.rule-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+}
+
+.rule-number {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 3rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: rgba(59, 130, 246, 0.1);
+    line-height: 1;
+}
+
+.rule-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.rule-card p {
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+/* Info Boxes */
+.info-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-box.success {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.info-box h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.info-box p {
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Guide Cards */
+.guide-card {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.guide-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.guide-header {
+    background: rgba(59, 130, 246, 0.05);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.guide-icon {
+    font-size: 2rem;
+}
+
+.guide-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.guide-content {
+    padding: 2rem;
+}
+
+.guide-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.guide-content ol,
+.guide-content ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.guide-content li {
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.guide-content code {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+
+.tip-box {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 3px solid var(--accent);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    color: var(--text-muted);
+}
+
+.tip-box strong {
+    color: var(--accent);
+}
+
+/* Command List */
+.command-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.command-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    gap: 1rem;
+}
+
+.command-item code {
+    background: rgba(59, 130, 246, 0.2);
+    flex-shrink: 0;
+}
+
+.command-item span {
+    color: var(--text-muted);
+    text-align: right;
+}
+
+/* Changelog */
+.changelog-entry {
+    background: var(--dark-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.changelog-header {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.changelog-version {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--primary);
+}
+
+.changelog-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.changelog-content {
+    padding: 2rem;
+}
+
+.change-section {
+    margin-bottom: 1.5rem;
+}
+
+.change-section:last-child {
+    margin-bottom: 0;
+}
+
+.change-type {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.change-type.added {
+    color: var(--secondary);
+}
+
+.change-type.improved {
+    color: var(--primary);
+}
+
+.change-type.fixed {
+    color: #ef4444;
+}
+
+.change-type.changed {
+    color: var(--accent);
+}
+
+.change-section ul {
+    margin-left: 1.5rem;
+}
+
+.change-section li {
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-hero {
+        padding: 6rem 1rem 3rem;
+    }
+    
+    .rule-number {
+        font-size: 2rem;
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .rule-card {
+        padding: 1.5rem;
+    }
+    
+    .guide-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .guide-content {
+        padding: 1.5rem;
+    }
+    
+    .command-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .command-item span {
+        text-align: left;
+    }
+    
+    .changelog-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
