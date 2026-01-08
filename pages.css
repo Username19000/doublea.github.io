@@ -40,7 +40,7 @@
 .page-hero p {
     font-size: 1.25rem;
     color: var(--text-muted);
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -129,6 +129,20 @@
 
 .info-box p {
     color: var(--text-muted);
+    margin: 0;
+}
+
+.legal-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(242, 255, 0, 0.53);
+    border-radius: 12px;
+    padding: .5rem;
+}
+
+.legal-box p {
+    font-size: 14px;
+    text-align: center;
+    color: rgba(242, 255, 0, 0.53);
     margin: 0;
 }
 
@@ -356,4 +370,9 @@
         align-items: flex-start;
         gap: 0.5rem;
     }
+}
+
+.nav-logo {
+    text-decoration: none;
+    color: var(--text);
 }

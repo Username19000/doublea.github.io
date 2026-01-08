@@ -6,15 +6,15 @@
 }
 
 :root {
-    --primary: #3b82f6;
-    --primary-dark: #2563eb;
-    --secondary: #10b981;
+    --primary: #01a1a4;
+    --primary-dark: #007f81;
+    --secondary: #f2b841;
     --dark: #0f172a;
     --dark-light: #1e293b;
     --text: #f8fafc;
     --text-muted: #94a3b8;
     --border: #334155;
-    --accent: #f59e0b;
+    --accent: #5a91ff;
     
     --font-display: 'Outfit', sans-serif;
     --font-mono: 'Space Mono', monospace;
@@ -428,14 +428,14 @@ body {
 }
 
 .btn-store {
-    background: var(--accent);
+    background: var(--primary);
     color: white;
     width: 100%;
     justify-content: center;
 }
 
 .btn-store:hover {
-    background: #d97706;
+    background: var(--primary-dark);
 }
 
 /* Server Info */
@@ -537,4 +537,9 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.nav-logo {
+    text-decoration: none;
+    color: var(--text);
 }
