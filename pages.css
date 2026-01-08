@@ -194,6 +194,11 @@
     color: var(--primary);
 }
 
+.guide-content p {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
 .guide-content ol,
 .guide-content ul {
     margin-left: 1.5rem;
