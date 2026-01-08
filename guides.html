@@ -51,7 +51,7 @@
             <h3>First Steps on the Server</h3>
             <ol>
               <li>Use <code>/tpr</code> to teleport to a random location in the wilderness.</li>
-              <li>Use <code>/town create [name]</code> to create your own town. This costs $2,700, but you start with
+              <li>Use <code>/town create</code> to create your own town. This costs $2,700, but you start with
                 $3,000.</li>
               <li>Use <code>/town claim</code> to claim your one free chunk and begin protecting your builds.</li>
               <li>Use <code>/kit starter</code> to get your first farm and starting seeds.</li>
@@ -76,11 +76,27 @@
             <h3>Growing Your Community</h3>
             <p>To invite other players to join your town, you canuse the command <code>/town trust [player]</code> to
               send the player an invite. The invited player must use <code>/town accept</code> to officailly join the
-              town and gain permissions within the land. Every player who joins the town gives allows an additional three chunks to be claimed.</p>
-             <p>You can use <code>/town invites</code> to view the list of towns that you have been invited to.</p>
+              town and gain permissions within the land. Every player who joins the town gives allows an additional
+              three chunks to be claimed.</p>
+            <p>You can use <code>/town invites</code> to view the list of towns that you have been invited to.</p>
+            <h3>Managing Your Town</h3>
+            <p>You can use <code>/town spawn</code> to teleport to your town. The spawnpoint is automatically set to
+              where the town was created, but can be changed using <code>/town setspawn</code>. This action costs
+              $3,000. All transactions for the town are taken out of the town bank. You can view how much is in the town
+              bank by using <code>/town balance</code>. You can add to the town bank using
+              <code>/town deposit [amount]</code>.
+            </p>
+            <p>Each additional chunk you claim costs $100 a week. This is taken from the town bank. If your town does
+              not have enough money in the bank when upkeep is due, the most recent chunks to be claimed will be
+              automatically unclaimed.</p>
+            <h3>Downgrading</h3>
+            <p>If you wish to remove players from your town for any reason, you can use
+              <code>/town untrust [player]</code>. You can unclaim the chunk in which you are standing by using
+              <code>/town unclaim</code>. All claimed chunks have to be connected in some way, so ensure you unclaim
+              from exterior chunks towards the middle.
+            </p>
             <div class="tip-box">
-              <strong>💡 Tip:</strong> You earn more claim blocks the longer you play! Use <code>/claimlist</code> to
-              view all your claims.
+              <strong>💡 Tip:</strong> Use <code>/town help</code> to view all available commands relating to your town!
             </div>
           </div>
         </div>
