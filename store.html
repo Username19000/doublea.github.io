@@ -124,14 +124,62 @@
       // Custom package metadata (optional - add images, custom perks, etc.)
       packageCustomData: {
         // Example: Map package IDs to custom data
+        // You can add two package IDs - one for one-time, one for subscription
+        // Example:
         // '7235170': {
         //   image: 'images/resident-preview.png',
         //   badge: 'Starter',
+        //   subscriptionPackageId: '7235171', // ID of the subscription version
         //   customPerks: ['Custom perk 1', 'Custom perk 2']
+        // }
+        
+        // CONFIGURE YOUR PACKAGES HERE
+        // Add your package IDs and their subscription counterparts
+        // Format:
+        // 'ONE_TIME_PACKAGE_ID': {
+        //   subscriptionPackageId: 'SUBSCRIPTION_PACKAGE_ID',
+        //   image: 'images/package-preview.png',
+        //   badge: 'Popular',
+        //   customPerks: ['Perk 1', 'Perk 2', ...]
         // }
       }
     };
 
+    // ========================================
+    // USERNAME MANAGEMENT
+    // ========================================
+    
+    /**
+     * Get stored username from localStorage
+     */
+    function getStoredUsername() {
+      return localStorage.getItem('tebex_minecraft_username') || '';
+    }
+    
+    /**
+     * Store username in localStorage
+     */
+    function saveUsername(username) {
+      if (username && username.trim()) {
+        localStorage.setItem('tebex_minecraft_username', username.trim());
+      }
+    }
+    
+    /**
+     * Get username from user (with localStorage fallback)
+     */
+    function getUsernameForPurchase() {
+      const stored = getStoredUsername();
+      
+      // If we have a stored username, use it
+      if (stored) {
+        return stored;
+      }
+      
+      // Otherwise, will be collected in modal
+      return null;
+    }
+    
     // ========================================
     // HEADLESS API FUNCTIONS
     // ========================================
@@ -168,8 +216,19 @@
     /**
      * Create a basket for checkout
      */
-    async function createBasket() {
+    async function createBasket(username) {
       try {
+        const basketData = {
+          complete_url: window.location.href,
+          cancel_url: window.location.href,
+          complete_auto_redirect: false
+        };
+        
+        // Add username if provided
+        if (username && username.trim()) {
+          basketData.username = username.trim();
+        }
+        
         const response = await fetch(
           `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/baskets`,
           {
@@ -178,12 +237,7 @@
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify({
-              complete_url: window.location.href,
-              cancel_url: window.location.href,
-              complete_auto_redirect: false,
-              username: prompt("Enter your Minecraft username for rank delivery:") || "Guest"
-            })
+            body: JSON.stringify(basketData)
           }
         );
         
@@ -285,24 +339,43 @@
     /**
      * Purchase a package using Headless API + Tebex.js
      */
-    async function purchasePackage(packageId, packageName, packagePrice) {
+    async function purchasePackage(packageId, packageName, packagePrice, isSubscription = false) {
+      // Get username input element value (will be added to modal)
+      const usernameInput = document.getElementById('purchase-username-input');
+      let username = usernameInput ? usernameInput.value.trim() : '';
+      
+      // If no username provided, check localStorage
+      if (!username) {
+        username = getStoredUsername();
+      }
+      
+      // Validate username
+      if (!username) {
+        alert('⚠️ Please enter your Minecraft username to continue.');
+        if (usernameInput) usernameInput.focus();
+        return;
+      }
+      
+      // Save username for future purchases
+      saveUsername(username);
+      
       // Save original footer content for error recovery
       const modalFooter = document.getElementById('modal-footer');
       const originalFooter = modalFooter.innerHTML;
       
       try {
-        console.log(`Starting purchase for package ${packageId}...`);
+        console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
         
         // Show loading state
         modalFooter.innerHTML = `
           <div style="text-align: center; padding: 1rem;">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
-            <p style="color: var(--text-muted);">Creating checkout...</p>
+            <p style="color: var(--text-muted);">Creating checkout for ${username}...</p>
           </div>
         `;
         
-        // Step 1: Create basket
-        const basket = await createBasket();
+        // Step 1: Create basket with username
+        const basket = await createBasket(username);
         console.log('✓ Basket created:', basket.ident);
         
         // Step 2: Add package to basket
@@ -329,11 +402,16 @@
           // Launch the checkout modal
           Tebex.checkout.launch();
           
-          // Listen for checkout completion
-          window.addEventListener('tebex:checkout:complete', function(event) {
+          // Listen for checkout completion (only once)
+          const completionHandler = function(event) {
             console.log('✓ Purchase completed!', event);
-            alert(`🎉 Thank you for your purchase!\n\nYour ${packageName} perks will be applied within a few minutes.\n\nJoin play.doubleasmp.net to enjoy your new rank!`);
-          });
+            window.removeEventListener('tebex:checkout:complete', completionHandler);
+            
+            // Show fancy success modal
+            showSuccessModal(packageName, packagePrice, username, isSubscription);
+          };
+          
+          window.addEventListener('tebex:checkout:complete', completionHandler);
           
         } else {
           throw new Error('Tebex.js is not loaded');
@@ -350,6 +428,90 @@
           modalFooter.innerHTML = originalFooter;
         }
       }
+    }
+    
+    /**
+     * Show fancy success modal after purchase
+     */
+    function showSuccessModal(packageName, packagePrice, username, isSubscription) {
+      // Create success modal HTML
+      const successHtml = `
+        <div style="text-align: center; padding: 2rem; animation: fadeInUp 0.5s ease;">
+          <div style="font-size: 5rem; margin-bottom: 1rem; animation: bounceIn 0.8s ease;">🎉</div>
+          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text);">
+            Purchase Successful!
+          </h2>
+          
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+            <p style="color: var(--text); font-size: 1.1rem; margin-bottom: 0.5rem;">
+              <strong>${packageName}</strong>
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;">
+              ${isSubscription ? 'Monthly Subscription' : 'One-Time Purchase'}: <strong style="color: var(--primary);">$${packagePrice}</strong>
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              For: <strong style="color: var(--secondary);">${username}</strong>
+            </p>
+          </div>
+          
+          <div style="background: var(--dark); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
+            <h3 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 1rem; text-align: center;">
+              ⚡ What Happens Next?
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--success); font-size: 1.5rem;">✓</span>
+                <span style="color: var(--text-muted);">Payment confirmed and processed</span>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--success); font-size: 1.5rem;">✓</span>
+                <span style="color: var(--text-muted);">Commands sent to server</span>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--primary); font-size: 1.5rem;">⏳</span>
+                <span style="color: var(--text-muted);">Perks will be applied within <strong style="color: var(--text);">2-5 minutes</strong></span>
+              </li>
+              <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--secondary); font-size: 1.5rem;">🎮</span>
+                <span style="color: var(--text-muted);">Join <strong style="color: var(--text);">play.doubleasmp.net</strong> to enjoy!</span>
+              </li>
+            </ul>
+          </div>
+          
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 1rem 0;">
+            ${isSubscription ? '💳 Your subscription will auto-renew monthly. You can cancel anytime from your Tebex account.' : ''}
+          </p>
+          
+          <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button onclick="closeModal()" style="flex: 1; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+              Continue Shopping
+            </button>
+            <button onclick="closeModal(); window.location.href='https://discord.com/invite/h2jQRcEYvs';" style="flex: 1; padding: 1rem; background: #5865f2; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+              Join Discord
+            </button>
+          </div>
+        </div>
+        
+        <style>
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        </style>
+      `;
+      
+      // Update modal content
+      document.getElementById('modal-body').innerHTML = successHtml;
+      document.getElementById('modal-header').style.display = 'none';
+      document.getElementById('modal-footer').style.display = 'none';
+      
+      // Show modal
+      document.getElementById('modal').classList.add('active');
     }
     
     // ========================================
@@ -462,6 +624,12 @@
     function openPackageModal(pkg) {
       const customData = HEADLESS_CONFIG.packageCustomData[pkg.id] || {};
       const image = customData.image || pkg.image;
+      const subscriptionPackageId = customData.subscriptionPackageId;
+      const subscriptionPackage = subscriptionPackageId ? findPackageById(subscriptionPackageId) : null;
+      
+      // Reset modal header visibility
+      document.getElementById('modal-header').style.display = 'block';
+      document.getElementById('modal-footer').style.display = 'block';
       
       // Set basic info
       document.getElementById('modal-icon').innerHTML = image ? 
@@ -469,40 +637,118 @@
         getPackageIcon(pkg.name);
       
       document.getElementById('modal-title').textContent = pkg.name;
-      document.getElementById('modal-price').textContent = `$${pkg.base_price.toFixed(2)}`;
-      document.getElementById('modal-price-subtitle').textContent = 
-        pkg.type === 'subscription' ? 'Monthly recurring subscription' : 'One-time purchase';
+      
+      // Show both prices if subscription is available
+      if (subscriptionPackage) {
+        document.getElementById('modal-price').textContent = 
+          `$${pkg.base_price.toFixed(2)} or $${subscriptionPackage.base_price.toFixed(2)}/mo`;
+        document.getElementById('modal-price-subtitle').textContent = 
+          'One-time purchase OR monthly subscription';
+      } else {
+        document.getElementById('modal-price').textContent = `$${pkg.base_price.toFixed(2)}`;
+        document.getElementById('modal-price-subtitle').textContent = 
+          pkg.type === 'subscription' ? 'Monthly recurring subscription' : 'One-time purchase';
+      }
       
       // Set description
-      document.getElementById('modal-body').innerHTML = `
+      let bodyHtml = `
         <div class="perk-section">
           <h3 class="perk-section-title">Description</h3>
           <div style="color: var(--text-muted); line-height: 1.8;">
             ${pkg.description}
           </div>
         </div>
-        
-        ${customData.customPerks ? `
+      `;
+      
+      if (customData.customPerks) {
+        bodyHtml += `
           <div class="perk-section">
             <h3 class="perk-section-title">What You Get</h3>
             <ul class="perk-list">
-              ${customData.customPerks.map(perk => `
-                <li><span class="perk-icon">✓</span><span>${perk}</span></li>
-              `).join('')}
+              ${customData.customPerks.map(perk => {
+                if (typeof perk === 'object' && perk.text) {
+                  return `
+                    <li>
+                      <span class="perk-icon">✓</span>
+                      <div>
+                        <span>${perk.text}</span>
+                        ${perk.image ? `<img src="${perk.image}" alt="${perk.text}" class="perk-image">` : ''}
+                      </div>
+                    </li>
+                  `;
+                }
+                return `<li><span class="perk-icon">✓</span><span>${perk}</span></li>`;
+              }).join('')}
             </ul>
           </div>
-        ` : ''}
+        `;
+      }
+      
+      // Add username input section
+      const storedUsername = getStoredUsername();
+      bodyHtml += `
+        <div class="perk-section">
+          <h3 class="perk-section-title">🎮 Minecraft Username</h3>
+          <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.95rem;">
+            Enter your Minecraft username to receive your perks in-game:
+          </p>
+          <input 
+            type="text" 
+            id="purchase-username-input" 
+            placeholder="Your Minecraft username"
+            value="${storedUsername}"
+            style="width: 100%; padding: 0.875rem; background: var(--dark); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; font-family: var(--font-display); transition: border-color 0.3s ease;"
+            onfocus="this.style.borderColor='var(--primary)'"
+            onblur="this.style.borderColor='var(--border)'"
+          />
+          <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.85rem;">
+            ${storedUsername ? '✓ Username saved from last purchase' : 'Your username will be saved for future purchases'}
+          </p>
+        </div>
       `;
       
-      // Set footer with purchase button
-      document.getElementById('modal-footer').innerHTML = `
-        <button class="buy-btn" onclick="purchasePackage(${pkg.id}, '${pkg.name.replace(/'/g, "\\'")}', ${pkg.base_price})">
-          Purchase $${pkg.base_price.toFixed(2)}
-        </button>
-      `;
+      document.getElementById('modal-body').innerHTML = bodyHtml;
+      
+      // Set footer with purchase button(s)
+      let footerHtml = '';
+      
+      if (subscriptionPackage) {
+        // Show two buttons for packages with subscription option
+        footerHtml = `
+          <div class="button-group">
+            <button class="buy-btn" onclick="purchasePackage(${pkg.id}, '${pkg.name.replace(/'/g, "\\'")}', ${pkg.base_price}, false)">
+              <span class="btn-label">One-Time</span>
+              $${pkg.base_price.toFixed(2)}
+            </button>
+            <button class="buy-btn subscription" onclick="purchasePackage(${subscriptionPackage.id}, '${pkg.name.replace(/'/g, "\\'")}', ${subscriptionPackage.base_price}, true)">
+              <span class="btn-label">Subscription</span>
+              $${subscriptionPackage.base_price.toFixed(2)}/mo
+            </button>
+          </div>
+        `;
+      } else {
+        // Single button
+        const isSubscription = pkg.type === 'subscription';
+        footerHtml = `
+          <button class="buy-btn ${isSubscription ? 'subscription' : ''}" 
+                  onclick="purchasePackage(${pkg.id}, '${pkg.name.replace(/'/g, "\\'")}', ${pkg.base_price}, ${isSubscription})">
+            Purchase $${pkg.base_price.toFixed(2)}${isSubscription ? '/mo' : ''}
+          </button>
+        `;
+      }
+      
+      document.getElementById('modal-footer').innerHTML = footerHtml;
       
       // Show modal
       document.getElementById('modal').classList.add('active');
+      
+      // Focus username input if empty
+      setTimeout(() => {
+        const input = document.getElementById('purchase-username-input');
+        if (input && !input.value) {
+          input.focus();
+        }
+      }, 100);
     }
     
     /**
