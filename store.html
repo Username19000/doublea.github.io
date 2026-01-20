@@ -96,7 +96,7 @@
     const HEADLESS_CONFIG = {
       // IMPORTANT: Replace this with YOUR Headless API Public Token
       // Get it from: https://double-a-smp-store.tebex.io/admin → Settings → API Keys
-      publicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30', // Example: 't66x-abc123...'
+      publicToken: 'YOUR_HEADLESS_PUBLIC_TOKEN_HERE', // Example: 't66x-abc123...'
       
       // API endpoints
       apiBase: 'https://headless.tebex.io/api',
@@ -181,7 +181,8 @@
             body: JSON.stringify({
               complete_url: window.location.href,
               cancel_url: window.location.href,
-              complete_auto_redirect: false
+              complete_auto_redirect: false,
+              username: prompt("Enter your Minecraft username for rank delivery:") || "Guest"
             })
           }
         );
@@ -203,6 +204,22 @@
      */
     async function addPackageToBasket(basketIdent, packageId, quantity = 1) {
       try {
+        const requestBody = {
+          package_id: parseInt(packageId), // Ensure it's a number, not string
+          quantity: quantity
+        };
+        
+        // If basket has username_id, include it in variable_data
+        // This is required for game server packages
+        const basket = await getBasket(basketIdent);
+        if (basket.username_id) {
+          requestBody.variable_data = {
+            username_id: basket.username_id
+          };
+        }
+        
+        console.log('Adding package to basket:', requestBody);
+        
         const response = await fetch(
           `${HEADLESS_CONFIG.apiBase}/baskets/${basketIdent}/packages`,
           {
@@ -211,15 +228,25 @@
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify({
-              package_id: packageId,
-              quantity: quantity
-            })
+            body: JSON.stringify(requestBody)
           }
         );
         
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          // Try to get error details from response
+          let errorMessage = `HTTP ${response.status}`;
+          try {
+            const errorData = await response.json();
+            if (errorData.message) {
+              errorMessage += `: ${errorData.message}`;
+            }
+            if (errorData.errors) {
+              errorMessage += ` - ${JSON.stringify(errorData.errors)}`;
+            }
+          } catch (e) {
+            errorMessage += `: ${response.statusText}`;
+          }
+          throw new Error(errorMessage);
         }
         
         return await response.json();
@@ -230,16 +257,44 @@
     }
     
     /**
+     * Get basket details
+     */
+    async function getBasket(basketIdent) {
+      try {
+        const response = await fetch(
+          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/baskets/${basketIdent}`,
+          {
+            headers: {
+              'Accept': 'application/json'
+            }
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return data.data;
+      } catch (error) {
+        console.error('Error fetching basket:', error);
+        throw error;
+      }
+    }
+    
+    /**
      * Purchase a package using Headless API + Tebex.js
      */
     async function purchasePackage(packageId, packageName, packagePrice) {
+      // Save original footer content for error recovery
+      const modalFooter = document.getElementById('modal-footer');
+      const originalFooter = modalFooter.innerHTML;
+      
       try {
         console.log(`Starting purchase for package ${packageId}...`);
         
         // Show loading state
-        const modal = document.getElementById('modal');
-        const originalFooter = document.getElementById('modal-footer').innerHTML;
-        document.getElementById('modal-footer').innerHTML = `
+        modalFooter.innerHTML = `
           <div style="text-align: center; padding: 1rem;">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
             <p style="color: var(--text-muted);">Creating checkout...</p>
@@ -290,9 +345,9 @@
         // Show error message
         alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support if the issue persists.`);
         
-        // Restore footer
+        // Restore footer if modal is still open
         if (document.getElementById('modal').classList.contains('active')) {
-          document.getElementById('modal-footer').innerHTML = originalFooter;
+          modalFooter.innerHTML = originalFooter;
         }
       }
     }
