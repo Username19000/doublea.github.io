@@ -99,7 +99,7 @@
     // CONFIGURATION - REPLACE WITH YOUR TEBEX IDs
     // ========================================
     const TEBEX_CONFIG = {
-      webstoreIdentifier: 'double-a-smp-store', // Get this from your Tebex dashboard
+      webstoreIdentifier: 'double-a-smp-store', // ✓ This is correct!
       
       ranks: [
         {
@@ -111,7 +111,7 @@
           priceSubtitle: 'One-time purchase',
           description: 'Start your journey with essential perks',
           image: 'images/resident-preview.png', // Optional: Add image showing the rank prefix
-          packageId: '7235170', // Replace with actual Tebex package ID
+          packageId: '1741913', // Replace with actual Tebex package ID
           subscriptionId: null,
           inGamePerks: [
             '[Resident] prefix in chat and tab list',
@@ -126,7 +126,9 @@
             'Ability to have up to 25 members in your land',
             'Ability to have up to 7 areas in your land',
             'Ability to have up to 9 roles in your land',
-            'Grant 7 additional claimable chunks to each land you are in'
+            'Grant 7 additional claimable chunks to each land you are in',
+            // You can add images to perks! Use this format:
+            // { text: 'Your perk description', image: 'images/perk-example.png' }
           ],
           discordPerks: [
             'Resident hoisted Discord role',
@@ -337,7 +339,22 @@
           <div class="perk-section">
             <h3 class="perk-section-title">In-Game Perks</h3>
             <ul class="perk-list">
-              ${rank.inGamePerks.map(p => `<li><span class="perk-icon">✓</span><span>${p}</span></li>`).join('')}
+              ${rank.inGamePerks.map(p => {
+                // Check if perk is an object with image
+                if (typeof p === 'object' && p.text) {
+                  return `
+                    <li>
+                      <span class="perk-icon">✓</span>
+                      <div>
+                        <span>${p.text}</span>
+                        ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image">` : ''}
+                      </div>
+                    </li>
+                  `;
+                }
+                // Regular text perk
+                return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
+              }).join('')}
             </ul>
           </div>
         `;
@@ -348,7 +365,20 @@
           <div class="perk-section">
             <h3 class="perk-section-title">Discord Perks</h3>
             <ul class="perk-list">
-              ${rank.discordPerks.map(p => `<li><span class="perk-icon">✓</span><span>${p}</span></li>`).join('')}
+              ${rank.discordPerks.map(p => {
+                if (typeof p === 'object' && p.text) {
+                  return `
+                    <li>
+                      <span class="perk-icon">✓</span>
+                      <div>
+                        <span>${p.text}</span>
+                        ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image">` : ''}
+                      </div>
+                    </li>
+                  `;
+                }
+                return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
+              }).join('')}
             </ul>
           </div>
         `;
@@ -382,21 +412,71 @@
       document.getElementById('modal').classList.remove('active');
     }
 
-    function buyItem(packageId) {
+    // ========================================
+    // TEBEX INTEGRATION METHODS
+    // ========================================
+    
+    // METHOD 1: Direct Checkout Link (Simpler, works immediately)
+    // Redirects to Tebex checkout page - reliable and easy
+    function buyItemDirect(packageId) {
       if (packageId.includes('_ID')) {
-        alert('Please replace package IDs in the configuration with your actual Tebex package IDs.');
+        alert('Please replace package IDs in the configuration with your actual Tebex package IDs from your Tebex dashboard.');
         return;
       }
       
-      if (typeof Tebex !== 'undefined') {
-        Tebex.checkout.init({ ident: TEBEX_CONFIG.webstoreIdentifier });
-        Tebex.checkout.open({
-          package: packageId
-        });
-      } else {
-        alert('Tebex SDK not loaded. Please check your connection.');
+      const checkoutUrl = `https://double-a-smp-store.tebex.io/checkout/packages/${packageId}`;
+      window.open(checkoutUrl, '_blank');
+    }
+    
+    // METHOD 2: Tebex SDK (Embedded checkout - more advanced)
+    // Keeps users on your site with a modal checkout
+    let tebexInitialized = false;
+    
+    function initTebexSDK() {
+      if (typeof Tebex !== 'undefined' && Tebex.checkout) {
+        try {
+          Tebex.checkout.init({ ident: TEBEX_CONFIG.webstoreIdentifier });
+          tebexInitialized = true;
+          console.log('✓ Tebex SDK initialized');
+        } catch (error) {
+          console.error('Tebex SDK error:', error);
+        }
       }
     }
+    
+    function buyItemSDK(packageId) {
+      if (packageId.includes('_ID')) {
+        alert('Please replace package IDs with your actual Tebex package IDs.');
+        return;
+      }
+      
+      if (!tebexInitialized) {
+        initTebexSDK();
+      }
+      
+      if (typeof Tebex !== 'undefined' && Tebex.checkout) {
+        try {
+          Tebex.checkout.launch({
+            ident: TEBEX_CONFIG.webstoreIdentifier,
+            package: packageId
+          });
+        } catch (error) {
+          console.error('Tebex checkout error:', error);
+          // Fallback to direct method if SDK fails
+          buyItemDirect(packageId);
+        }
+      } else {
+        console.warn('Tebex SDK not loaded, using direct checkout');
+        buyItemDirect(packageId);
+      }
+    }
+    
+    // CURRENTLY USING: Direct method (most reliable for GitHub Pages)
+    // To switch to SDK method, change all "buyItemDirect" calls to "buyItemSDK"
+    const buyItem = buyItemDirect;
+    
+    // Initialize SDK on page load (in case you switch to SDK method)
+    window.addEventListener('load', initTebexSDK);
 
     // Click outside modal to close
     document.getElementById('modal').addEventListener('click', function(e) {

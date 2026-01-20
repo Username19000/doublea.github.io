@@ -467,6 +467,16 @@ body {
   flex-shrink: 0;
 }
 
+.perk-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-top: 0.5rem;
+  display: block;
+}
+
 .modal-footer {
   padding: 2rem;
   border-top: 1px solid var(--border);
