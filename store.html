@@ -8,14 +8,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Tebex Checkout SDK -->
-  <script src="https://checkout.tebex.io/js/sdk.js" async></script>
+  <!-- Tebex.js for embedded checkout -->
+  <script src="https://js.tebex.io/v/1.js" defer></script>
   
   <!-- External CSS -->
   <link rel="stylesheet" href="store.css">
 </head>
 
 <body>
+  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
@@ -32,6 +33,7 @@
     </div>
   </nav>
 
+  <!-- Hero -->
   <section class="store-hero">
     <div class="store-hero-content">
       <div class="store-badge">✨ Support the Server</div>
@@ -40,34 +42,25 @@
     </div>
   </section>
 
+  <!-- Category Navigation -->
   <nav class="category-nav">
-    <ul class="category-list">
-      <li><a href="#ranks" class="category-item active">🎖️ Ranks</a></li>
-      <li><a href="#crates" class="category-item">📦 Crates</a></li>
-      <li><a href="#cosmetics" class="category-item">✨ Cosmetics</a></li>
+    <ul class="category-list" id="category-nav">
+      <!-- Categories will be loaded dynamically -->
     </ul>
   </nav>
 
-  <main class="container">
-    <section id="ranks" class="products-section">
-      <h2 class="section-title">Server Ranks</h2>
-      <p class="section-subtitle">Click any rank to view full details and perks</p>
-      <div class="products-grid" id="ranks-grid"></div>
-    </section>
+  <!-- Loading State -->
+  <div id="loading-state" style="text-align: center; padding: 4rem;">
+    <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+    <p style="color: #94a3b8;">Loading store packages from Tebex...</p>
+  </div>
 
-    <section id="crates" class="products-section">
-      <h2 class="section-title">Crate Keys</h2>
-      <p class="section-subtitle">Try your luck with exciting rewards</p>
-      <div class="products-grid" id="crates-grid"></div>
-    </section>
-
-    <section id="cosmetics" class="products-section">
-      <h2 class="section-title">Cosmetics & Utilities</h2>
-      <p class="section-subtitle">Stand out and boost your gameplay</p>
-      <div class="products-grid" id="cosmetics-grid"></div>
-    </section>
+  <!-- Main Content -->
+  <main class="container" id="store-content" style="display: none;">
+    <!-- Packages will be loaded dynamically by category -->
   </main>
 
+  <!-- Modal for package details -->
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -82,6 +75,7 @@
     </div>
   </div>
 
+  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -96,455 +90,529 @@
 
   <script>
     // ========================================
-    // CONFIGURATION - REPLACE WITH YOUR TEBEX IDs
+    // HEADLESS API CONFIGURATION
     // ========================================
-    const TEBEX_CONFIG = {
-      webstoreIdentifier: 'double-a-smp-store', // ✓ This is correct!
+    
+    const HEADLESS_CONFIG = {
+      // IMPORTANT: Replace this with YOUR Headless API Public Token
+      // Get it from: https://double-a-smp-store.tebex.io/admin → Settings → API Keys
+      publicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30', // Example: 't66x-abc123...'
       
-      ranks: [
-        {
-          name: 'Resident',
-          icon: '🌱',
-          badge: 'Starter',
-          badgeClass: '',
-          price: '$5.00',
-          priceSubtitle: 'One-time purchase',
-          description: 'Start your journey with essential perks',
-          image: 'images/resident-preview.png', // Optional: Add image showing the rank prefix
-          packageId: '7235170', // Replace with actual Tebex package ID
-          subscriptionId: null,
-          inGamePerks: [
-            '[Resident] prefix in chat and tab list',
-            'Access to /hat to put any item/block on your head',
-            'Access to /tpahere to bring players to you',
-            'Access to all animation commands to sit, lie, or crawl anywhere',
-            'Ability to set up to 3 homes',
-            'Ability to set up to 7 shops',
-            'Ability to lock up to 15 blocks/entities',
-            'Ability to be a member of up to 5 lands',
-            'Ability to claim up to 15 chunks in your land to start',
-            'Ability to have up to 25 members in your land',
-            'Ability to have up to 7 areas in your land',
-            'Ability to have up to 9 roles in your land',
-            'Grant 7 additional claimable chunks to each land you are in',
-            // You can add images to perks! Use this format:
-            // { text: 'Your perk description', image: 'images/perk-example.png' }
-          ],
-          discordPerks: [
-            'Resident hoisted Discord role',
-            'Access VIP Chat',
-            'Access VIP Lounge',
-            'Access Leaks channel',
-            'Access to priority support',
-            'Ability to screenshare',
-            'Ability to send images in #general'
-          ]
+      // API endpoints
+      apiBase: 'https://headless.tebex.io/api',
+      
+      // Webstore identifier for checkout
+      webstoreIdentifier: 'double-a-smp-store',
+      
+      // Custom configuration
+      categoryConfig: {
+        // Map category names to custom settings
+        'Ranks': {
+          icon: '🎖️',
+          description: 'Server ranks with progressive perks'
         },
-        {
-          name: 'Merchant',
-          icon: '💰',
-          badge: 'Popular',
-          badgeClass: 'popular',
-          price: '$10.00',
-          priceSubtitle: 'One-time purchase',
-          description: 'Expand your business with enhanced trading perks',
-          packageId: 'MERCHANT_PACKAGE_ID',
-          subscriptionId: null,
-          inGamePerks: [
-            'All Resident perks',
-            '[Merchant] prefix',
-            '/back command',
-            '5 total homes',
-            '25 chunk claims',
-            'Green chat name',
-            '10 shops',
-            'Lock 25 blocks'
-          ],
-          discordPerks: [
-            'All Resident Discord perks',
-            'Merchant Discord role'
-          ]
+        'Crates': {
+          icon: '📦',
+          description: 'Mystery crates with random rewards'
         },
-        {
-          name: 'Pioneer',
-          icon: '⚔️',
-          badge: 'Premium',
-          badgeClass: 'premium',
-          price: '$30 or $8/mo',
-          priceSubtitle: 'One-time OR monthly subscription',
-          description: 'Forge ahead with premium features',
-          packageId: 'PIONEER_ONETIME_ID',
-          subscriptionId: 'PIONEER_SUB_ID',
-          inGamePerks: [
-            'All Merchant perks',
-            'Weekly kit with crate key',
-            '/workbench command',
-            '10 total homes',
-            '50 chunk claims',
-            'Custom chat formatting',
-            '/nick command'
-          ],
-          discordPerks: [
-            'All Merchant Discord perks',
-            'Pioneer exclusive channels'
-          ]
-        },
-        {
-          name: 'Guardian',
-          icon: '🛡️',
-          badge: 'Premium',
-          badgeClass: 'premium',
-          price: '$45 or $12/mo',
-          priceSubtitle: 'One-time OR monthly subscription',
-          description: 'Enhanced survival perks',
-          packageId: 'GUARDIAN_ONETIME_ID',
-          subscriptionId: 'GUARDIAN_SUB_ID',
-          inGamePerks: [
-            'All Pioneer perks',
-            'Keep XP on death',
-            '20 total homes',
-            '75 chunk claims',
-            'Particle effects',
-            'Priority queue'
-          ],
-          discordPerks: [
-            'All Pioneer Discord perks',
-            'Priority support'
-          ]
-        },
-        {
-          name: 'Sovereign',
-          icon: '👑',
-          badge: 'Premium',
-          badgeClass: 'premium',
-          price: '$60 or $16/mo',
-          priceSubtitle: 'One-time OR monthly subscription',
-          description: 'Rule your domain',
-          packageId: 'SOVEREIGN_ONETIME_ID',
-          subscriptionId: 'SOVEREIGN_SUB_ID',
-          inGamePerks: [
-            'All Guardian perks',
-            'Keep inventory on death',
-            '35 total homes',
-            '100 chunk claims',
-            '/fly in claimed land',
-            'Custom item names',
-            'Cosmetic pets'
-          ],
-          discordPerks: [
-            'All Guardian Discord perks',
-            'Direct admin access'
-          ]
-        },
-        {
-          name: 'Overlord',
-          icon: '⚡',
-          badge: 'Ultimate',
-          badgeClass: 'premium',
-          price: '$75 or $20/mo',
-          priceSubtitle: 'One-time OR monthly subscription',
-          description: 'The pinnacle of power',
-          packageId: 'OVERLORD_ONETIME_ID',
-          subscriptionId: 'OVERLORD_SUB_ID',
-          inGamePerks: [
-            'All Sovereign perks',
-            'Unlimited homes',
-            '150 chunk claims',
-            '/fly everywhere',
-            'Custom join/quit messages',
-            'All cosmetics'
-          ],
-          discordPerks: [
-            'All Sovereign Discord perks',
-            'Owner access',
-            'Vote on features'
-          ]
+        'Cosmetics': {
+          icon: '✨',
+          description: 'Visual effects and customization'
         }
-      ],
+      },
       
-      crates: [
-        { name: 'Common Crate Key', icon: '📦', price: '$2.50', description: 'Basic resources and small chance at rare items', packageId: 'COMMON_CRATE_ID' },
-        { name: 'Rare Crate Key', icon: '💎', price: '$5.00', description: 'Enchanted gear and valuable resources', packageId: 'RARE_CRATE_ID' },
-        { name: 'Legendary Crate Key', icon: '⭐', price: '$10.00', description: 'Ultimate rewards and rare spawners', packageId: 'LEGENDARY_CRATE_ID' }
-      ],
-      
-      cosmetics: [
-        { name: 'Particle Pack', icon: '✨', price: '$3.00', description: '5 unique particle effects', packageId: 'PARTICLE_ID' },
-        { name: 'Cosmetic Pet', icon: '🐾', price: '$5.00', description: 'Loyal companion', packageId: 'PET_ID' },
-        { name: '$10k Money', icon: '💵', price: '$5.00', description: 'Instant cash injection', packageId: 'MONEY_ID' }
-      ]
+      // Custom package metadata (optional - add images, custom perks, etc.)
+      packageCustomData: {
+        // Example: Map package IDs to custom data
+        // '7235170': {
+        //   image: 'images/resident-preview.png',
+        //   badge: 'Starter',
+        //   customPerks: ['Custom perk 1', 'Custom perk 2']
+        // }
+      }
     };
 
-    // Initialize Tebex
-    if (typeof Tebex !== 'undefined') {
-      Tebex.checkout.init({ ident: TEBEX_CONFIG.webstoreIdentifier });
+    // ========================================
+    // HEADLESS API FUNCTIONS
+    // ========================================
+    
+    let packagesCache = [];
+    let categoriesCache = [];
+    
+    /**
+     * Fetch all categories from Headless API
+     */
+    async function fetchCategories() {
+      try {
+        const response = await fetch(
+          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/categories?includePackages=1`,
+          {
+            headers: {
+              'Accept': 'application/json'
+            }
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return data.data || [];
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        throw error;
+      }
     }
-
-    // Render functions
-    function renderRanks() {
-      const grid = document.getElementById('ranks-grid');
-      grid.innerHTML = TEBEX_CONFIG.ranks.map(rank => `
-        <div class="product-card" onclick="openRankModal('${rank.name}')">
-          ${rank.badge ? `<span class="product-badge ${rank.badgeClass}">${rank.badge}</span>` : ''}
-          ${rank.image ? `<img src="${rank.image}" alt="${rank.name} Preview" class="product-image">` : `<div class="product-icon">${rank.icon}</div>`}
-          <h3 class="product-title">${rank.name}</h3>
-          <div class="product-price">${rank.price}</div>
-          <p class="product-price-sub">${rank.priceSubtitle}</p>
-          <p class="product-description">${rank.description}</p>
+    
+    /**
+     * Create a basket for checkout
+     */
+    async function createBasket() {
+      try {
+        const response = await fetch(
+          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/baskets`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              complete_url: window.location.href,
+              cancel_url: window.location.href,
+              complete_auto_redirect: false
+            })
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return data.data;
+      } catch (error) {
+        console.error('Error creating basket:', error);
+        throw error;
+      }
+    }
+    
+    /**
+     * Add a package to a basket
+     */
+    async function addPackageToBasket(basketIdent, packageId, quantity = 1) {
+      try {
+        const response = await fetch(
+          `${HEADLESS_CONFIG.apiBase}/baskets/${basketIdent}/packages`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              package_id: packageId,
+              quantity: quantity
+            })
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error adding package to basket:', error);
+        throw error;
+      }
+    }
+    
+    /**
+     * Purchase a package using Headless API + Tebex.js
+     */
+    async function purchasePackage(packageId, packageName, packagePrice) {
+      try {
+        console.log(`Starting purchase for package ${packageId}...`);
+        
+        // Show loading state
+        const modal = document.getElementById('modal');
+        const originalFooter = document.getElementById('modal-footer').innerHTML;
+        document.getElementById('modal-footer').innerHTML = `
+          <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            <p style="color: var(--text-muted);">Creating checkout...</p>
+          </div>
+        `;
+        
+        // Step 1: Create basket
+        const basket = await createBasket();
+        console.log('✓ Basket created:', basket.ident);
+        
+        // Step 2: Add package to basket
+        await addPackageToBasket(basket.ident, packageId);
+        console.log('✓ Package added to basket');
+        
+        // Step 3: Close modal
+        closeModal();
+        
+        // Step 4: Launch Tebex.js checkout
+        if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
+          console.log('✓ Launching Tebex.js checkout...');
+          
+          // Initialize checkout with your branding
+          Tebex.checkout.init({
+            ident: basket.ident,
+            theme: 'dark',
+            colors: [
+              { name: "primary", color: "#01a1a4" },
+              { name: "secondary", color: "#f2b841" }
+            ]
+          });
+          
+          // Launch the checkout modal
+          Tebex.checkout.launch();
+          
+          // Listen for checkout completion
+          window.addEventListener('tebex:checkout:complete', function(event) {
+            console.log('✓ Purchase completed!', event);
+            alert(`🎉 Thank you for your purchase!\n\nYour ${packageName} perks will be applied within a few minutes.\n\nJoin play.doubleasmp.net to enjoy your new rank!`);
+          });
+          
+        } else {
+          throw new Error('Tebex.js is not loaded');
+        }
+        
+      } catch (error) {
+        console.error('Purchase error:', error);
+        
+        // Show error message
+        alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support if the issue persists.`);
+        
+        // Restore footer
+        if (document.getElementById('modal').classList.contains('active')) {
+          document.getElementById('modal-footer').innerHTML = originalFooter;
+        }
+      }
+    }
+    
+    // ========================================
+    // UI RENDERING FUNCTIONS
+    // ========================================
+    
+    /**
+     * Render category navigation
+     */
+    function renderCategoryNav(categories) {
+      const nav = document.getElementById('category-nav');
+      
+      nav.innerHTML = categories.map((cat, index) => {
+        const config = HEADLESS_CONFIG.categoryConfig[cat.name] || {};
+        const icon = config.icon || '📦';
+        
+        return `
+          <li>
+            <a href="#${cat.slug}" class="category-item ${index === 0 ? 'active' : ''}" 
+               data-category="${cat.id}">
+              ${icon} ${cat.name}
+            </a>
+          </li>
+        `;
+      }).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          
+          const categoryId = this.getAttribute('data-category');
+          scrollToCategory(categoryId);
+        });
+      });
+    }
+    
+    /**
+     * Render all packages by category
+     */
+    function renderPackages(categories) {
+      const container = document.getElementById('store-content');
+      
+      container.innerHTML = categories.map(category => {
+        const config = HEADLESS_CONFIG.categoryConfig[category.name] || {};
+        const packages = category.packages || [];
+        
+        if (packages.length === 0) return '';
+        
+        return `
+          <section id="category-${category.id}" class="products-section" data-category="${category.id}">
+            <h2 class="section-title">${category.name}</h2>
+            <p class="section-subtitle">${config.description || category.description || 'Click any item to view details'}</p>
+            
+            <div class="products-grid">
+              ${packages.map(pkg => renderPackageCard(pkg, category)).join('')}
+            </div>
+          </section>
+        `;
+      }).join('');
+      
+      // Add click handlers to cards
+      document.querySelectorAll('[data-package-id]').forEach(card => {
+        card.addEventListener('click', function() {
+          const packageId = this.getAttribute('data-package-id');
+          const pkg = findPackageById(packageId);
+          if (pkg) {
+            openPackageModal(pkg);
+          }
+        });
+      });
+    }
+    
+    /**
+     * Render a single package card
+     */
+    function renderPackageCard(pkg, category) {
+      const customData = HEADLESS_CONFIG.packageCustomData[pkg.id] || {};
+      const badge = customData.badge || (pkg.type === 'subscription' ? 'Subscription' : '');
+      const image = customData.image || pkg.image;
+      
+      // Determine badge class
+      let badgeClass = '';
+      if (badge.toLowerCase().includes('popular')) badgeClass = 'popular';
+      if (badge.toLowerCase().includes('premium') || badge.toLowerCase().includes('ultimate')) badgeClass = 'premium';
+      
+      return `
+        <div class="product-card" data-package-id="${pkg.id}">
+          ${badge ? `<span class="product-badge ${badgeClass}">${badge}</span>` : ''}
+          
+          ${image ? 
+            `<img src="${image}" alt="${pkg.name}" class="product-image">` : 
+            `<div class="product-icon">${getPackageIcon(pkg.name, category.name)}</div>`
+          }
+          
+          <h3 class="product-title">${pkg.name}</h3>
+          <div class="product-price">$${pkg.base_price.toFixed(2)}</div>
+          <p class="product-price-sub">${pkg.type === 'subscription' ? 'Monthly subscription' : 'One-time purchase'}</p>
+          <p class="product-description">${stripHtml(pkg.description)}</p>
           <div class="view-details-text">View Full Details →</div>
         </div>
-      `).join('');
+      `;
     }
-
-    function renderCrates() {
-      const grid = document.getElementById('crates-grid');
-      grid.innerHTML = TEBEX_CONFIG.crates.map(c => `
-        <div class="product-card" onclick="buyItem('${c.packageId}')">
-          <div class="product-icon">${c.icon}</div>
-          <h3 class="product-title">${c.name}</h3>
-          <div class="product-price">${c.price}</div>
-          <p class="product-description">${c.description}</p>
-          <div class="view-details-text">Purchase →</div>
+    
+    /**
+     * Open package details modal
+     */
+    function openPackageModal(pkg) {
+      const customData = HEADLESS_CONFIG.packageCustomData[pkg.id] || {};
+      const image = customData.image || pkg.image;
+      
+      // Set basic info
+      document.getElementById('modal-icon').innerHTML = image ? 
+        `<img src="${image}" alt="${pkg.name}" class="modal-image">` : 
+        getPackageIcon(pkg.name);
+      
+      document.getElementById('modal-title').textContent = pkg.name;
+      document.getElementById('modal-price').textContent = `$${pkg.base_price.toFixed(2)}`;
+      document.getElementById('modal-price-subtitle').textContent = 
+        pkg.type === 'subscription' ? 'Monthly recurring subscription' : 'One-time purchase';
+      
+      // Set description
+      document.getElementById('modal-body').innerHTML = `
+        <div class="perk-section">
+          <h3 class="perk-section-title">Description</h3>
+          <div style="color: var(--text-muted); line-height: 1.8;">
+            ${pkg.description}
+          </div>
         </div>
-      `).join('');
-    }
-
-    function renderCosmetics() {
-      const grid = document.getElementById('cosmetics-grid');
-      grid.innerHTML = TEBEX_CONFIG.cosmetics.map(c => `
-        <div class="product-card" onclick="buyItem('${c.packageId}')">
-          <div class="product-icon">${c.icon}</div>
-          <h3 class="product-title">${c.name}</h3>
-          <div class="product-price">${c.price}</div>
-          <p class="product-description">${c.description}</p>
-          <div class="view-details-text">Purchase →</div>
-        </div>
-      `).join('');
-    }
-
-    function openRankModal(rankName) {
-      const rank = TEBEX_CONFIG.ranks.find(r => r.name === rankName);
-      if (!rank) return;
-
-      document.getElementById('modal-icon').innerHTML = rank.image 
-        ? `<img src="${rank.image}" alt="${rank.name}" class="modal-image">` 
-        : rank.icon;
-      document.getElementById('modal-title').textContent = rank.name;
-      document.getElementById('modal-price').textContent = rank.price;
-      document.getElementById('modal-price-subtitle').textContent = rank.priceSubtitle;
-
-      let perksHtml = '';
-      if (rank.inGamePerks?.length) {
-        perksHtml += `
+        
+        ${customData.customPerks ? `
           <div class="perk-section">
-            <h3 class="perk-section-title">In-Game Perks</h3>
+            <h3 class="perk-section-title">What You Get</h3>
             <ul class="perk-list">
-              ${rank.inGamePerks.map(p => {
-                // Check if perk is an object with image
-                if (typeof p === 'object' && p.text) {
-                  return `
-                    <li>
-                      <span class="perk-icon">✓</span>
-                      <div>
-                        <span>${p.text}</span>
-                        ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image">` : ''}
-                      </div>
-                    </li>
-                  `;
-                }
-                // Regular text perk
-                return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
-              }).join('')}
+              ${customData.customPerks.map(perk => `
+                <li><span class="perk-icon">✓</span><span>${perk}</span></li>
+              `).join('')}
             </ul>
           </div>
-        `;
-      }
-
-      if (rank.discordPerks?.length) {
-        perksHtml += `
-          <div class="perk-section">
-            <h3 class="perk-section-title">Discord Perks</h3>
-            <ul class="perk-list">
-              ${rank.discordPerks.map(p => {
-                if (typeof p === 'object' && p.text) {
-                  return `
-                    <li>
-                      <span class="perk-icon">✓</span>
-                      <div>
-                        <span>${p.text}</span>
-                        ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image">` : ''}
-                      </div>
-                    </li>
-                  `;
-                }
-                return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
-              }).join('')}
-            </ul>
-          </div>
-        `;
-      }
-
-      document.getElementById('modal-body').innerHTML = perksHtml;
-
-      let footerHtml = '';
-      if (rank.subscriptionId) {
-        footerHtml = `
-          <div class="button-group">
-            <button class="buy-btn" onclick="buyItem('${rank.packageId}')">
-              <span class="btn-label">One-Time</span>
-              ${rank.price.split(' or ')[0]}
-            </button>
-            <button class="buy-btn subscription" onclick="buyItem('${rank.subscriptionId}')">
-              <span class="btn-label">Subscription</span>
-              ${rank.price.split(' or ')[1] || 'Subscribe'}
-            </button>
-          </div>
-        `;
-      } else {
-        footerHtml = `<button class="buy-btn" onclick="buyItem('${rank.packageId}')">Purchase ${rank.price}</button>`;
-      }
-
-      document.getElementById('modal-footer').innerHTML = footerHtml;
+        ` : ''}
+      `;
+      
+      // Set footer with purchase button
+      document.getElementById('modal-footer').innerHTML = `
+        <button class="buy-btn" onclick="purchasePackage(${pkg.id}, '${pkg.name.replace(/'/g, "\\'")}', ${pkg.base_price})">
+          Purchase $${pkg.base_price.toFixed(2)}
+        </button>
+      `;
+      
+      // Show modal
       document.getElementById('modal').classList.add('active');
     }
-
+    
+    /**
+     * Close modal
+     */
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
     }
-
+    
     // ========================================
-    // TEBEX INTEGRATION METHODS
+    // UTILITY FUNCTIONS
     // ========================================
     
-    // METHOD 1: Basket API (Works for unapproved/test stores)
-    // Adds package to basket then redirects to checkout
-    function buyItemDirect(packageId) {
-      if (packageId.includes('_ID')) {
-        alert('Please replace package IDs in the configuration with your actual Tebex package IDs from your Tebex dashboard.');
-        return;
+    /**
+     * Find package by ID
+     */
+    function findPackageById(packageId) {
+      for (const category of categoriesCache) {
+        const pkg = category.packages.find(p => p.id == packageId);
+        if (pkg) return pkg;
       }
-      
-      // Use Tebex's add-to-basket URL - this automatically:
-      // 1. Adds item to basket
-      // 2. Redirects to checkout page
-      const url = `https://double-a-smp-store.tebex.io/checkout/packages/add/${packageId}/single`;
-      window.location.href = url; // Same tab redirect (can change to window.open for new tab)
+      return null;
     }
     
-    // METHOD 2: Tebex SDK (Embedded checkout modal)
-    // Keeps users on your site with a modal checkout
-    let tebexInitialized = false;
+    /**
+     * Get icon for package based on name/category
+     */
+    function getPackageIcon(packageName, categoryName) {
+      const name = packageName.toLowerCase();
+      const cat = (categoryName || '').toLowerCase();
+      
+      // Rank icons
+      if (name.includes('resident')) return '🌱';
+      if (name.includes('merchant')) return '💰';
+      if (name.includes('pioneer')) return '⚔️';
+      if (name.includes('guardian')) return '🛡️';
+      if (name.includes('sovereign')) return '👑';
+      if (name.includes('overlord')) return '⚡';
+      
+      // Crate icons
+      if (name.includes('common') || name.includes('basic')) return '📦';
+      if (name.includes('rare')) return '💎';
+      if (name.includes('legendary') || name.includes('epic')) return '⭐';
+      
+      // Cosmetic icons
+      if (name.includes('particle')) return '✨';
+      if (name.includes('pet')) return '🐾';
+      if (name.includes('color')) return '🎨';
+      
+      // Default by category
+      if (cat.includes('rank')) return '🎖️';
+      if (cat.includes('crate')) return '📦';
+      if (cat.includes('cosmetic')) return '✨';
+      
+      return '🎁';
+    }
     
-    function initTebexSDK() {
-      // The SDK creates a global 'Tebex' object when loaded
-      // Check if it exists and has the checkout methods
-      if (typeof Tebex !== 'undefined') {
-        console.log('✓ Tebex object found');
+    /**
+     * Strip HTML tags from string
+     */
+    function stripHtml(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      const text = tmp.textContent || tmp.innerText || '';
+      return text.length > 120 ? text.substring(0, 120) + '...' : text;
+    }
+    
+    /**
+     * Scroll to category section
+     */
+    function scrollToCategory(categoryId) {
+      const section = document.querySelector(`[data-category="${categoryId}"]`);
+      if (section) {
+        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+        const categoryNavHeight = document.querySelector('.category-nav').offsetHeight;
+        const offset = navbarHeight + categoryNavHeight + 20;
         
-        if (typeof Tebex.Checkout !== 'undefined') {
-          console.log('✓ Tebex.Checkout available');
-          tebexInitialized = true;
-          return true;
-        } else if (typeof Tebex.checkout !== 'undefined') {
-          console.log('✓ Tebex.checkout available');
-          tebexInitialized = true;
-          return true;
-        } else {
-          console.warn('⚠ Tebex object exists but checkout not found. Available methods:', Object.keys(Tebex));
-        }
-      } else {
-        console.warn('⚠ Tebex SDK not loaded - the <script> tag may not have loaded yet');
+        const targetPosition = section.offsetTop - offset;
+        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
       }
-      return false;
     }
     
-    function buyItemSDK(packageId) {
-      if (packageId.includes('_ID')) {
-        alert('Please replace package IDs with your actual Tebex package IDs.');
-        return;
-      }
-      
-      // Try to initialize if not already done
-      if (!tebexInitialized) {
-        initTebexSDK();
-      }
-      
-      // Check for Tebex SDK - try multiple possible API formats
-      if (typeof Tebex !== 'undefined') {
-        try {
-          // Try format 1: Tebex.Checkout.popup
-          if (Tebex.Checkout && typeof Tebex.Checkout.popup === 'function') {
-            console.log('Using Tebex.Checkout.popup');
-            Tebex.Checkout.popup({
-              ident: TEBEX_CONFIG.webstoreIdentifier,
-              package: packageId
-            });
-            return;
-          }
-          
-          // Try format 2: Tebex.checkout.open
-          if (Tebex.checkout && typeof Tebex.checkout.open === 'function') {
-            console.log('Using Tebex.checkout.open');
-            Tebex.checkout.open({
-              ident: TEBEX_CONFIG.webstoreIdentifier,
-              package: packageId
-            });
-            return;
-          }
-          
-          // Try format 3: Direct Tebex.popup
-          if (typeof Tebex.popup === 'function') {
-            console.log('Using Tebex.popup');
-            Tebex.popup({
-              ident: TEBEX_CONFIG.webstoreIdentifier,
-              package: packageId
-            });
-            return;
-          }
-          
-          console.error('Tebex SDK loaded but no known checkout method found');
-          console.log('Available Tebex methods:', Object.keys(Tebex));
-        } catch (error) {
-          console.error('Tebex SDK error:', error);
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+    
+    /**
+     * Initialize the store
+     */
+    async function initStore() {
+      try {
+        console.log('🔄 Initializing Headless API store...');
+        
+        // Check if token is configured
+        if (HEADLESS_CONFIG.publicToken === 'YOUR_HEADLESS_PUBLIC_TOKEN_HERE') {
+          throw new Error('Please configure your Headless API public token in HEADLESS_CONFIG');
         }
+        
+        // Fetch categories and packages
+        console.log('📦 Fetching packages from Tebex...');
+        categoriesCache = await fetchCategories();
+        
+        console.log(`✓ Loaded ${categoriesCache.length} categories`);
+        
+        // Count total packages
+        const totalPackages = categoriesCache.reduce((sum, cat) => sum + (cat.packages?.length || 0), 0);
+        console.log(`✓ Loaded ${totalPackages} packages`);
+        
+        // Render UI
+        renderCategoryNav(categoriesCache);
+        renderPackages(categoriesCache);
+        
+        // Hide loading, show content
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('store-content').style.display = 'block';
+        
+        console.log('✅ Store initialized successfully!');
+        
+      } catch (error) {
+        console.error('❌ Failed to initialize store:', error);
+        
+        // Show error message
+        document.getElementById('loading-state').innerHTML = `
+          <div style="text-align: center; padding: 4rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
+            <h2 style="color: var(--text); margin-bottom: 1rem;">Failed to Load Store</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">${error.message}</p>
+            <button onclick="location.reload()" class="buy-btn" style="display: inline-block;">
+              Retry
+            </button>
+          </div>
+        `;
       }
-      
-      // Fallback to direct checkout if SDK doesn't work
-      console.warn('Tebex SDK not working, falling back to direct checkout');
-      buyItemDirect(packageId);
     }
     
-    // To switch to SDK method, change this line: (buyItemDirect or buyItemSDK)
-    const buyItem = buyItemDirect;
+    // Wait for DOM and Tebex.js to load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initStore);
+    } else {
+      initStore();
+    }
     
-    // Initialize SDK on page load (in case you switch to SDK method later)
-    window.addEventListener('load', function() {
-      setTimeout(initTebexSDK, 1000); // Give SDK time to load
-    });
-
-    
-    // Initialize SDK on page load (in case you switch to SDK method)
-    window.addEventListener('load', initTebexSDK);
-
     // Click outside modal to close
     document.getElementById('modal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
-
-    // Initialize
-    renderRanks();
-    renderCrates();
-    renderCosmetics();
-
-    // Smooth scroll
-    document.querySelectorAll('.category-item').forEach(item => {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
+    
+    // Smooth scroll on category click
+    window.addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('.products-section');
+      const navbarHeight = document.querySelector('.navbar').offsetHeight;
+      const categoryNavHeight = document.querySelector('.category-nav').offsetHeight;
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - navbarHeight - categoryNavHeight - 100;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+          const categoryId = section.getAttribute('data-category');
+          document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-category') === categoryId) {
+              item.classList.add('active');
+            }
+          });
         }
       });
     });
