@@ -111,7 +111,7 @@
           priceSubtitle: 'One-time purchase',
           description: 'Start your journey with essential perks',
           image: 'images/resident-preview.png', // Optional: Add image showing the rank prefix
-          packageId: '1741913', // Replace with actual Tebex package ID
+          packageId: '7235170', // Replace with actual Tebex package ID
           subscriptionId: null,
           inGamePerks: [
             '[Resident] prefix in chat and tab list',
@@ -458,10 +458,35 @@
         try {
           Tebex.checkout.launch({
             ident: TEBEX_CONFIG.webstoreIdentifier,
-            package: packageId
+            package: packageId,
+            
+            // Optional: Theme customization to match your site
+            theme: {
+              backgroundColor: '#0f172a',  // Dark background
+              primaryColor: '#01a1a4',     // Teal primary color
+              textColor: '#f8fafc'          // Light text
+            },
+            
+            // Optional: Success callback
+            onComplete: function(data) {
+              console.log('✓ Purchase completed:', data);
+              closeModal(); // Close the rank details modal
+              alert('🎉 Thank you for your purchase!\n\nYour perks will be applied within a few minutes.\n\nJoin play.doubleasmp.net to enjoy your new rank!');
+            },
+            
+            // Optional: Close callback
+            onClose: function() {
+              console.log('Checkout modal closed by user');
+            },
+            
+            // Optional: Error callback
+            onError: function(error) {
+              console.error('Checkout error:', error);
+              alert('⚠️ There was an error with the checkout.\n\nPlease try again or contact support.');
+            }
           });
         } catch (error) {
-          console.error('Tebex checkout error:', error);
+          console.error('Tebex launch error:', error);
           // Fallback to direct method if SDK fails
           buyItemDirect(packageId);
         }
