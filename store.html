@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <!-- Tebex Checkout SDK -->
-  <script src="https://js.tebex.io/v/2.0.0"></script>
+  <script src="https://checkout.tebex.io/js/sdk.js" async></script>
   
   <!-- External CSS -->
   <link rel="stylesheet" href="store.css">
@@ -416,32 +416,46 @@
     // TEBEX INTEGRATION METHODS
     // ========================================
     
-    // METHOD 1: Direct Checkout Link (Simpler, works immediately)
-    // Redirects to Tebex checkout page - reliable and easy
+    // METHOD 1: Basket API (Works for unapproved/test stores)
+    // Adds package to basket then redirects to checkout
     function buyItemDirect(packageId) {
       if (packageId.includes('_ID')) {
         alert('Please replace package IDs in the configuration with your actual Tebex package IDs from your Tebex dashboard.');
         return;
       }
       
-      const checkoutUrl = `https://double-a-smp-store.tebex.io/checkout/packages/${packageId}`;
-      window.open(checkoutUrl, '_blank');
+      // Use Tebex's add-to-basket URL - this automatically:
+      // 1. Adds item to basket
+      // 2. Redirects to checkout page
+      const url = `https://double-a-smp-store.tebex.io/checkout/packages/add/${packageId}/single`;
+      window.location.href = url; // Same tab redirect (can change to window.open for new tab)
     }
     
-    // METHOD 2: Tebex SDK (Embedded checkout - more advanced)
+    // METHOD 2: Tebex SDK (Embedded checkout modal)
     // Keeps users on your site with a modal checkout
     let tebexInitialized = false;
     
     function initTebexSDK() {
-      if (typeof Tebex !== 'undefined' && Tebex.checkout) {
-        try {
-          Tebex.checkout.init({ ident: TEBEX_CONFIG.webstoreIdentifier });
+      // The SDK creates a global 'Tebex' object when loaded
+      // Check if it exists and has the checkout methods
+      if (typeof Tebex !== 'undefined') {
+        console.log('✓ Tebex object found');
+        
+        if (typeof Tebex.Checkout !== 'undefined') {
+          console.log('✓ Tebex.Checkout available');
           tebexInitialized = true;
-          console.log('✓ Tebex SDK initialized');
-        } catch (error) {
-          console.error('Tebex SDK error:', error);
+          return true;
+        } else if (typeof Tebex.checkout !== 'undefined') {
+          console.log('✓ Tebex.checkout available');
+          tebexInitialized = true;
+          return true;
+        } else {
+          console.warn('⚠ Tebex object exists but checkout not found. Available methods:', Object.keys(Tebex));
         }
+      } else {
+        console.warn('⚠ Tebex SDK not loaded - the <script> tag may not have loaded yet');
       }
+      return false;
     }
     
     function buyItemSDK(packageId) {
@@ -450,55 +464,64 @@
         return;
       }
       
+      // Try to initialize if not already done
       if (!tebexInitialized) {
         initTebexSDK();
       }
       
-      if (typeof Tebex !== 'undefined' && Tebex.checkout) {
+      // Check for Tebex SDK - try multiple possible API formats
+      if (typeof Tebex !== 'undefined') {
         try {
-          Tebex.checkout.launch({
-            ident: TEBEX_CONFIG.webstoreIdentifier,
-            package: packageId,
-            
-            // Optional: Theme customization to match your site
-            theme: {
-              backgroundColor: '#0f172a',  // Dark background
-              primaryColor: '#01a1a4',     // Teal primary color
-              textColor: '#f8fafc'          // Light text
-            },
-            
-            // Optional: Success callback
-            onComplete: function(data) {
-              console.log('✓ Purchase completed:', data);
-              closeModal(); // Close the rank details modal
-              alert('🎉 Thank you for your purchase!\n\nYour perks will be applied within a few minutes.\n\nJoin play.doubleasmp.net to enjoy your new rank!');
-            },
-            
-            // Optional: Close callback
-            onClose: function() {
-              console.log('Checkout modal closed by user');
-            },
-            
-            // Optional: Error callback
-            onError: function(error) {
-              console.error('Checkout error:', error);
-              alert('⚠️ There was an error with the checkout.\n\nPlease try again or contact support.');
-            }
-          });
+          // Try format 1: Tebex.Checkout.popup
+          if (Tebex.Checkout && typeof Tebex.Checkout.popup === 'function') {
+            console.log('Using Tebex.Checkout.popup');
+            Tebex.Checkout.popup({
+              ident: TEBEX_CONFIG.webstoreIdentifier,
+              package: packageId
+            });
+            return;
+          }
+          
+          // Try format 2: Tebex.checkout.open
+          if (Tebex.checkout && typeof Tebex.checkout.open === 'function') {
+            console.log('Using Tebex.checkout.open');
+            Tebex.checkout.open({
+              ident: TEBEX_CONFIG.webstoreIdentifier,
+              package: packageId
+            });
+            return;
+          }
+          
+          // Try format 3: Direct Tebex.popup
+          if (typeof Tebex.popup === 'function') {
+            console.log('Using Tebex.popup');
+            Tebex.popup({
+              ident: TEBEX_CONFIG.webstoreIdentifier,
+              package: packageId
+            });
+            return;
+          }
+          
+          console.error('Tebex SDK loaded but no known checkout method found');
+          console.log('Available Tebex methods:', Object.keys(Tebex));
         } catch (error) {
-          console.error('Tebex launch error:', error);
-          // Fallback to direct method if SDK fails
-          buyItemDirect(packageId);
+          console.error('Tebex SDK error:', error);
         }
-      } else {
-        console.warn('Tebex SDK not loaded, using direct checkout');
-        buyItemDirect(packageId);
       }
+      
+      // Fallback to direct checkout if SDK doesn't work
+      console.warn('Tebex SDK not working, falling back to direct checkout');
+      buyItemDirect(packageId);
     }
     
-    // CURRENTLY USING: Direct method (most reliable for GitHub Pages)
-    // To switch to SDK method, change all "buyItemDirect" calls to "buyItemSDK"
-    const buyItem = buyItemSDK;
+    // To switch to SDK method, change this line: (buyItemDirect or buyItemSDK)
+    const buyItem = buyItemDirect;
+    
+    // Initialize SDK on page load (in case you switch to SDK method later)
+    window.addEventListener('load', function() {
+      setTimeout(initTebexSDK, 1000); // Give SDK time to load
+    });
+
     
     // Initialize SDK on page load (in case you switch to SDK method)
     window.addEventListener('load', initTebexSDK);
