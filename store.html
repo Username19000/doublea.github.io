@@ -39,31 +39,61 @@
       <div class="store-badge">✨ Support the Server</div>
       <h1>Server Store</h1>
       <p>Unlock exclusive ranks and perks to enhance your Double A SMP experience</p>
+      
+      <!-- Username Display/Sign-in -->
+      <div id="username-display" style="margin-top: 2rem;">
+        <!-- Will be populated by JavaScript -->
+      </div>
     </div>
   </section>
 
   <!-- Category Navigation -->
   <nav class="category-nav">
-    <ul class="category-list" id="category-nav">
-      <!-- Categories will be loaded dynamically -->
+    <ul class="category-list">
+      <li><a href="#ranks" class="category-item active" onclick="scrollToSection('ranks')">🎖️ Ranks</a></li>
+      <li><a href="#crates" class="category-item" onclick="scrollToSection('crates')">📦 Crates</a></li>
+      <li><a href="#cosmetics" class="category-item" onclick="scrollToSection('cosmetics')">✨ Cosmetics</a></li>
     </ul>
   </nav>
 
-  <!-- Loading State -->
-  <div id="loading-state" style="text-align: center; padding: 4rem;">
-    <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
-    <p style="color: #94a3b8;">Loading store packages from Tebex...</p>
-  </div>
-
   <!-- Main Content -->
-  <main class="container" id="store-content" style="display: none;">
-    <!-- Packages will be loaded dynamically by category -->
+  <main class="container">
+    <!-- Ranks Section -->
+    <section id="ranks" class="products-section">
+      <h2 class="section-title">Server Ranks</h2>
+      <p class="section-subtitle">Server ranks with progressive perks - Click any rank for full details</p>
+      
+      <div class="products-grid" id="ranks-grid">
+        <!-- YOUR CUSTOM RANK CARDS GO HERE -->
+        <!-- I'll add JavaScript to make them purchasable with Headless API -->
+      </div>
+    </section>
+
+    <!-- Crates Section -->
+    <section id="crates" class="products-section">
+      <h2 class="section-title">Mystery Crates</h2>
+      <p class="section-subtitle">Random rewards and rare items</p>
+      
+      <div class="products-grid" id="crates-grid">
+        <!-- YOUR CUSTOM CRATE CARDS -->
+      </div>
+    </section>
+
+    <!-- Cosmetics Section -->
+    <section id="cosmetics" class="products-section">
+      <h2 class="section-title">Cosmetics & Utilities</h2>
+      <p class="section-subtitle">Visual effects and convenience items</p>
+      
+      <div class="products-grid" id="cosmetics-grid">
+        <!-- YOUR CUSTOM COSMETIC CARDS -->
+      </div>
+    </section>
   </main>
 
   <!-- Modal for package details -->
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
-      <div class="modal-header">
+      <div id="modal-header" class="modal-header">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <div class="modal-icon" id="modal-icon"></div>
         <h2 class="modal-title" id="modal-title"></h2>
@@ -71,7 +101,7 @@
         <div class="modal-price-subtitle" id="modal-price-subtitle"></div>
       </div>
       <div class="modal-body" id="modal-body"></div>
-      <div class="modal-footer" id="modal-footer"></div>
+      <div id="modal-footer" class="modal-footer"></div>
     </div>
   </div>
 
@@ -90,233 +120,314 @@
 
   <script>
     // ========================================
-    // HEADLESS API CONFIGURATION
+    // CONFIGURATION - YOUR CUSTOM DATA
     // ========================================
     
-    const HEADLESS_CONFIG = {
-      // IMPORTANT: Replace this with YOUR Headless API Public Token
-      // Get it from: https://double-a-smp-store.tebex.io/admin → Settings → API Keys
-      publicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30', // Example: 't66x-abc123...'
+    const STORE_CONFIG = {
+      // Tebex Headless API Token (ONLY for purchasing)
+      tebexPublicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30',
       
-      // API endpoints
-      apiBase: 'https://headless.tebex.io/api',
+      // Server details
+      serverIp: 'play.doubleasmp.net',
+      discordInvite: 'https://discord.com/invite/h2jQRcEYvs',
       
-      // Webstore identifier for checkout
-      webstoreIdentifier: 'double-a-smp-store',
-      
-      // Custom configuration
-      categoryConfig: {
-        // Map category names to custom settings
-        'Ranks': {
-          icon: '🎖️',
-          description: 'Server ranks with progressive perks'
+      // Define YOUR packages with YOUR layout
+      ranks: [
+        {
+          // Display info (YOU control this)
+          name: 'Resident',
+          icon: '🌱',
+          badge: 'Starter',
+          badgeClass: '',
+          price: 5.00,
+          priceDisplay: '$5.00',
+          description: 'Start your journey with essential perks',
+          image: null, // or 'images/resident.png'
+          
+          // Tebex package IDs (for purchasing)
+          packageId: 7235170, // Replace with YOUR one-time package ID
+          subscriptionId: null, // If you have subscription version
+          
+          // Custom perks (YOUR content)
+          inGamePerks: [
+            '[Resident] prefix in chat and tab list',
+            'Access to /hat command',
+            'Access to /tpahere command',
+            'Access to animation commands',
+            'Ability to set up to 3 homes',
+            'Ability to set up to 7 shops',
+            'Ability to lock up to 15 blocks/entities',
+            'Ability to claim up to 15 chunks'
+          ],
+          discordPerks: [
+            'Resident hoisted Discord role',
+            'Access VIP Chat',
+            'Access VIP Lounge',
+            'Access Leaks channel'
+          ]
         },
-        'Crates': {
-          icon: '📦',
-          description: 'Mystery crates with random rewards'
+        {
+          name: 'Merchant',
+          icon: '💰',
+          badge: 'Popular',
+          badgeClass: 'popular',
+          price: 10.00,
+          priceDisplay: '$10.00',
+          description: 'Enhanced trading and land abilities',
+          image: null,
+          packageId: 0, // YOUR PACKAGE ID
+          subscriptionId: null,
+          inGamePerks: [
+            'All Resident perks',
+            '[Merchant] prefix',
+            '/back on death',
+            '5 homes',
+            '25 chunk claims'
+          ],
+          discordPerks: [
+            'Merchant Discord role',
+            'Priority support'
+          ]
         },
-        'Cosmetics': {
-          icon: '✨',
-          description: 'Visual effects and customization'
+        {
+          name: 'Pioneer',
+          icon: '⚔️',
+          badge: 'Premium',
+          badgeClass: 'premium',
+          price: 30.00,
+          priceDisplay: '$30.00',
+          priceSubscription: 8.00,
+          priceSubscriptionDisplay: '$8.00/mo',
+          description: 'Unlock advanced abilities',
+          image: null,
+          packageId: 0, // YOUR ONE-TIME PACKAGE ID
+          subscriptionId: 0, // YOUR SUBSCRIPTION PACKAGE ID
+          inGamePerks: [
+            'All Merchant perks',
+            '[Pioneer] prefix',
+            'Weekly kit',
+            '/workbench command',
+            '10 homes',
+            '50 chunk claims'
+          ],
+          discordPerks: [
+            'Pioneer Discord role',
+            'Access to exclusive channels'
+          ]
         }
-      },
+        // Add more ranks...
+      ],
       
-      // Custom package metadata (optional - add images, custom perks, etc.)
-      packageCustomData: {
-        // Example: Map package IDs to custom data
-        // '7235170': {
-        //   image: 'images/resident-preview.png',
-        //   badge: 'Starter',
-        //   customPerks: ['Custom perk 1', 'Custom perk 2']
-        // }
-      }
+      crates: [
+        {
+          name: 'Common Crate Key',
+          icon: '📦',
+          badge: null,
+          price: 2.50,
+          priceDisplay: '$2.50',
+          description: 'Basic resources and small chance at rare items',
+          packageId: 0, // YOUR PACKAGE ID
+          subscriptionId: null
+        }
+        // Add more crates...
+      ],
+      
+      cosmetics: [
+        {
+          name: 'Particle Effects',
+          icon: '✨',
+          badge: null,
+          price: 5.00,
+          priceDisplay: '$5.00',
+          description: 'Unique visual effects',
+          packageId: 0,
+          subscriptionId: null
+        }
+        // Add more cosmetics...
+      ]
     };
 
     // ========================================
-    // HEADLESS API FUNCTIONS
+    // USERNAME MANAGEMENT
     // ========================================
     
-    let packagesCache = [];
-    let categoriesCache = [];
+    let currentUsername = localStorage.getItem('minecraft_username') || '';
+    let isGiftMode = false;
     
-    /**
-     * Fetch all categories from Headless API
-     */
-    async function fetchCategories() {
-      try {
-        const response = await fetch(
-          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/categories?includePackages=1`,
-          {
-            headers: {
-              'Accept': 'application/json'
-            }
-          }
-        );
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        return data.data || [];
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        throw error;
-      }
-    }
-    
-    /**
-     * Create a basket for checkout
-     */
-    async function createBasket() {
-      try {
-        const response = await fetch(
-          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/baskets`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              complete_url: window.location.href,
-              cancel_url: window.location.href,
-              complete_auto_redirect: false,
-              username: prompt("Enter your Minecraft username for rank delivery:") || "Guest"
-            })
-          }
-        );
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        return data.data;
-      } catch (error) {
-        console.error('Error creating basket:', error);
-        throw error;
-      }
-    }
-    
-    /**
-     * Add a package to a basket
-     */
-    async function addPackageToBasket(basketIdent, packageId, quantity = 1) {
-      try {
-        const requestBody = {
-          package_id: parseInt(packageId), // Ensure it's a number, not string
-          quantity: quantity
-        };
-        
-        // If basket has username_id, include it in variable_data
-        // This is required for game server packages
-        const basket = await getBasket(basketIdent);
-        if (basket.username_id) {
-          requestBody.variable_data = {
-            username_id: basket.username_id
-          };
-        }
-        
-        console.log('Adding package to basket:', requestBody);
-        
-        const response = await fetch(
-          `${HEADLESS_CONFIG.apiBase}/baskets/${basketIdent}/packages`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-          }
-        );
-        
-        if (!response.ok) {
-          // Try to get error details from response
-          let errorMessage = `HTTP ${response.status}`;
-          try {
-            const errorData = await response.json();
-            if (errorData.message) {
-              errorMessage += `: ${errorData.message}`;
-            }
-            if (errorData.errors) {
-              errorMessage += ` - ${JSON.stringify(errorData.errors)}`;
-            }
-          } catch (e) {
-            errorMessage += `: ${response.statusText}`;
-          }
-          throw new Error(errorMessage);
-        }
-        
-        return await response.json();
-      } catch (error) {
-        console.error('Error adding package to basket:', error);
-        throw error;
-      }
-    }
-    
-    /**
-     * Get basket details
-     */
-    async function getBasket(basketIdent) {
-      try {
-        const response = await fetch(
-          `${HEADLESS_CONFIG.apiBase}/accounts/${HEADLESS_CONFIG.publicToken}/baskets/${basketIdent}`,
-          {
-            headers: {
-              'Accept': 'application/json'
-            }
-          }
-        );
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        return data.data;
-      } catch (error) {
-        console.error('Error fetching basket:', error);
-        throw error;
-      }
-    }
-    
-    /**
-     * Purchase a package using Headless API + Tebex.js
-     */
-    async function purchasePackage(packageId, packageName, packagePrice) {
-      // Save original footer content for error recovery
-      const modalFooter = document.getElementById('modal-footer');
-      const originalFooter = modalFooter.innerHTML;
+    function renderUsernameDisplay() {
+      const display = document.getElementById('username-display');
       
-      try {
-        console.log(`Starting purchase for package ${packageId}...`);
-        
-        // Show loading state
-        modalFooter.innerHTML = `
-          <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
-            <p style="color: var(--text-muted);">Creating checkout...</p>
+      if (currentUsername) {
+        display.innerHTML = `
+          <div style="background: rgba(1, 161, 164, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 1rem; display: inline-block;">
+            <span style="color: var(--text); font-weight: 600;">Signed in as: <strong style="color: var(--primary);">${currentUsername}</strong></span>
+            <button onclick="signOut()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Sign Out
+            </button>
+            <button onclick="toggleGiftMode()" style="margin-left: 0.5rem; padding: 0.5rem 1rem; background: ${isGiftMode ? 'var(--secondary)' : 'transparent'}; border: 1px solid var(--secondary); color: ${isGiftMode ? 'var(--dark)' : 'var(--secondary)'}; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              ${isGiftMode ? '🎁 Gift Mode ON' : '🎁 Gift as Present'}
+            </button>
           </div>
         `;
+      } else {
+        display.innerHTML = `
+          <div style="background: rgba(242, 184, 65, 0.1); border: 1px solid var(--secondary); border-radius: 12px; padding: 1rem; display: inline-block;">
+            <span style="color: var(--text); margin-right: 1rem;">Enter your Minecraft username to get started:</span>
+            <input type="text" id="username-signin-input" placeholder="Minecraft Username" style="padding: 0.5rem 1rem; background: var(--dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-right: 0.5rem;" />
+            <button onclick="signIn()" style="padding: 0.5rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Sign In
+            </button>
+          </div>
+        `;
+      }
+    }
+    
+    function signIn() {
+      const input = document.getElementById('username-signin-input');
+      const username = input.value.trim();
+      
+      if (!username) {
+        alert('Please enter your Minecraft username');
+        return;
+      }
+      
+      currentUsername = username;
+      localStorage.setItem('minecraft_username', username);
+      renderUsernameDisplay();
+    }
+    
+    function signOut() {
+      if (confirm('Sign out? You\'ll need to enter your username again for purchases.')) {
+        currentUsername = '';
+        isGiftMode = false;
+        localStorage.removeItem('minecraft_username');
+        renderUsernameDisplay();
+      }
+    }
+    
+    function toggleGiftMode() {
+      isGiftMode = !isGiftMode;
+      renderUsernameDisplay();
+    }
+
+    // ========================================
+    // HEADLESS API (PURCHASE ONLY)
+    // ========================================
+    
+    async function createBasket(username) {
+      const response = await fetch(
+        `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            complete_url: window.location.href,
+            cancel_url: window.location.href,
+            complete_auto_redirect: false,
+            username: username
+          })
+        }
+      );
+      
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to create basket: ${error}`);
+      }
+      
+      const data = await response.json();
+      return data.data;
+    }
+    
+    async function addPackageToBasket(basketIdent, packageId) {
+      // First get basket to check for username_id
+      const basketResponse = await fetch(
+        `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets/${basketIdent}`,
+        { headers: { 'Accept': 'application/json' } }
+      );
+      const basketData = await basketResponse.json();
+      const basket = basketData.data;
+      
+      const requestBody = {
+        package_id: parseInt(packageId),
+        quantity: 1
+      };
+      
+      if (basket.username_id) {
+        requestBody.variable_data = {
+          username_id: basket.username_id
+        };
+      }
+      
+      const response = await fetch(
+        `https://headless.tebex.io/api/baskets/${basketIdent}/packages`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        }
+      );
+      
+      if (!response.ok) {
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.message) errorMessage += `: ${errorData.message}`;
+          if (errorData.errors) errorMessage += ` - ${JSON.stringify(errorData.errors)}`;
+        } catch (e) {
+          errorMessage += `: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      return await response.json();
+    }
+    
+    async function purchasePackage(packageId, packageName, price, isSubscription, forUsername = null) {
+      try {
+        // Determine username
+        let username = forUsername;
         
-        // Step 1: Create basket
-        const basket = await createBasket();
+        if (!username) {
+          if (isGiftMode) {
+            username = prompt('Enter recipient\'s Minecraft username:');
+            if (!username || !username.trim()) {
+              alert('Gift cancelled - no username entered');
+              return;
+            }
+            username = username.trim();
+          } else {
+            username = currentUsername;
+          }
+        }
+        
+        if (!username) {
+          alert('⚠️ Please sign in with your Minecraft username first!');
+          return;
+        }
+        
+        console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
+        
+        // Show loading
+        const modal = document.getElementById('modal');
+        const wasModalOpen = modal.classList.contains('active');
+        if (wasModalOpen) closeModal();
+        
+        // Create basket
+        const basket = await createBasket(username);
         console.log('✓ Basket created:', basket.ident);
         
-        // Step 2: Add package to basket
+        // Add package
         await addPackageToBasket(basket.ident, packageId);
-        console.log('✓ Package added to basket');
+        console.log('✓ Package added');
         
-        // Step 3: Close modal
-        closeModal();
-        
-        // Step 4: Launch Tebex.js checkout
+        // Launch checkout
         if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
-          console.log('✓ Launching Tebex.js checkout...');
-          
-          // Initialize checkout with your branding
           Tebex.checkout.init({
             ident: basket.ident,
             theme: 'dark',
@@ -326,350 +437,254 @@
             ]
           });
           
-          // Launch the checkout modal
           Tebex.checkout.launch();
           
-          // Listen for checkout completion
-          window.addEventListener('tebex:checkout:complete', function(event) {
-            console.log('✓ Purchase completed!', event);
-            alert(`🎉 Thank you for your purchase!\n\nYour ${packageName} perks will be applied within a few minutes.\n\nJoin play.doubleasmp.net to enjoy your new rank!`);
-          });
+          // Success handler
+          const handler = function(event) {
+            window.removeEventListener('tebex:checkout:complete', handler);
+            showSuccessModal(packageName, price, username, isSubscription, isGiftMode);
+          };
+          window.addEventListener('tebex:checkout:complete', handler);
           
         } else {
-          throw new Error('Tebex.js is not loaded');
+          throw new Error('Tebex.js not loaded');
         }
         
       } catch (error) {
         console.error('Purchase error:', error);
-        
-        // Show error message
-        alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support if the issue persists.`);
-        
-        // Restore footer if modal is still open
-        if (document.getElementById('modal').classList.contains('active')) {
-          modalFooter.innerHTML = originalFooter;
-        }
+        alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support.`);
       }
     }
     
-    // ========================================
-    // UI RENDERING FUNCTIONS
-    // ========================================
-    
-    /**
-     * Render category navigation
-     */
-    function renderCategoryNav(categories) {
-      const nav = document.getElementById('category-nav');
-      
-      nav.innerHTML = categories.map((cat, index) => {
-        const config = HEADLESS_CONFIG.categoryConfig[cat.name] || {};
-        const icon = config.icon || '📦';
-        
-        return `
-          <li>
-            <a href="#${cat.slug}" class="category-item ${index === 0 ? 'active' : ''}" 
-               data-category="${cat.id}">
-              ${icon} ${cat.name}
-            </a>
-          </li>
-        `;
-      }).join('');
-      
-      // Add click handlers
-      document.querySelectorAll('.category-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
+    function showSuccessModal(packageName, price, username, isSubscription, wasGift) {
+      const html = `
+        <div style="text-align: center; padding: 2rem; animation: fadeInUp 0.5s ease;">
+          <div style="font-size: 5rem; margin-bottom: 1rem; animation: bounceIn 0.8s ease;">${wasGift ? '🎁' : '🎉'}</div>
+          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">
+            ${wasGift ? 'Gift Sent Successfully!' : 'Purchase Successful!'}
+          </h2>
           
-          const categoryId = this.getAttribute('data-category');
-          scrollToCategory(categoryId);
-        });
-      });
-    }
-    
-    /**
-     * Render all packages by category
-     */
-    function renderPackages(categories) {
-      const container = document.getElementById('store-content');
-      
-      container.innerHTML = categories.map(category => {
-        const config = HEADLESS_CONFIG.categoryConfig[category.name] || {};
-        const packages = category.packages || [];
-        
-        if (packages.length === 0) return '';
-        
-        return `
-          <section id="category-${category.id}" class="products-section" data-category="${category.id}">
-            <h2 class="section-title">${category.name}</h2>
-            <p class="section-subtitle">${config.description || category.description || 'Click any item to view details'}</p>
-            
-            <div class="products-grid">
-              ${packages.map(pkg => renderPackageCard(pkg, category)).join('')}
-            </div>
-          </section>
-        `;
-      }).join('');
-      
-      // Add click handlers to cards
-      document.querySelectorAll('[data-package-id]').forEach(card => {
-        card.addEventListener('click', function() {
-          const packageId = this.getAttribute('data-package-id');
-          const pkg = findPackageById(packageId);
-          if (pkg) {
-            openPackageModal(pkg);
-          }
-        });
-      });
-    }
-    
-    /**
-     * Render a single package card
-     */
-    function renderPackageCard(pkg, category) {
-      const customData = HEADLESS_CONFIG.packageCustomData[pkg.id] || {};
-      const badge = customData.badge || (pkg.type === 'subscription' ? 'Subscription' : '');
-      const image = customData.image || pkg.image;
-      
-      // Determine badge class
-      let badgeClass = '';
-      if (badge.toLowerCase().includes('popular')) badgeClass = 'popular';
-      if (badge.toLowerCase().includes('premium') || badge.toLowerCase().includes('ultimate')) badgeClass = 'premium';
-      
-      return `
-        <div class="product-card" data-package-id="${pkg.id}">
-          ${badge ? `<span class="product-badge ${badgeClass}">${badge}</span>` : ''}
-          
-          ${image ? 
-            `<img src="${image}" alt="${pkg.name}" class="product-image">` : 
-            `<div class="product-icon">${getPackageIcon(pkg.name, category.name)}</div>`
-          }
-          
-          <h3 class="product-title">${pkg.name}</h3>
-          <div class="product-price">$${pkg.base_price.toFixed(2)}</div>
-          <p class="product-price-sub">${pkg.type === 'subscription' ? 'Monthly subscription' : 'One-time purchase'}</p>
-          <p class="product-description">${stripHtml(pkg.description)}</p>
-          <div class="view-details-text">View Full Details →</div>
-        </div>
-      `;
-    }
-    
-    /**
-     * Open package details modal
-     */
-    function openPackageModal(pkg) {
-      const customData = HEADLESS_CONFIG.packageCustomData[pkg.id] || {};
-      const image = customData.image || pkg.image;
-      
-      // Set basic info
-      document.getElementById('modal-icon').innerHTML = image ? 
-        `<img src="${image}" alt="${pkg.name}" class="modal-image">` : 
-        getPackageIcon(pkg.name);
-      
-      document.getElementById('modal-title').textContent = pkg.name;
-      document.getElementById('modal-price').textContent = `$${pkg.base_price.toFixed(2)}`;
-      document.getElementById('modal-price-subtitle').textContent = 
-        pkg.type === 'subscription' ? 'Monthly recurring subscription' : 'One-time purchase';
-      
-      // Set description
-      document.getElementById('modal-body').innerHTML = `
-        <div class="perk-section">
-          <h3 class="perk-section-title">Description</h3>
-          <div style="color: var(--text-muted); line-height: 1.8;">
-            ${pkg.description}
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>${packageName}</strong></p>
+            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">
+              ${isSubscription ? 'Monthly Subscription' : 'One-Time'}: <strong style="color: var(--primary);">$${price.toFixed(2)}</strong>
+            </p>
+            <p style="color: var(--text-muted);">
+              ${wasGift ? 'Recipient' : 'Player'}: <strong style="color: var(--secondary);">${username}</strong>
+            </p>
           </div>
-        </div>
-        
-        ${customData.customPerks ? `
-          <div class="perk-section">
-            <h3 class="perk-section-title">What You Get</h3>
-            <ul class="perk-list">
-              ${customData.customPerks.map(perk => `
-                <li><span class="perk-icon">✓</span><span>${perk}</span></li>
-              `).join('')}
+          
+          <div style="background: var(--dark); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">⚡ What Happens Next?</h3>
+            <ul style="list-style: none; padding: 0;">
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
+                <span style="color: #10b981;">✓</span>
+                <span>Payment confirmed and processed</span>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
+                <span style="color: #10b981;">✓</span>
+                <span>Commands sent to server</span>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
+                <span style="color: var(--primary);">⏳</span>
+                <span>Perks will be applied within <strong>2-5 minutes</strong></span>
+              </li>
+              <li style="padding: 0.75rem 0; display: flex; gap: 0.75rem;">
+                <span style="color: var(--secondary);">🎮</span>
+                <span>Join <strong>${STORE_CONFIG.serverIp}</strong> to enjoy!</span>
+              </li>
             </ul>
           </div>
-        ` : ''}
+          
+          <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button onclick="closeModal()" style="flex: 1; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+              Continue Shopping
+            </button>
+            <button onclick="closeModal(); window.location.href='${STORE_CONFIG.discordInvite}';" style="flex: 1; padding: 1rem; background: #5865f2; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+              Join Discord
+            </button>
+          </div>
+        </div>
+        
+        <style>
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+          }
+        </style>
       `;
       
-      // Set footer with purchase button
-      document.getElementById('modal-footer').innerHTML = `
-        <button class="buy-btn" onclick="purchasePackage(${pkg.id}, '${pkg.name.replace(/'/g, "\\'")}', ${pkg.base_price})">
-          Purchase $${pkg.base_price.toFixed(2)}
-        </button>
-      `;
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      if (modalHeader) modalHeader.style.display = 'none';
+      if (modalFooter) modalFooter.style.display = 'none';
       
-      // Show modal
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    // ========================================
+    // RENDER YOUR CUSTOM CARDS
+    // ========================================
+    
+    function renderRanks() {
+      const grid = document.getElementById('ranks-grid');
+      grid.innerHTML = STORE_CONFIG.ranks.map(rank => `
+        <div class="product-card" onclick="openRankModal('${rank.name}')">
+          ${rank.badge ? `<span class="product-badge ${rank.badgeClass}">${rank.badge}</span>` : ''}
+          ${rank.image ? `<img src="${rank.image}" alt="${rank.name}" class="product-image">` : `<div class="product-icon">${rank.icon}</div>`}
+          <h3 class="product-title">${rank.name}</h3>
+          <div class="product-price">${rank.subscriptionId ? `${rank.priceDisplay} or ${rank.priceSubscriptionDisplay}` : rank.priceDisplay}</div>
+          <p class="product-description">${rank.description}</p>
+          <div class="view-details-text">View Full Details →</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderCrates() {
+      const grid = document.getElementById('crates-grid');
+      grid.innerHTML = STORE_CONFIG.crates.map(crate => `
+        <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false)">
+          <div class="product-icon">${crate.icon}</div>
+          <h3 class="product-title">${crate.name}</h3>
+          <div class="product-price">${crate.priceDisplay}</div>
+          <p class="product-description">${crate.description}</p>
+        </div>
+      `).join('');
+    }
+    
+    function renderCosmetics() {
+      const grid = document.getElementById('cosmetics-grid');
+      grid.innerHTML = STORE_CONFIG.cosmetics.map(item => `
+        <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false)">
+          <div class="product-icon">${item.icon}</div>
+          <h3 class="product-title">${item.name}</h3>
+          <div class="product-price">${item.priceDisplay}</div>
+          <p class="product-description">${item.description}</p>
+        </div>
+      `).join('');
+    }
+    
+    function openRankModal(rankName) {
+      const rank = STORE_CONFIG.ranks.find(r => r.name === rankName);
+      if (!rank) return;
+      
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      if (modalHeader) modalHeader.style.display = 'block';
+      if (modalFooter) modalFooter.style.display = 'block';
+      
+      document.getElementById('modal-icon').innerHTML = rank.image ? 
+        `<img src="${rank.image}" class="modal-image">` : 
+        `<div style="font-size: 4rem;">${rank.icon}</div>`;
+      document.getElementById('modal-title').textContent = rank.name;
+      document.getElementById('modal-price').textContent = rank.subscriptionId ? 
+        `${rank.priceDisplay} or ${rank.priceSubscriptionDisplay}` : rank.priceDisplay;
+      document.getElementById('modal-price-subtitle').textContent = 
+        rank.subscriptionId ? 'One-time purchase OR monthly subscription' : 'One-time purchase';
+      
+      let bodyHtml = '';
+      
+      if (rank.inGamePerks) {
+        bodyHtml += `
+          <div class="perk-section">
+            <h3 class="perk-section-title">In-Game Perks</h3>
+            <ul class="perk-list">
+              ${rank.inGamePerks.map(p => `<li><span class="perk-icon">✓</span><span>${p}</span></li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      if (rank.discordPerks) {
+        bodyHtml += `
+          <div class="perk-section">
+            <h3 class="perk-section-title">Discord Perks</h3>
+            <ul class="perk-list">
+              ${rank.discordPerks.map(p => `<li><span class="perk-icon">✓</span><span>${p}</span></li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      document.getElementById('modal-body').innerHTML = bodyHtml;
+      
+      let footerHtml = '';
+      if (rank.subscriptionId) {
+        footerHtml = `
+          <div class="button-group">
+            <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+              <span class="btn-label">One-Time</span>
+              ${rank.priceDisplay}
+            </button>
+            <button class="buy-btn subscription" onclick="purchasePackage(${rank.subscriptionId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.priceSubscription}, true)">
+              <span class="btn-label">Subscription</span>
+              ${rank.priceSubscriptionDisplay}
+            </button>
+          </div>
+        `;
+      } else {
+        footerHtml = `
+          <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+            Purchase ${rank.priceDisplay}
+          </button>
+        `;
+      }
+      
+      document.getElementById('modal-footer').innerHTML = footerHtml;
       document.getElementById('modal').classList.add('active');
     }
     
-    /**
-     * Close modal
-     */
+    function openSimpleModal(name, packageId, price, isSub) {
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      if (modalHeader) modalHeader.style.display = 'block';
+      if (modalFooter) modalFooter.style.display = 'block';
+      
+      document.getElementById('modal-title').textContent = name;
+      document.getElementById('modal-price').textContent = `$${price.toFixed(2)}`;
+      document.getElementById('modal-body').innerHTML = `<p style="text-align: center; color: var(--text-muted);">Click purchase to continue</p>`;
+      document.getElementById('modal-footer').innerHTML = `
+        <button class="buy-btn" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
+          Purchase $${price.toFixed(2)}
+        </button>
+      `;
+      document.getElementById('modal').classList.add('active');
+    }
+    
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
     }
     
-    // ========================================
-    // UTILITY FUNCTIONS
-    // ========================================
-    
-    /**
-     * Find package by ID
-     */
-    function findPackageById(packageId) {
-      for (const category of categoriesCache) {
-        const pkg = category.packages.find(p => p.id == packageId);
-        if (pkg) return pkg;
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        const offset = 150;
+        window.scrollTo({ top: el.offsetTop - offset, behavior: 'smooth' });
       }
-      return null;
+      
+      document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+      event.target.classList.add('active');
     }
-    
-    /**
-     * Get icon for package based on name/category
-     */
-    function getPackageIcon(packageName, categoryName) {
-      const name = packageName.toLowerCase();
-      const cat = (categoryName || '').toLowerCase();
-      
-      // Rank icons
-      if (name.includes('resident')) return '🌱';
-      if (name.includes('merchant')) return '💰';
-      if (name.includes('pioneer')) return '⚔️';
-      if (name.includes('guardian')) return '🛡️';
-      if (name.includes('sovereign')) return '👑';
-      if (name.includes('overlord')) return '⚡';
-      
-      // Crate icons
-      if (name.includes('common') || name.includes('basic')) return '📦';
-      if (name.includes('rare')) return '💎';
-      if (name.includes('legendary') || name.includes('epic')) return '⭐';
-      
-      // Cosmetic icons
-      if (name.includes('particle')) return '✨';
-      if (name.includes('pet')) return '🐾';
-      if (name.includes('color')) return '🎨';
-      
-      // Default by category
-      if (cat.includes('rank')) return '🎖️';
-      if (cat.includes('crate')) return '📦';
-      if (cat.includes('cosmetic')) return '✨';
-      
-      return '🎁';
-    }
-    
-    /**
-     * Strip HTML tags from string
-     */
-    function stripHtml(html) {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html;
-      const text = tmp.textContent || tmp.innerText || '';
-      return text.length > 120 ? text.substring(0, 120) + '...' : text;
-    }
-    
-    /**
-     * Scroll to category section
-     */
-    function scrollToCategory(categoryId) {
-      const section = document.querySelector(`[data-category="${categoryId}"]`);
-      if (section) {
-        const navbarHeight = document.querySelector('.navbar').offsetHeight;
-        const categoryNavHeight = document.querySelector('.category-nav').offsetHeight;
-        const offset = navbarHeight + categoryNavHeight + 20;
-        
-        const targetPosition = section.offsetTop - offset;
-        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-      }
-    }
-    
+
     // ========================================
-    // INITIALIZATION
+    // INITIALIZE
     // ========================================
     
-    /**
-     * Initialize the store
-     */
-    async function initStore() {
-      try {
-        console.log('🔄 Initializing Headless API store...');
-        
-        // Check if token is configured
-        if (HEADLESS_CONFIG.publicToken === 'YOUR_HEADLESS_PUBLIC_TOKEN_HERE') {
-          throw new Error('Please configure your Headless API public token in HEADLESS_CONFIG');
-        }
-        
-        // Fetch categories and packages
-        console.log('📦 Fetching packages from Tebex...');
-        categoriesCache = await fetchCategories();
-        
-        console.log(`✓ Loaded ${categoriesCache.length} categories`);
-        
-        // Count total packages
-        const totalPackages = categoriesCache.reduce((sum, cat) => sum + (cat.packages?.length || 0), 0);
-        console.log(`✓ Loaded ${totalPackages} packages`);
-        
-        // Render UI
-        renderCategoryNav(categoriesCache);
-        renderPackages(categoriesCache);
-        
-        // Hide loading, show content
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('store-content').style.display = 'block';
-        
-        console.log('✅ Store initialized successfully!');
-        
-      } catch (error) {
-        console.error('❌ Failed to initialize store:', error);
-        
-        // Show error message
-        document.getElementById('loading-state').innerHTML = `
-          <div style="text-align: center; padding: 4rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
-            <h2 style="color: var(--text); margin-bottom: 1rem;">Failed to Load Store</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">${error.message}</p>
-            <button onclick="location.reload()" class="buy-btn" style="display: inline-block;">
-              Retry
-            </button>
-          </div>
-        `;
-      }
-    }
-    
-    // Wait for DOM and Tebex.js to load
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initStore);
-    } else {
-      initStore();
-    }
-    
-    // Click outside modal to close
-    document.getElementById('modal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
+    window.addEventListener('DOMContentLoaded', function() {
+      renderUsernameDisplay();
+      renderRanks();
+      renderCrates();
+      renderCosmetics();
     });
     
-    // Smooth scroll on category click
-    window.addEventListener('scroll', function() {
-      const sections = document.querySelectorAll('.products-section');
-      const navbarHeight = document.querySelector('.navbar').offsetHeight;
-      const categoryNavHeight = document.querySelector('.category-nav').offsetHeight;
-      
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop - navbarHeight - categoryNavHeight - 100;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        
-        if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
-          const categoryId = section.getAttribute('data-category');
-          document.querySelectorAll('.category-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('data-category') === categoryId) {
-              item.classList.add('active');
-            }
-          });
-        }
-      });
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
     });
   </script>
 </body>
