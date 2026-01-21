@@ -17,6 +17,34 @@
   <!-- External CSS -->
   <link rel="stylesheet" href="store.css">
   
+  <!-- Custom store-specific styles -->
+  <style>
+    /* Force ranks grid to 3 columns */
+    #ranks-grid.products-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    
+    /* Make rank card images fit properly */
+    .product-card .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    @media (max-width: 1024px) {
+      #ranks-grid.products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      #ranks-grid.products-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+  
   <!-- 
     Custom Dialog Styles
     NOTE: These styles are inline because they define the custom modal dialogs
@@ -833,16 +861,18 @@ if (rank.landPerks) {
           </button>
         `;
       } else {
-        // Single button with gift option
+        // Single button with gift option - side by side
         footerHtml = `
-          <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-            Purchase ${rank.priceDisplay}
-          </button>
-          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
-                  onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-            <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
-            <span>Purchase as Gift</span>
-          </button>
+          <div style="display: flex; gap: 1rem;">
+            <button class="buy-btn" style="flex: 1;" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+              Purchase ${rank.priceDisplay}
+            </button>
+            <button class="buy-btn" style="flex: 1; background: var(--secondary); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+              <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+              <span>Gift</span>
+            </button>
+          </div>
         `;
       }
       
