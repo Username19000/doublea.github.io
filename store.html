@@ -252,7 +252,6 @@
     // ========================================
     
     let currentUsername = localStorage.getItem('minecraft_username') || '';
-    let isGiftMode = false;
     
     function renderUsernameDisplay() {
       const display = document.getElementById('username-display');
@@ -263,9 +262,6 @@
             <span style="color: var(--text); font-weight: 600;">Signed in as: <strong style="color: var(--primary);">${currentUsername}</strong></span>
             <button onclick="signOut()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; cursor: pointer; font-weight: 600;">
               Sign Out
-            </button>
-            <button onclick="toggleGiftMode()" style="margin-left: 0.5rem; padding: 0.5rem 1rem; background: ${isGiftMode ? 'var(--secondary)' : 'transparent'}; border: 1px solid var(--secondary); color: ${isGiftMode ? 'var(--dark)' : 'var(--secondary)'}; border-radius: 6px; cursor: pointer; font-weight: 600;">
-              ${isGiftMode ? '🎁 Gift Mode ON' : '🎁 Gift as Present'}
             </button>
           </div>
         `;
@@ -299,15 +295,9 @@
     function signOut() {
       if (confirm('Sign out? You\'ll need to enter your username again for purchases.')) {
         currentUsername = '';
-        isGiftMode = false;
         localStorage.removeItem('minecraft_username');
         renderUsernameDisplay();
       }
-    }
-    
-    function toggleGiftMode() {
-      isGiftMode = !isGiftMode;
-      renderUsernameDisplay();
     }
 
     // ========================================
@@ -361,6 +351,8 @@
         };
       }
       
+      console.log('Adding package to basket:', requestBody);
+      
       const response = await fetch(
         `https://headless.tebex.io/api/baskets/${basketIdent}/packages`,
         {
@@ -374,13 +366,36 @@
       );
       
       if (!response.ok) {
+        // Get detailed error message from Tebex
         let errorMessage = `HTTP ${response.status}`;
         try {
           const errorData = await response.json();
-          if (errorData.message) errorMessage += `: ${errorData.message}`;
-          if (errorData.errors) errorMessage += ` - ${JSON.stringify(errorData.errors)}`;
+          console.log('Tebex error response:', errorData);
+          
+          // Extract the actual error message
+          if (errorData.error_message) {
+            errorMessage = errorData.error_message;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          } else if (errorData.errors && typeof errorData.errors === 'object') {
+            // Sometimes errors are in an object
+            const firstError = Object.values(errorData.errors)[0];
+            if (Array.isArray(firstError)) {
+              errorMessage = firstError[0];
+            } else {
+              errorMessage = firstError;
+            }
+          }
+          
+          // Common error translations
+          if (response.status === 400) {
+            if (errorMessage.toLowerCase().includes('limit') || errorMessage.toLowerCase().includes('already')) {
+              errorMessage = 'You have already purchased this package and cannot buy it again due to purchase limits.';
+            }
+          }
+          
         } catch (e) {
-          errorMessage += `: ${response.statusText}`;
+          errorMessage = `${response.status}: ${response.statusText}`;
         }
         throw new Error(errorMessage);
       }
@@ -393,22 +408,15 @@
         // Determine username
         let username = forUsername;
         
-        if (!username) {
-          if (isGiftMode) {
-            username = prompt('Enter recipient\'s Minecraft username:');
-            if (!username || !username.trim()) {
-              alert('Gift cancelled - no username entered');
-              return;
-            }
-            username = username.trim();
-          } else {
-            username = currentUsername;
-          }
-        }
-        
-        if (!username) {
+        // If no username passed (gift purchase), current user must be signed in
+        if (!username && !currentUsername) {
           alert('⚠️ Please sign in with your Minecraft username first!');
           return;
+        }
+        
+        // Use current user's username if not a gift
+        if (!username) {
+          username = currentUsername;
         }
         
         console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
@@ -440,9 +448,10 @@
           Tebex.checkout.launch();
           
           // Success handler
+          const isGift = (forUsername && forUsername !== currentUsername);
           const handler = function(event) {
             window.removeEventListener('tebex:checkout:complete', handler);
-            showSuccessModal(packageName, price, username, isSubscription, isGiftMode);
+            showSuccessModal(packageName, price, username, isSubscription, isGift);
           };
           window.addEventListener('tebex:checkout:complete', handler);
           
@@ -454,6 +463,18 @@
         console.error('Purchase error:', error);
         alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support.`);
       }
+    }
+    
+    function purchaseAsGift(packageId, packageName, price, isSubscription) {
+      const recipientUsername = prompt('🎁 Enter the recipient\'s Minecraft username:');
+      
+      if (!recipientUsername || !recipientUsername.trim()) {
+        alert('Gift cancelled - no username entered');
+        return;
+      }
+      
+      // Call purchase with recipient's username
+      purchasePackage(packageId, packageName, price, isSubscription, recipientUsername.trim());
     }
     
     function showSuccessModal(packageName, price, username, isSubscription, wasGift) {
@@ -616,6 +637,7 @@
       
       let footerHtml = '';
       if (rank.subscriptionId) {
+        // Dual buttons with gift option below
         footerHtml = `
           <div class="button-group">
             <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
@@ -627,11 +649,20 @@
               ${rank.priceSubscriptionDisplay}
             </button>
           </div>
+          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+                  onclick="event.stopPropagation(); const isOneTime = confirm('Purchase as gift:\\n\\nClick OK for One-Time (${rank.priceDisplay})\\nClick Cancel for Subscription (${rank.priceSubscriptionDisplay})'); purchaseAsGift(isOneTime ? ${rank.packageId} : ${rank.subscriptionId}, '${rank.name.replace(/'/g, "\\'")}', isOneTime ? ${rank.price} : ${rank.priceSubscription}, !isOneTime);">
+            🎁 Purchase as Gift
+          </button>
         `;
       } else {
+        // Single button with gift option
         footerHtml = `
           <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
             Purchase ${rank.priceDisplay}
+          </button>
+          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+                  onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+            🎁 Purchase as Gift
           </button>
         `;
       }
@@ -652,6 +683,10 @@
       document.getElementById('modal-footer').innerHTML = `
         <button class="buy-btn" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
           Purchase $${price.toFixed(2)}
+        </button>
+        <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+                onclick="purchaseAsGift(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
+          🎁 Purchase as Gift
         </button>
       `;
       document.getElementById('modal').classList.add('active');
