@@ -16,7 +16,7 @@ const STORE_CONFIG = {
       // Display info (YOU control this)
       name: 'Resident',
       icon: '🌱',
-      badge: 'Basic',
+      badge: '',
       badgeClass: '',
       price: 5.00,
       priceDisplay: '$5.00',
@@ -64,7 +64,7 @@ const STORE_CONFIG = {
     {
       name: 'Merchant',
       icon: '💰',
-      badge: 'Starter',
+      badge: '',
       badgeClass: '',
       price: 10.00,
       priceDisplay: '$10.00',
@@ -112,13 +112,13 @@ const STORE_CONFIG = {
     {
       name: 'Pioneer',
       icon: '⚔️',
-      badge: 'Popular',
-      badgeClass: 'popular',
+      badge: '',
+      badgeClass: '',
       price: 30.00,
       priceDisplay: '$30.00',
       priceSubscription: 10.00,
       priceSubscriptionDisplay: '$10.00/mo',
-      description: 'Stand out with colors and text formatting.',
+      description: 'Stand out with colors and text formatting',
       image: 'images/Pioneer_Logo.png',
       packageId: 7235232, // YOUR ONE-TIME PACKAGE ID
       subscriptionId: 7235252, // YOUR SUBSCRIPTION PACKAGE ID
@@ -172,7 +172,7 @@ const STORE_CONFIG = {
       priceDisplay: '$45.00',
       priceSubscription: 15.00,
       priceSubscriptionDisplay: '$15.00/mo',
-      description: 'Access portable workstations hop on players.',
+      description: 'Access portable workstations hop on players',
       image: 'images/Guardian_Logo.png',
       packageId: 7235281,
       subscriptionId: 7235286,
@@ -225,8 +225,8 @@ const STORE_CONFIG = {
     {
       name: 'Sentinel',
       icon: '👑',
-      badge: 'Premium',
-      badgeClass: 'premium',
+      badge: '',
+      badgeClass: '',
       price: 75.00,
       priceDisplay: '$75.00',
       priceSubscription: 18.00,
@@ -255,8 +255,8 @@ const STORE_CONFIG = {
     {
       name: 'Overlord',
       icon: '⚡',
-      badge: 'Ultimate',
-      badgeClass: 'ultimate',
+      badge: 'Best Value',
+      badgeClass: 'popular',
       price: 100.00,
       priceDisplay: '$100.00',
       priceSubscription: 25.00,
