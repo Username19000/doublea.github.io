@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Double A SMP - Store</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
   <!-- Tebex.js for embedded checkout -->
   <script src="https://js.tebex.io/v/1.js" defer></script>
-  
+
   <!-- Store Configuration -->
   <script src="store-config.js"></script>
-  
+
   <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="store.css">
-  
+
   <style>
     /* Custom Alert/Prompt Modals */
     .custom-dialog-overlay {
@@ -35,12 +39,12 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
     }
-    
+
     .custom-dialog-overlay.active {
       opacity: 1;
       pointer-events: all;
     }
-    
+
     .custom-dialog {
       background: var(--card-bg);
       border: 2px solid var(--border);
@@ -52,17 +56,17 @@
       transform: scale(0.9) translateY(20px);
       transition: transform 0.3s ease;
     }
-    
+
     .custom-dialog-overlay.active .custom-dialog {
       transform: scale(1) translateY(0);
     }
-    
+
     .custom-dialog-icon {
       font-size: 3rem;
       text-align: center;
       margin-bottom: 1rem;
     }
-    
+
     .custom-dialog-title {
       font-size: 1.5rem;
       font-weight: 700;
@@ -70,14 +74,14 @@
       text-align: center;
       margin-bottom: 0.5rem;
     }
-    
+
     .custom-dialog-message {
       color: var(--text-muted);
       text-align: center;
       line-height: 1.6;
       margin-bottom: 1.5rem;
     }
-    
+
     .custom-dialog-input {
       width: 100%;
       padding: 0.875rem;
@@ -90,17 +94,17 @@
       margin-bottom: 1.5rem;
       transition: border-color 0.3s ease;
     }
-    
+
     .custom-dialog-input:focus {
       outline: none;
       border-color: var(--primary);
     }
-    
+
     .custom-dialog-buttons {
       display: flex;
       gap: 0.75rem;
     }
-    
+
     .custom-dialog-btn {
       flex: 1;
       padding: 0.875rem;
@@ -111,32 +115,32 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .custom-dialog-btn.primary {
       background: var(--primary);
       color: white;
     }
-    
+
     .custom-dialog-btn.primary:hover {
       background: #019a9d;
       transform: translateY(-2px);
     }
-    
+
     .custom-dialog-btn.secondary {
       background: transparent;
       border: 2px solid var(--border);
       color: var(--text);
     }
-    
+
     .custom-dialog-btn.secondary:hover {
       border-color: var(--text);
     }
-    
+
     .custom-dialog-btn.warning {
       background: #ef4444;
       color: white;
     }
-    
+
     .custom-dialog-btn.warning:hover {
       background: #dc2626;
     }
@@ -164,10 +168,10 @@
   <!-- Hero -->
   <section class="store-hero">
     <div class="store-hero-content">
-      <div class="store-badge">✨ Support the Server</div>
+      <div class="store-icon">🛒</div>
       <h1>Server Store</h1>
       <p>Unlock exclusive ranks and perks to enhance your Double A SMP experience</p>
-      
+
       <!-- Username Display/Sign-in -->
       <div id="username-display" style="margin-top: 2rem;">
         <!-- Will be populated by JavaScript -->
@@ -185,12 +189,14 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="container">
+  <main class="container page-content">
     <!-- Ranks Section -->
     <section id="ranks" class="products-section">
       <h2 class="section-title">Server Ranks</h2>
-      <p class="section-subtitle">Server ranks with progressive perks - Click any rank for full details</p>
-      
+      <p class="section-subtitle">Explore our various membership tiers, each packed with special perks and privileges
+        designed to make your gaming experience even more enjoyable.<br>Click any rank for full details
+      </p>
+
       <div class="products-grid" id="ranks-grid">
         <!-- Populated by JavaScript -->
       </div>
@@ -200,7 +206,7 @@
     <section id="crates" class="products-section">
       <h2 class="section-title">Mystery Crates</h2>
       <p class="section-subtitle">Random rewards and rare items</p>
-      
+
       <div class="products-grid" id="crates-grid">
         <!-- Populated by JavaScript -->
       </div>
@@ -210,7 +216,7 @@
     <section id="cosmetics" class="products-section">
       <h2 class="section-title">Cosmetics & Utilities</h2>
       <p class="section-subtitle">Visual effects and convenience items</p>
-      
+
       <div class="products-grid" id="cosmetics-grid">
         <!-- Populated by JavaScript -->
       </div>
@@ -420,7 +426,7 @@
     
     async function signOut() {
       const confirmed = await customConfirm(
-        'Sign out? You\'ll need to enter your username again for purchases.',
+        'Sign out? You\'ll need to be signed in for purchases.',
         'Sign Out',
         '👋'
       );
@@ -782,9 +788,10 @@
               ${rank.priceSubscriptionDisplay}
             </button>
           </div>
-          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                   onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-            🎁 Gift One-Time Purchase
+            <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+            <span>Gift One-Time Purchase</span>
           </button>
         `;
       } else {
@@ -793,9 +800,10 @@
           <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
             Purchase ${rank.priceDisplay}
           </button>
-          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+          <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                   onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-            🎁 Purchase as Gift
+            <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+            <span>Purchase as Gift</span>
           </button>
         `;
       }
@@ -817,9 +825,10 @@
         <button class="buy-btn" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
           Purchase $${price.toFixed(2)}
         </button>
-        <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
+        <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                 onclick="purchaseAsGift(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
-          🎁 Purchase as Gift
+          <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+          <span>Purchase as Gift</span>
         </button>
       `;
       document.getElementById('modal').classList.add('active');
@@ -857,4 +866,5 @@
     });
   </script>
 </body>
+
 </html>

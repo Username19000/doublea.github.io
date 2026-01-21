@@ -5,11 +5,11 @@
 const STORE_CONFIG = {
   // Tebex Headless API Token (ONLY for purchasing)
   tebexPublicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30',
-  
+
   // Server details
   serverIp: 'play.doubleasmp.net',
   discordInvite: 'https://discord.com/invite/h2jQRcEYvs',
-  
+
   // Define YOUR packages with YOUR layout
   ranks: [
     {
@@ -20,13 +20,13 @@ const STORE_CONFIG = {
       badgeClass: '',
       price: 5.00,
       priceDisplay: '$5.00',
-      description: 'Start your journey with essential perks',
+      description: ' Start your journey with basic perks',
       image: null, // or 'images/resident.png'
-      
+
       // Tebex package IDs (for purchasing)
       packageId: 7235170, // Replace with YOUR one-time package ID
       subscriptionId: null, // If you have subscription version
-      
+
       // Custom perks (YOUR content)
       inGamePerks: [
         '[Resident] prefix in chat and tab list',
@@ -34,19 +34,22 @@ const STORE_CONFIG = {
         'Access to /tpahere command',
         'Access to animation commands',
         'Ability to set up to 3 homes',
-        'Ability to set up to 7 shops',
+        'Ability to set up to 7 shops', {
+          text: '[Pioneer] prefix in chat',
+          image: 'images/pioneer-prefix.png'
+        },
         'Ability to lock up to 15 blocks/entities',
         'Ability to claim up to 15 chunks'
+      ],
+      landPerks: [
+        'Up to 15 chunk claims',
+        'Basic land protection'
       ],
       discordPerks: [
         'Resident hoisted Discord role',
         'Access VIP Chat',
         'Access VIP Lounge',
         'Access Leaks channel'
-      ],
-      landPerks: [
-        'Up to 15 chunk claims',
-        'Basic land protection'
       ]
     },
     {
@@ -199,7 +202,7 @@ const STORE_CONFIG = {
       ]
     }
   ],
-  
+
   crates: [
     {
       name: 'Common Crate Key',
@@ -235,7 +238,7 @@ const STORE_CONFIG = {
       subscriptionId: null
     }
   ],
-  
+
   cosmetics: [
     {
       name: 'Particle Effects',

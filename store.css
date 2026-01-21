@@ -103,18 +103,24 @@ body {
   margin: 0 auto;
 }
 
-.store-badge {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: rgba(1, 161, 164, 0.1);
-  border: 1px solid rgba(1, 161, 164, 0.3);
-  border-radius: 50px;
-  color: var(--primary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1.5rem;
+.store-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .store-hero h1 {
@@ -144,10 +150,11 @@ body {
 
 .category-list {
   display: flex;
+  justify-content: center;
   gap: 1rem;
   list-style: none;
   overflow-x: auto;
-  padding: 0 2rem;
+  padding: 0.75rem;
   max-width: 1400px;
   margin: 0 auto;
 }
