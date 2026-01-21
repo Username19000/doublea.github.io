@@ -11,8 +11,136 @@
   <!-- Tebex.js for embedded checkout -->
   <script src="https://js.tebex.io/v/1.js" defer></script>
   
+  <!-- Store Configuration -->
+  <script src="store-config.js"></script>
+  
   <!-- External CSS -->
   <link rel="stylesheet" href="store.css">
+  
+  <style>
+    /* Custom Alert/Prompt Modals */
+    .custom-dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .custom-dialog-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .custom-dialog {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    .custom-dialog-overlay.active .custom-dialog {
+      transform: scale(1) translateY(0);
+    }
+    
+    .custom-dialog-icon {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .custom-dialog-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .custom-dialog-message {
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .custom-dialog-input {
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--dark);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: var(--font-display);
+      margin-bottom: 1.5rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .custom-dialog-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .custom-dialog-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .custom-dialog-btn {
+      flex: 1;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .custom-dialog-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .custom-dialog-btn.primary:hover {
+      background: #019a9d;
+      transform: translateY(-2px);
+    }
+    
+    .custom-dialog-btn.secondary {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    
+    .custom-dialog-btn.secondary:hover {
+      border-color: var(--text);
+    }
+    
+    .custom-dialog-btn.warning {
+      background: #ef4444;
+      color: white;
+    }
+    
+    .custom-dialog-btn.warning:hover {
+      background: #dc2626;
+    }
+  </style>
 </head>
 
 <body>
@@ -50,9 +178,9 @@
   <!-- Category Navigation -->
   <nav class="category-nav">
     <ul class="category-list">
-      <li><a href="#ranks" class="category-item active" onclick="scrollToSection('ranks')">🎖️ Ranks</a></li>
-      <li><a href="#crates" class="category-item" onclick="scrollToSection('crates')">📦 Crates</a></li>
-      <li><a href="#cosmetics" class="category-item" onclick="scrollToSection('cosmetics')">✨ Cosmetics</a></li>
+      <li><a href="#ranks" class="category-item active" onclick="scrollToSection('ranks', event)">🎖️ Ranks</a></li>
+      <li><a href="#crates" class="category-item" onclick="scrollToSection('crates', event)">📦 Crates</a></li>
+      <li><a href="#cosmetics" class="category-item" onclick="scrollToSection('cosmetics', event)">✨ Cosmetics</a></li>
     </ul>
   </nav>
 
@@ -64,8 +192,7 @@
       <p class="section-subtitle">Server ranks with progressive perks - Click any rank for full details</p>
       
       <div class="products-grid" id="ranks-grid">
-        <!-- YOUR CUSTOM RANK CARDS GO HERE -->
-        <!-- I'll add JavaScript to make them purchasable with Headless API -->
+        <!-- Populated by JavaScript -->
       </div>
     </section>
 
@@ -75,7 +202,7 @@
       <p class="section-subtitle">Random rewards and rare items</p>
       
       <div class="products-grid" id="crates-grid">
-        <!-- YOUR CUSTOM CRATE CARDS -->
+        <!-- Populated by JavaScript -->
       </div>
     </section>
 
@@ -85,7 +212,7 @@
       <p class="section-subtitle">Visual effects and convenience items</p>
       
       <div class="products-grid" id="cosmetics-grid">
-        <!-- YOUR CUSTOM COSMETIC CARDS -->
+        <!-- Populated by JavaScript -->
       </div>
     </section>
   </main>
@@ -105,6 +232,45 @@
     </div>
   </div>
 
+  <!-- Custom Alert Dialog -->
+  <div class="custom-dialog-overlay" id="custom-alert">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="alert-icon">⚠️</div>
+      <div class="custom-dialog-title" id="alert-title">Alert</div>
+      <div class="custom-dialog-message" id="alert-message"></div>
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn primary" id="alert-ok-btn" onclick="closeCustomAlert()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Prompt Dialog -->
+  <div class="custom-dialog-overlay" id="custom-prompt">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="prompt-icon">🎁</div>
+      <div class="custom-dialog-title" id="prompt-title">Enter Information</div>
+      <div class="custom-dialog-message" id="prompt-message"></div>
+      <input type="text" class="custom-dialog-input" id="prompt-input" placeholder="">
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn secondary" onclick="closeCustomPrompt(false)">Cancel</button>
+        <button class="custom-dialog-btn primary" onclick="closeCustomPrompt(true)">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirm Dialog -->
+  <div class="custom-dialog-overlay" id="custom-confirm">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="confirm-icon">❓</div>
+      <div class="custom-dialog-title" id="confirm-title">Confirm</div>
+      <div class="custom-dialog-message" id="confirm-message"></div>
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn secondary" onclick="closeCustomConfirm(false)">Cancel</button>
+        <button class="custom-dialog-btn primary" onclick="closeCustomConfirm(true)">OK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -120,132 +286,92 @@
 
   <script>
     // ========================================
-    // CONFIGURATION - YOUR CUSTOM DATA
+    // CUSTOM DIALOG FUNCTIONS
     // ========================================
     
-    const STORE_CONFIG = {
-      // Tebex Headless API Token (ONLY for purchasing)
-      tebexPublicToken: '11c2h-d83f9a87902177a4fb436058df6ce2f2a0569c30',
-      
-      // Server details
-      serverIp: 'play.doubleasmp.net',
-      discordInvite: 'https://discord.com/invite/h2jQRcEYvs',
-      
-      // Define YOUR packages with YOUR layout
-      ranks: [
-        {
-          // Display info (YOU control this)
-          name: 'Resident',
-          icon: '🌱',
-          badge: 'Starter',
-          badgeClass: '',
-          price: 5.00,
-          priceDisplay: '$5.00',
-          description: 'Start your journey with essential perks',
-          image: null, // or 'images/resident.png'
-          
-          // Tebex package IDs (for purchasing)
-          packageId: 7235170, // Replace with YOUR one-time package ID
-          subscriptionId: null, // If you have subscription version
-          
-          // Custom perks (YOUR content)
-          inGamePerks: [
-            '[Resident] prefix in chat and tab list',
-            'Access to /hat command',
-            'Access to /tpahere command',
-            'Access to animation commands',
-            'Ability to set up to 3 homes',
-            'Ability to set up to 7 shops',
-            'Ability to lock up to 15 blocks/entities',
-            'Ability to claim up to 15 chunks'
-          ],
-          discordPerks: [
-            'Resident hoisted Discord role',
-            'Access VIP Chat',
-            'Access VIP Lounge',
-            'Access Leaks channel'
-          ]
-        },
-        {
-          name: 'Merchant',
-          icon: '💰',
-          badge: 'Popular',
-          badgeClass: 'popular',
-          price: 10.00,
-          priceDisplay: '$10.00',
-          description: 'Enhanced trading and land abilities',
-          image: null,
-          packageId: 0, // YOUR PACKAGE ID
-          subscriptionId: null,
-          inGamePerks: [
-            'All Resident perks',
-            '[Merchant] prefix',
-            '/back on death',
-            '5 homes',
-            '25 chunk claims'
-          ],
-          discordPerks: [
-            'Merchant Discord role',
-            'Priority support'
-          ]
-        },
-        {
-          name: 'Pioneer',
-          icon: '⚔️',
-          badge: 'Premium',
-          badgeClass: 'premium',
-          price: 30.00,
-          priceDisplay: '$30.00',
-          priceSubscription: 8.00,
-          priceSubscriptionDisplay: '$8.00/mo',
-          description: 'Unlock advanced abilities',
-          image: null,
-          packageId: 0, // YOUR ONE-TIME PACKAGE ID
-          subscriptionId: 0, // YOUR SUBSCRIPTION PACKAGE ID
-          inGamePerks: [
-            'All Merchant perks',
-            '[Pioneer] prefix',
-            'Weekly kit',
-            '/workbench command',
-            '10 homes',
-            '50 chunk claims'
-          ],
-          discordPerks: [
-            'Pioneer Discord role',
-            'Access to exclusive channels'
-          ]
+    let alertResolve = null;
+    let promptResolve = null;
+    let confirmResolve = null;
+    
+    // Custom Alert
+    function customAlert(message, title = 'Alert', icon = '⚠️') {
+      return new Promise((resolve) => {
+        alertResolve = resolve;
+        document.getElementById('alert-icon').textContent = icon;
+        document.getElementById('alert-title').textContent = title;
+        document.getElementById('alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.add('active');
+      });
+    }
+    
+    function closeCustomAlert() {
+      document.getElementById('custom-alert').classList.remove('active');
+      if (alertResolve) {
+        alertResolve();
+        alertResolve = null;
+      }
+    }
+    
+    // Custom Prompt
+    function customPrompt(message, title = 'Enter Information', placeholder = '', icon = '🎁') {
+      return new Promise((resolve) => {
+        promptResolve = resolve;
+        document.getElementById('prompt-icon').textContent = icon;
+        document.getElementById('prompt-title').textContent = title;
+        document.getElementById('prompt-message').textContent = message;
+        const input = document.getElementById('prompt-input');
+        input.placeholder = placeholder;
+        input.value = '';
+        document.getElementById('custom-prompt').classList.add('active');
+        setTimeout(() => input.focus(), 100);
+      });
+    }
+    
+    function closeCustomPrompt(confirmed) {
+      const value = confirmed ? document.getElementById('prompt-input').value : null;
+      document.getElementById('custom-prompt').classList.remove('active');
+      if (promptResolve) {
+        promptResolve(value);
+        promptResolve = null;
+      }
+    }
+    
+    // Custom Confirm
+    function customConfirm(message, title = 'Confirm', icon = '❓') {
+      return new Promise((resolve) => {
+        confirmResolve = resolve;
+        document.getElementById('confirm-icon').textContent = icon;
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-message').textContent = message;
+        document.getElementById('custom-confirm').classList.add('active');
+      });
+    }
+    
+    function closeCustomConfirm(confirmed) {
+      document.getElementById('custom-confirm').classList.remove('active');
+      if (confirmResolve) {
+        confirmResolve(confirmed);
+        confirmResolve = null;
+      }
+    }
+    
+    // Handle Enter key in prompt
+    document.getElementById('prompt-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        closeCustomPrompt(true);
+      }
+    });
+    
+    // Close on overlay click
+    document.querySelectorAll('.custom-dialog-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          if (this.id === 'custom-alert') closeCustomAlert();
+          if (this.id === 'custom-prompt') closeCustomPrompt(false);
+          if (this.id === 'custom-confirm') closeCustomConfirm(false);
         }
-        // Add more ranks...
-      ],
-      
-      crates: [
-        {
-          name: 'Common Crate Key',
-          icon: '📦',
-          badge: null,
-          price: 2.50,
-          priceDisplay: '$2.50',
-          description: 'Basic resources and small chance at rare items',
-          packageId: 0, // YOUR PACKAGE ID
-          subscriptionId: null
-        }
-        // Add more crates...
-      ],
-      
-      cosmetics: [
-        {
-          name: 'Particle Effects',
-          icon: '✨',
-          badge: null,
-          price: 5.00,
-          priceDisplay: '$5.00',
-          description: 'Unique visual effects',
-          packageId: 0,
-          subscriptionId: null
-        }
-        // Add more cosmetics...
-      ]
-    };
+      });
+    });
 
     // ========================================
     // USERNAME MANAGEMENT
@@ -278,12 +404,12 @@
       }
     }
     
-    function signIn() {
+    async function signIn() {
       const input = document.getElementById('username-signin-input');
       const username = input.value.trim();
       
       if (!username) {
-        alert('Please enter your Minecraft username');
+        await customAlert('Please enter your Minecraft username', 'Username Required', '⚠️');
         return;
       }
       
@@ -292,8 +418,14 @@
       renderUsernameDisplay();
     }
     
-    function signOut() {
-      if (confirm('Sign out? You\'ll need to enter your username again for purchases.')) {
+    async function signOut() {
+      const confirmed = await customConfirm(
+        'Sign out? You\'ll need to enter your username again for purchases.',
+        'Sign Out',
+        '👋'
+      );
+      
+      if (confirmed) {
         currentUsername = '';
         localStorage.removeItem('minecraft_username');
         renderUsernameDisplay();
@@ -351,8 +483,6 @@
         };
       }
       
-      console.log('Adding package to basket:', requestBody);
-      
       const response = await fetch(
         `https://headless.tebex.io/api/baskets/${basketIdent}/packages`,
         {
@@ -366,13 +496,11 @@
       );
       
       if (!response.ok) {
-        // Get detailed error message from Tebex
         let errorMessage = `HTTP ${response.status}`;
         try {
           const errorData = await response.json();
-          console.log('Tebex error response:', errorData);
           
-          // Extract the actual error message - Tebex uses 'detail' field
+          // Extract error from Tebex response
           if (errorData.detail) {
             errorMessage = errorData.detail;
           } else if (errorData.error_message) {
@@ -381,16 +509,7 @@
             errorMessage = errorData.message;
           } else if (errorData.title) {
             errorMessage = errorData.title;
-          } else if (errorData.errors && typeof errorData.errors === 'object') {
-            // Sometimes errors are in an object
-            const firstError = Object.values(errorData.errors)[0];
-            if (Array.isArray(firstError)) {
-              errorMessage = firstError[0];
-            } else {
-              errorMessage = firstError;
-            }
           }
-          
         } catch (e) {
           errorMessage = `${response.status}: ${response.statusText}`;
         }
@@ -405,9 +524,9 @@
         // Determine username
         let username = forUsername;
         
-        // If no username passed (gift purchase), current user must be signed in
+        // If no username passed, current user must be signed in
         if (!username && !currentUsername) {
-          alert('⚠️ Please sign in with your Minecraft username first!');
+          await customAlert('Please sign in with your Minecraft username first!', 'Sign In Required', '⚠️');
           return;
         }
         
@@ -458,15 +577,19 @@
         
       } catch (error) {
         console.error('Purchase error:', error);
-        alert(`⚠️ Failed to start checkout:\n\n${error.message}\n\nPlease try again or contact support.`);
+        await customAlert(error.message, 'Failed to Start Checkout', '❌');
       }
     }
     
-    function purchaseAsGift(packageId, packageName, price, isSubscription) {
-      const recipientUsername = prompt('🎁 Enter the recipient\'s Minecraft username:');
+    async function purchaseAsGift(packageId, packageName, price, isSubscription) {
+      const recipientUsername = await customPrompt(
+        'Enter the recipient\'s Minecraft username:',
+        'Gift Purchase',
+        'Minecraft Username',
+        '🎁'
+      );
       
       if (!recipientUsername || !recipientUsername.trim()) {
-        alert('Gift cancelled - no username entered');
         return;
       }
       
@@ -568,6 +691,7 @@
       const grid = document.getElementById('crates-grid');
       grid.innerHTML = STORE_CONFIG.crates.map(crate => `
         <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false)">
+          ${crate.badge ? `<span class="product-badge ${crate.badgeClass}">${crate.badge}</span>` : ''}
           <div class="product-icon">${crate.icon}</div>
           <h3 class="product-title">${crate.name}</h3>
           <div class="product-price">${crate.priceDisplay}</div>
@@ -580,6 +704,7 @@
       const grid = document.getElementById('cosmetics-grid');
       grid.innerHTML = STORE_CONFIG.cosmetics.map(item => `
         <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false)">
+          ${item.badge ? `<span class="product-badge ${item.badgeClass}">${item.badge}</span>` : ''}
           <div class="product-icon">${item.icon}</div>
           <h3 class="product-title">${item.name}</h3>
           <div class="product-price">${item.priceDisplay}</div>
@@ -630,11 +755,22 @@
         `;
       }
       
+      if (rank.landPerks) {
+        bodyHtml += `
+          <div class="perk-section landPerks">
+            <h3 class="perk-section-title">Land & Claims</h3>
+            <ul class="perk-list">
+              ${rank.landPerks.map(p => `<li><span class="perk-icon">✓</span><span>${p}</span></li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
       document.getElementById('modal-body').innerHTML = bodyHtml;
       
       let footerHtml = '';
       if (rank.subscriptionId) {
-        // Dual buttons with gift option below
+        // Dual buttons - only one-time can be gifted
         footerHtml = `
           <div class="button-group">
             <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
@@ -647,8 +783,8 @@
             </button>
           </div>
           <button class="buy-btn" style="background: var(--secondary); margin-top: 1rem;" 
-                  onclick="event.stopPropagation(); const isOneTime = confirm('Purchase as gift:\\n\\nClick OK for One-Time (${rank.priceDisplay})\\nClick Cancel for Subscription (${rank.priceSubscriptionDisplay})'); purchaseAsGift(isOneTime ? ${rank.packageId} : ${rank.subscriptionId}, '${rank.name.replace(/'/g, "\\'")}', isOneTime ? ${rank.price} : ${rank.priceSubscription}, !isOneTime);">
-            🎁 Purchase as Gift
+                  onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+            🎁 Gift One-Time Purchase
           </button>
         `;
       } else {
@@ -693,7 +829,8 @@
       document.getElementById('modal').classList.remove('active');
     }
     
-    function scrollToSection(id) {
+    function scrollToSection(id, event) {
+      event.preventDefault();
       const el = document.getElementById(id);
       if (el) {
         const offset = 150;
