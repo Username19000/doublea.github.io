@@ -217,7 +217,7 @@ const STORE_CONFIG = {
         'Ability to screenshare',
         'Ability to send images in #general',
         'Ability to send in-game messages through Discord',
-        'Ability to create a private VC with up to 10 other people',
+        'Ability to create a private VC with up to 15 other people',
         'Receive kit notifications in Discord',
         'Request a custom named role'
       ]
@@ -227,29 +227,61 @@ const STORE_CONFIG = {
       icon: '👑',
       badge: '',
       badgeClass: '',
-      price: 75.00,
-      priceDisplay: '$75.00',
-      priceSubscription: 18.00,
-      priceSubscriptionDisplay: '$18.00/mo',
-      description: 'Master the environment controlling time, weather, and storage.',
-      image: null,
+      price: 60.00,
+      priceDisplay: '$60.00',
+      priceSubscription: 20.00,
+      priceSubscriptionDisplay: '$20.00/mo',
+      description: 'Master time, weather, and storage',
+      image: 'images/Sentinel_Logo.png',
       packageId: 7235985,
       subscriptionId: 7235987,
       inGamePerks: [
-        'All Guardian perks',
-        '[Sovereign] prefix',
-        'Keep inventory on death',
-        '35 homes',
-        '100 chunk claims',
-        '/fly in claimed land'
+        {
+          text: 'prefix in chat and tab list',
+          image: 'images/Sentinel_GameTag.png'  // ← Resident's own image
+        },
+        'Access to /kit guardian',
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Access to /craft to use a virtual table',
+        'Access to /nick to set a colored in-game nickname',
+        'Access to /trash to access a virtual can',
+        'Access to /anvil, /grindstone, /stonecutter, /loom, /smithtable use virtual menus',
+        'Access to /condense to quickly turn all nuggets and ingots into blocks',
+        'Access to bypass /spawn timer',
+        'Access to /ptime and /pweather to change your surroundings',
+        'Access to /enderchest to access your ender chest from anywhere',
+        'Ability to use colors and formatting on signs',
+        'Ability to ride ontop of other players',
+        'Ability to store player XP in bottles',
+        'Set up to 20 homes',
+        'Set up to 30 shops',
+        'Lock up to 35 blocks/entities',
+      ],
+
+      landPerks: [
+        'Be a member of up to 20 lands',
+        'Claim up to 30 chunks in your land to start',
+        'Have up to 40 members in your land',
+        'Have up to 10 areas in your land',
+        'Have up to 18 roles in your land',
+        'Grant 13 additional claimable chunks to each land you are in'
+        
       ],
       discordPerks: [
-        'Sovereign Discord role',
-        'Exclusive Sovereign lounge'
-      ],
-      landPerks: [
-        'Up to 100 chunk claims',
-        'Maximum land control'
+        'Guardian hoisted Discord role',
+        'Access VIP Chat',
+        'Access VIP Lounge',
+        'Access Leaks channel',
+        'Access to priority support',
+        'Access to High-Tier Lounge',
+        'Ability to screenshare',
+        'Ability to send images in #general',
+        'Ability to send in-game messages through Discord',
+        'Ability to create a private VC with up to 25 other people',
+        'Receive kit notifications in Discord',
+        'Request a custom named role as your highest role'
       ]
     },
     {
@@ -257,31 +289,62 @@ const STORE_CONFIG = {
       icon: '⚡',
       badge: 'Best Value',
       badgeClass: 'popular',
-      price: 100.00,
-      priceDisplay: '$100.00',
+      price: 75.00,
+      priceDisplay: '$75.00',
       priceSubscription: 25.00,
       priceSubscriptionDisplay: '$25.00/mo',
-      description: 'The ultimate rank with all perks',
-      image: null,
+      description: 'Rule with maximum limits and perks',
+      image: 'images/Overlord_Logo.png',
       packageId: 7236047,
       subscriptionId: 7236050,
       inGamePerks: [
-        'All Sovereign perks',
-        '[Overlord] prefix',
-        'Unlimited homes',
-        '150 chunk claims',
-        '/fly everywhere',
-        'Custom join/quit messages',
-        'All cosmetics'
+        {
+          text: 'prefix in chat and tab list',
+          image: 'images/Overlord_GameTag.png'  // ← Resident's own image
+        },
+        'Access to /kit guardian',
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Access to /craft to use a virtual table',
+        'Access to /nick to set a colored in-game nickname',
+        'Access to /trash to access a virtual can',
+        'Access to /anvil, /grindstone, /stonecutter, /loom, /smithtable use virtual menus',
+        'Access to /condense to quickly turn all nuggets and ingots into blocks',
+        'Access to bypass /spawn timer',
+        'Access to /ptime and /pweather to change your surroundings',
+        'Access to /enderchest to access your ender chest from anywhere',
+        'Ability to use colors and formatting on signs',
+        'Ability to ride ontop of other players',
+        'Ability to store player XP in bottles',
+        'Set up to 30 homes',
+        'Set up to 40 shops',
+        'Lock up to 40 blocks/entities',
+      ],
+
+      landPerks: [
+        'Be a member of up to 25 lands',
+        'Claim up to 40 chunks in your land to start',
+        'Have up to 50 members in your land',
+        'Have up to 15 areas in your land',
+        'Have up to 18 roles in your land',
+        'Grant 15 additional claimable chunks to each land you are in',
+        'Rule over two lands simultaneously'
+        
       ],
       discordPerks: [
-        'Overlord Discord role',
-        'Special Overlord badge',
-        'All Discord perks'
-      ],
-      landPerks: [
-        'Up to 150 chunk claims',
-        'Complete land mastery'
+        'Guardian hoisted Discord role',
+        'Access VIP Chat',
+        'Access VIP Lounge',
+        'Access Leaks channel',
+        'Access to priority support',
+        'Access to High-Tier Lounge',
+        'Ability to screenshare',
+        'Ability to send images in #general',
+        'Ability to send in-game messages through Discord',
+        'Ability to create a private VC with no person limit',
+        'Receive kit notifications in Discord',
+        'Request two custom named roles as your highest roles'
       ]
     }
   ],
