@@ -766,12 +766,12 @@
         `;
       }
       
-      if (rank.discordPerks) {
+if (rank.landPerks) {
         bodyHtml += `
-          <div class="perk-section">
-            <h3 class="perk-section-title">Discord Perks</h3>
+          <div class="perk-section landPerks">
+            <h3 class="perk-section-title">Land Perks</h3>
             <ul class="perk-list">
-              ${rank.discordPerks.map(p => {
+              ${rank.landPerks.map(p => {
                 if (typeof p === 'object' && p.text) {
                   return `
                     <li style="display: flex; align-items: center; gap: 0.75rem;">
@@ -787,13 +787,13 @@
           </div>
         `;
       }
-      
-      if (rank.landPerks) {
+
+      if (rank.discordPerks) {
         bodyHtml += `
-          <div class="perk-section landPerks">
-            <h3 class="perk-section-title">Land & Claims</h3>
+          <div class="perk-section">
+            <h3 class="perk-section-title">Discord Perks</h3>
             <ul class="perk-list">
-              ${rank.landPerks.map(p => {
+              ${rank.discordPerks.map(p => {
                 if (typeof p === 'object' && p.text) {
                   return `
                     <li style="display: flex; align-items: center; gap: 0.75rem;">
