@@ -282,6 +282,12 @@ body {
   color: #a855f7;
 }
 
+.product-badge.ultimate {
+  background: rgba(234, 51, 51, 0.15);
+  border-color: #b41619;
+  color: #e80509;
+}
+
 .product-title {
   font-size: 1.5rem;
   font-weight: 700;
