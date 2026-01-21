@@ -33,6 +33,7 @@ const STORE_CONFIG = {
           text: 'prefix in chat and tab list',
           image: 'images/Resident_GameTag.png'  // ← Resident's own image
         },
+        'Access to /kit resident',
         'Access to /hat to put any item/block on your head',
         'Access to /tpahere to bring players to you',
         'Access to all animation commands to sit, lie, or crawl anywhere',
@@ -68,87 +69,161 @@ const STORE_CONFIG = {
       price: 10.00,
       priceDisplay: '$10.00',
       description: 'Level up with cosmetic upgrades',
-      image: null,
-      packageId: 0, // YOUR PACKAGE ID
+      image: 'images/Merchant_Logo.png',
+      packageId: 7235226, // YOUR PACKAGE ID
       subscriptionId: null,
       inGamePerks: [
-        'All Resident perks',
-        '[Merchant] prefix',
-        '/back on death',
-        '5 homes',
-        '25 chunk claims'
+        {
+          text: 'prefix in chat and tab list',
+          image: 'images/Merchant_GameTag.png'  // ← Resident's own image
+        },
+        'Access to /kit merchant',
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Access to /craft to use a virtual table',
+        'Access to /nick to set an in-game nickname',
+        'Set up to 5 homes',
+        'Set up to 10 shops',
+        'Lock up to 20 blocks/entities',
+      ],
+
+      landPerks: [
+        'Be a member of up to 7 lands',
+        'Claim up to 15 chunks in your land to start',
+        'Have up to 25 members in your land',
+        'Have up to 7 areas in your land',
+        'Have up to 9 roles in your land',
+        'Grant 7 additional claimable chunks to each land you are in'
+        
       ],
       discordPerks: [
-        'Merchant Discord role',
-        'Priority support'
-      ],
-      landPerks: [
-        'Up to 25 chunk claims',
-        'Enhanced land protection'
+        'Merchant hoisted Discord role',
+        'Access VIP Chat',
+        'Access VIP Lounge',
+        'Access Leaks channel',
+        'Access to priority support',
+        'Ability to screenshare',
+        'Ability to send images in #general',
+        'Ability to send in-game messages through Discord',
+        'Receive kit notifications in Discord'
       ]
     },
     {
       name: 'Pioneer',
       icon: '⚔️',
-      badge: 'Premium',
-      badgeClass: 'premium',
+      badge: 'Popular',
+      badgeClass: 'popular',
       price: 30.00,
       priceDisplay: '$30.00',
-      priceSubscription: 8.00,
-      priceSubscriptionDisplay: '$8.00/mo',
-      description: 'Unlock advanced abilities',
-      image: null,
-      packageId: 0, // YOUR ONE-TIME PACKAGE ID
-      subscriptionId: 0, // YOUR SUBSCRIPTION PACKAGE ID
+      priceSubscription: 10.00,
+      priceSubscriptionDisplay: '$10.00/mo',
+      description: 'Stand out with colors and text formatting.',
+      image: 'images/Pioneer_Logo.png',
+      packageId: 7235232, // YOUR ONE-TIME PACKAGE ID
+      subscriptionId: 7235252, // YOUR SUBSCRIPTION PACKAGE ID
       inGamePerks: [
-        'All Merchant perks',
-        '[Pioneer] prefix',
-        'Weekly kit',
-        '/workbench command',
-        '10 homes',
-        '50 chunk claims'
+        {
+          text: 'prefix in chat and tab list',
+          image: 'images/Pioneer_GameTag.png'  // ← Resident's own image
+        },
+        'Access to /kit pioneer',
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Access to /craft to use a virtual table',
+        'Access to /nick to set a colored in-game nickname',
+        'Access to /trash to access a virtual can',
+        'Ability to use colors and formatting on signs',
+        'Set up to 10 homes',
+        'Set up to 15 shops',
+        'Lock up to 25 blocks/entities',
+      ],
+
+      landPerks: [
+        'Be a member of up to 10 lands',
+        'Claim up to 20 chunks in your land to start',
+        'Have up to 30 members in your land',
+        'Have up to 10 areas in your land',
+        'Have up to 18 roles in your land',
+        'Grant 10 additional claimable chunks to each land you are in'
+        
       ],
       discordPerks: [
-        'Pioneer Discord role',
-        'Access to exclusive channels'
-      ],
-      landPerks: [
-        'Up to 50 chunk claims',
-        'Advanced land features'
+        'Pioneer hoisted Discord role',
+        'Access VIP Chat',
+        'Access VIP Lounge',
+        'Access Leaks channel',
+        'Access to priority support',
+        'Access to High-Tier Lounge',
+        'Ability to screenshare',
+        'Ability to send images in #general',
+        'Ability to send in-game messages through Discord',
+        'Ability to create a private VC with up to 5 other people',
+        'Receive kit notifications in Discord'
       ]
     },
     {
       name: 'Guardian',
       icon: '🛡️',
-      badge: 'Premium',
-      badgeClass: 'premium',
-      price: 50.00,
-      priceDisplay: '$50.00',
-      priceSubscription: 12.00,
-      priceSubscriptionDisplay: '$12.00/mo',
-      description: 'Elite rank with powerful perks',
-      image: null,
-      packageId: 0,
-      subscriptionId: 0,
+      badge: 'Most Popular',
+      badgeClass: 'popular',
+      price: 45.00,
+      priceDisplay: '$45.00',
+      priceSubscription: 15.00,
+      priceSubscriptionDisplay: '$15.00/mo',
+      description: 'Access portable workstations hop on players.',
+      image: 'images/Guardian_Logo.png',
+      packageId: 7235281,
+      subscriptionId: 7235286,
       inGamePerks: [
-        'All Pioneer perks',
-        '[Guardian] prefix',
-        'Enhanced weekly kit',
-        'Keep XP on death',
-        '20 homes',
-        '75 chunk claims'
+        {
+          text: 'prefix in chat and tab list',
+          image: 'images/Guardian_GameTag.png'  // ← Resident's own image
+        },
+        'Access to /kit guardian',
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Access to /craft to use a virtual table',
+        'Access to /nick to set a colored in-game nickname',
+        'Access to /trash to access a virtual can',
+        'Access to /anvil, /grindstone, /stonecutter, /loom, /smithtable use virtual menus',
+        'Access to /condense to quickly turn all nuggets and ingots into blocks',
+        'Access to a shortened /spawn timer (3s)',
+        'Ability to use colors and formatting on signs',
+        'Ability to ride ontop of other players',
+        'Set up to 15 homes',
+        'Set up to 20 shops',
+        'Lock up to 30 blocks/entities',
+      ],
+
+      landPerks: [
+        'Be a member of up to 15 lands',
+        'Claim up to 20 chunks in your land to start',
+        'Have up to 30 members in your land',
+        'Have up to 10 areas in your land',
+        'Have up to 18 roles in your land',
+        'Grant 10 additional claimable chunks to each land you are in'
+        
       ],
       discordPerks: [
-        'Guardian Discord role',
-        'Priority queue access'
-      ],
-      landPerks: [
-        'Up to 75 chunk claims',
-        'Premium land tools'
+        'Guardian hoisted Discord role',
+        'Access VIP Chat',
+        'Access VIP Lounge',
+        'Access Leaks channel',
+        'Access to priority support',
+        'Access to High-Tier Lounge',
+        'Ability to screenshare',
+        'Ability to send images in #general',
+        'Ability to send in-game messages through Discord',
+        'Ability to create a private VC with up to 10 other people',
+        'Receive kit notifications in Discord',
+        'Request a custom named role'
       ]
     },
     {
-      name: 'Sovereign',
+      name: 'Sentinel',
       icon: '👑',
       badge: 'Premium',
       badgeClass: 'premium',
@@ -156,7 +231,7 @@ const STORE_CONFIG = {
       priceDisplay: '$75.00',
       priceSubscription: 18.00,
       priceSubscriptionDisplay: '$18.00/mo',
-      description: 'Supreme rank with exclusive abilities',
+      description: 'Master the environment controlling time, weather, and storage.',
       image: null,
       packageId: 0,
       subscriptionId: 0,
