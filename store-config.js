@@ -29,15 +29,15 @@ const STORE_CONFIG = {
 
       // Custom perks (YOUR content)
       inGamePerks: [
-        '[Resident] prefix in chat and tab list',
+        {
+          text: '[Resident] prefix in chat and tab list',
+          image: 'images/resident_gametag.png'  // ← Resident's own image
+        },
         'Access to /hat command',
         'Access to /tpahere command',
         'Access to animation commands',
         'Ability to set up to 3 homes',
-        'Ability to set up to 7 shops', {
-          text: '[Pioneer] prefix in chat',
-          image: 'images/pioneer-prefix.png'
-        },
+        'Ability to set up to 7 shops',
         'Ability to lock up to 15 blocks/entities',
         'Ability to claim up to 15 chunks'
       ],
