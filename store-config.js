@@ -21,7 +21,7 @@ const STORE_CONFIG = {
       price: 5.00,
       priceDisplay: '$5.00',
       description: ' Start your journey with basic perks',
-      image: null, // or 'images/resident.png'
+      image: 'images/Resident_Logo.png', // or 'images/resident.png'
 
       // Tebex package IDs (for purchasing)
       packageId: 7235170, // Replace with YOUR one-time package ID
@@ -33,33 +33,41 @@ const STORE_CONFIG = {
           text: 'prefix in chat and tab list',
           image: 'images/Resident_GameTag.png'  // ← Resident's own image
         },
-        'Access to /hat command',
-        'Access to /tpahere command',
-        'Access to animation commands',
-        'Ability to set up to 3 homes',
-        'Ability to set up to 7 shops',
-        'Ability to lock up to 15 blocks/entities',
-        'Ability to claim up to 15 chunks'
+        'Access to /hat to put any item/block on your head',
+        'Access to /tpahere to bring players to you',
+        'Access to all animation commands to sit, lie, or crawl anywhere',
+        'Set up to 3 homes',
+        'Set up to 7 shops',
+        'Lock up to 15 blocks/entities',
       ],
+
       landPerks: [
-        'Up to 15 chunk claims',
-        'Basic land protection'
+        'Be a member of up to 5 lands',
+        'Claim up to 15 chunks in your land to start',
+        'Have up to 25 members in your land',
+        'Have up to 7 areas in your land',
+        'Have up to 9 roles in your land',
+        'Grant 7 additional claimable chunks to each land you are in'
+        
       ],
       discordPerks: [
         'Resident hoisted Discord role',
         'Access VIP Chat',
         'Access VIP Lounge',
-        'Access Leaks channel'
+        'Access Leaks channel',
+        'Access to priority support',
+        'Ability to screenshare',
+        'Ability to send images in #general'
       ]
     },
     {
       name: 'Merchant',
       icon: '💰',
-      badge: 'Popular',
-      badgeClass: 'popular',
+      badge: 'Starter',
+      badgeClass: '',
       price: 10.00,
       priceDisplay: '$10.00',
-      description: 'Enhanced trading and land abilities',
+      description: 'Level up with cosmetic upgrades',
       image: null,
       packageId: 0, // YOUR PACKAGE ID
       subscriptionId: null,
