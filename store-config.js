@@ -30,8 +30,8 @@ const STORE_CONFIG = {
       // Custom perks (YOUR content)
       inGamePerks: [
         {
-          text: '[Resident] prefix in chat and tab list',
-          image: 'images/resident_gametag.png'  // ← Resident's own image
+          text: 'prefix in chat and tab list',
+          image: 'images/Resident_GameTag.png'  // ← Resident's own image
         },
         'Access to /hat command',
         'Access to /tpahere command',
