@@ -48,6 +48,42 @@
     }
   </style>
 
+  <!-- Tebex Modal Overrides for Mobile -->
+  <style>
+    /* Ensure Tebex checkout modal works on mobile and has proper z-index */
+    .tebex-checkout-wrapper,
+    .tebex-checkout-modal,
+    [class*="tebex-checkout"],
+    iframe[src*="checkout.tebex.io"] {
+      position: fixed !important;
+      z-index: 9999 !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      border: none !important;
+    }
+
+    /* Tebex overlay */
+    .tebex-checkout-overlay,
+    [class*="tebex"][class*="overlay"] {
+      position: fixed !important;
+      z-index: 9998 !important;
+      background: rgba(0, 0, 0, 0.8) !important;
+    }
+
+    /* Make sure Tebex content is scrollable on mobile */
+    @media (max-width: 768px) {
+      .tebex-checkout-modal,
+      .tebex-checkout-wrapper {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+    }
+  </style>
+
   <!-- 
     Custom Dialog Styles
     NOTE: These styles are inline because they define the custom modal dialogs
@@ -563,7 +599,29 @@
 
         console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
 
-        // Show loading
+        // Show loading overlay
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10001;
+        `;
+        loadingOverlay.innerHTML = `
+          <div style="text-align: center; color: var(--text);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⏳</div>
+            <p style="font-size: 1.25rem;">Preparing checkout...</p>
+          </div>
+        `;
+        document.body.appendChild(loadingOverlay);
+
+        // Close modal if open
         const modal = document.getElementById('modal');
         const wasModalOpen = modal.classList.contains('active');
         if (wasModalOpen) closeModal();
@@ -576,26 +634,40 @@
         await addPackageToBasket(basket.ident, packageId);
         console.log('✓ Package added');
 
+        // Detect if mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+        // Remove loading overlay
+        document.body.removeChild(loadingOverlay);
+
         // Launch checkout
         if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
-          Tebex.checkout.init({
-            ident: basket.ident,
-            theme: 'dark',
-            colors: [
-              { name: "primary", color: "#01a1a4" },
-              { name: "secondary", color: "#f2b841" }
-            ]
-          });
+          if (isMobile) {
+            // On mobile, redirect directly to checkout page (avoids popup blockers)
+            console.log('Mobile detected, using redirect mode');
+            const checkoutUrl = `https://checkout.tebex.io/checkout/${basket.ident}`;
+            window.location.href = checkoutUrl;
+          } else {
+            // On desktop, use modal
+            Tebex.checkout.init({
+              ident: basket.ident,
+              theme: 'dark',
+              colors: [
+                { name: "primary", color: "#01a1a4" },
+                { name: "secondary", color: "#f2b841" }
+              ]
+            });
 
-          Tebex.checkout.launch();
+            Tebex.checkout.launch();
 
-          // Success handler
-          const isGift = (forUsername && forUsername !== currentUsername);
-          const handler = function (event) {
-            window.removeEventListener('tebex:checkout:complete', handler);
-            showSuccessModal(packageName, price, username, isSubscription, isGift);
-          };
-          window.addEventListener('tebex:checkout:complete', handler);
+            // Success handler
+            const isGift = (forUsername && forUsername !== currentUsername);
+            const handler = function (event) {
+              window.removeEventListener('tebex:checkout:complete', handler);
+              showSuccessModal(packageName, price, username, isSubscription, isGift);
+            };
+            window.addEventListener('tebex:checkout:complete', handler);
+          }
 
         } else {
           throw new Error('Tebex.js not loaded');
@@ -603,6 +675,11 @@
 
       } catch (error) {
         console.error('Purchase error:', error);
+        // Remove loading overlay if it exists
+        const loadingOverlay = document.querySelector('div[style*="z-index: 10001"]');
+        if (loadingOverlay) {
+          document.body.removeChild(loadingOverlay);
+        }
         await customAlert(error.message, 'Failed to Start Checkout', '❌');
       }
     }
