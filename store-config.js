@@ -351,21 +351,19 @@ const STORE_CONFIG = {
 
   crates: [
     {
-      name: 'Cash Crate #1 Key',
+      name: 'Common Crate Key',
       icon: '📦',
-      image: 'images/DollarCrate1_Logo.png', // or 'images/common_crate.png'
-      badge: 'Best Farms',
-      badgeClass: 'premium',
-      price: 15.00,
-      priceDisplay: '$15.00',
-      description: 'Get a random tier of the highest level farm',
-      packageId: 7236791, // YOUR PACKAGE ID
+      badge: null,
+      badgeClass: '',
+      price: 2.50,
+      priceDisplay: '$2.50',
+      description: 'Basic resources and small chance at rare items',
+      packageId: 0, // YOUR PACKAGE ID
       subscriptionId: null
     },
     {
       name: 'Rare Crate Key',
       icon: '💎',
-      image: null, // or 'images/rare_crate.png'
       badge: 'Popular',
       badgeClass: 'popular',
       price: 5.00,
@@ -377,7 +375,6 @@ const STORE_CONFIG = {
     {
       name: 'Legendary Crate Key',
       icon: '⭐',
-      image: null, // or 'images/legendary_crate.png'
       badge: 'Premium',
       badgeClass: 'premium',
       price: 10.00,
@@ -392,7 +389,6 @@ const STORE_CONFIG = {
     {
       name: 'Particle Effects',
       icon: '✨',
-      image: null, // or 'images/particles.png'
       badge: null,
       badgeClass: '',
       price: 5.00,
@@ -404,7 +400,6 @@ const STORE_CONFIG = {
     {
       name: 'Pet Companion',
       icon: '🐾',
-      image: null, // or 'images/pet.png'
       badge: 'Popular',
       badgeClass: 'popular',
       price: 7.50,
@@ -416,7 +411,6 @@ const STORE_CONFIG = {
     {
       name: 'Chat Colors',
       icon: '🎨',
-      image: null, // or 'images/chat_colors.png'
       badge: null,
       badgeClass: '',
       price: 3.00,
