@@ -731,9 +731,12 @@
     function renderCrates() {
       const grid = document.getElementById('crates-grid');
       grid.innerHTML = STORE_CONFIG.crates.map(crate => `
-        <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false)">
+        <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false, '${crate.image || ''}', '${crate.icon}')">
           ${crate.badge ? `<span class="product-badge ${crate.badgeClass}">${crate.badge}</span>` : ''}
-          <div class="product-icon">${crate.icon}</div>
+          ${crate.image ? 
+            `<img src="${crate.image}" alt="${crate.name}" class="product-image">` : 
+            `<div class="product-icon">${crate.icon}</div>`
+          }
           <h3 class="product-title">${crate.name}</h3>
           <div class="product-price">${crate.priceDisplay}</div>
           <p class="product-description">${crate.description}</p>
@@ -744,9 +747,12 @@
     function renderCosmetics() {
       const grid = document.getElementById('cosmetics-grid');
       grid.innerHTML = STORE_CONFIG.cosmetics.map(item => `
-        <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false)">
+        <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false, '${item.image || ''}', '${item.icon}')">
           ${item.badge ? `<span class="product-badge ${item.badgeClass}">${item.badge}</span>` : ''}
-          <div class="product-icon">${item.icon}</div>
+          ${item.image ? 
+            `<img src="${item.image}" alt="${item.name}" class="product-image">` : 
+            `<div class="product-icon">${item.icon}</div>`
+          }
           <h3 class="product-title">${item.name}</h3>
           <div class="product-price">${item.priceDisplay}</div>
           <p class="product-description">${item.description}</p>
@@ -884,12 +890,17 @@
       document.getElementById('modal').classList.add('active');
     }
 
-    function openSimpleModal(name, packageId, price, isSub) {
+    function openSimpleModal(name, packageId, price, isSub, image = '', icon = '') {
       const modalHeader = document.getElementById('modal-header');
       const modalFooter = document.getElementById('modal-footer');
       if (modalHeader) modalHeader.style.display = 'block';
       if (modalFooter) modalFooter.style.display = 'block';
 
+      // Display image or icon in modal
+      document.getElementById('modal-icon').innerHTML = image ? 
+        `<img src="${image}" class="modal-image">` : 
+        `<div style="font-size: 4rem;">${icon}</div>`;
+      
       document.getElementById('modal-title').textContent = name;
       document.getElementById('modal-price').textContent = `$${price.toFixed(2)}`;
       document.getElementById('modal-body').innerHTML = `<p style="text-align: center; color: var(--text-muted);">Click purchase to continue</p>`;
