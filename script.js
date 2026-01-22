@@ -1,74 +1,10 @@
-// Mobile Menu Toggle Functionality
-function initMobileMenu() {
-// Create mobile menu toggle button
-const navContainer = document.querySelector(’.nav-container’);
-const navLinks = document.querySelector(’.nav-links’);
-
-```
-if (!navContainer || !navLinks) return;
-
-// Check if button already exists
-if (document.querySelector('.mobile-menu-toggle')) return;
-
-// Create toggle button
-const toggleBtn = document.createElement('button');
-toggleBtn.className = 'mobile-menu-toggle';
-toggleBtn.setAttribute('aria-label', 'Toggle menu');
-toggleBtn.innerHTML = '☰';
-
-// Create overlay for mobile menu
-const overlay = document.createElement('div');
-overlay.className = 'nav-overlay';
-document.body.appendChild(overlay);
-
-// Add toggle button to nav
-navContainer.appendChild(toggleBtn);
-
-// Toggle menu function
-function toggleMenu() {
-    const isOpen = navLinks.classList.contains('active');
-    
-    if (isOpen) {
-        navLinks.classList.remove('active');
-        overlay.classList.remove('active');
-        toggleBtn.innerHTML = '☰';
-        document.body.style.overflow = '';
-    } else {
-        navLinks.classList.add('active');
-        overlay.classList.add('active');
-        toggleBtn.innerHTML = '✕';
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-// Event listeners
-toggleBtn.addEventListener('click', toggleMenu);
-overlay.addEventListener('click', toggleMenu);
-
-// Close menu when clicking a link
-const navLinkItems = navLinks.querySelectorAll('a');
-navLinkItems.forEach(link => {
-    link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            toggleMenu();
-        }
-    });
-});
-
-// Close menu on window resize if open
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
-        navLinks.classList.remove('active');
-        overlay.classList.remove('active');
-        toggleBtn.innerHTML = '☰';
-        document.body.style.overflow = '';
-    }
-});
-```
-
-}
+// Main script.js - Works with component system
+// This file should load AFTER header.js and footer.js
 
 // Smooth scroll for anchor links
+document.addEventListener(‘DOMContentLoaded’, function() {
+// Wait a bit for header to be inserted
+setTimeout(function() {
 document.querySelectorAll(‘a[href^=”#”]’).forEach(anchor => {
 anchor.addEventListener(‘click’, function (e) {
 e.preventDefault();
@@ -82,6 +18,8 @@ behavior: ‘smooth’
 });
 }
 });
+});
+}, 100);
 });
 
 // Add animation on scroll
@@ -101,13 +39,9 @@ entry.target.style.transform = ‘translateY(0)’;
 
 // Observe elements for animation
 document.addEventListener(‘DOMContentLoaded’, () => {
-// Initialize mobile menu
-initMobileMenu();
+const animateElements = document.querySelectorAll(’.feature-card, .community-card, .rule-card, .guide-card, .changelog-entry, .product-card’);
 
 ```
-// Animate elements
-const animateElements = document.querySelectorAll('.feature-card, .community-card, .rule-card, .guide-card, .changelog-entry, .product-card');
-
 animateElements.forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
@@ -121,9 +55,11 @@ animateElements.forEach(el => {
 // Navbar background on scroll
 window.addEventListener(‘scroll’, () => {
 const navbar = document.querySelector(’.navbar’);
+if (navbar) {
 if (window.scrollY > 50) {
 navbar.style.background = ‘rgba(15, 23, 42, 0.98)’;
 } else {
 navbar.style.background = ‘rgba(15, 23, 42, 0.95)’;
+}
 }
 });
