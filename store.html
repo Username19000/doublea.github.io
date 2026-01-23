@@ -787,8 +787,10 @@
 
     function renderCrates() {
       const grid = document.getElementById('crates-grid');
-      grid.innerHTML = STORE_CONFIG.crates.map(crate => `
-        <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false, '${crate.image || ''}', '${crate.icon}', '${crate.modalDescription || crate.description}')">
+      grid.innerHTML = STORE_CONFIG.crates.map(crate => {
+        const desc = (crate.modalDescription || crate.description).replace(/'/g, "&apos;");
+        return `
+        <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false, '${crate.image || ''}', '${crate.icon}', '${desc}')">
           ${crate.badge ? `<span class="product-badge ${crate.badgeClass}">${crate.badge}</span>` : ''}
           ${crate.image ?
           `<img src="${crate.image}" alt="${crate.name}" class="product-image">` :
@@ -799,13 +801,15 @@
           <p class="product-description">${crate.description}</p>
           <div class="view-details-text">View Full Details →</div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function renderCosmetics() {
       const grid = document.getElementById('cosmetics-grid');
-      grid.innerHTML = STORE_CONFIG.cosmetics.map(item => `
-        <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false, '${item.image || ''}', '${item.icon}', '${item.modalDescription || item.description}')">
+      grid.innerHTML = STORE_CONFIG.cosmetics.map(item => {
+        const desc = (item.modalDescription || item.description).replace(/'/g, "&apos;");
+        return `
+        <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false, '${item.image || ''}', '${item.icon}', '${desc}')">
           ${item.badge ? `<span class="product-badge ${item.badgeClass}">${item.badge}</span>` : ''}
           ${item.image ?
           `<img src="${item.image}" alt="${item.name}" class="product-image">` :
@@ -816,7 +820,7 @@
           <p class="product-description">${item.description}</p>
           <div class="view-details-text">View Full Details →</div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function openRankModal(rankName) {
