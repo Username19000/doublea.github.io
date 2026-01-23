@@ -359,7 +359,7 @@ body {
 
 .product-badge {
   position: absolute;
-  top: 1rem;
+  top: -0.75rem;
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
@@ -373,6 +373,8 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   z-index: 10;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .product-badge.popular {
@@ -768,6 +770,12 @@ body {
   .custom-dialog-overlay {
     padding: 1rem;
   }
+
+  /* Adjust badge for tablet screens */
+  .product-badge {
+    padding: 0.25rem 2rem;
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -785,6 +793,13 @@ body {
 
   .product-title {
     font-size: 1.25rem;
+  }
+
+  /* Adjust badge for smaller screens */
+  .product-badge {
+    padding: 0.25rem 1.5rem;
+    font-size: 0.65rem;
+    top: -0.6rem;
   }
 }
 
