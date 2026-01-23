@@ -240,7 +240,7 @@ const STORE_CONFIG = {
           text: 'prefix in chat and tab list',
           image: 'images/Sentinel_GameTag.png'  // ← Resident's own image
         },
-        'Access to /kit guardian',
+        'Access to /kit sentinel',
         'Access to /hat to put any item/block on your head',
         'Access to /tpahere to bring players to you',
         'Access to all animation commands to sit, lie, or crawl anywhere',
@@ -270,7 +270,7 @@ const STORE_CONFIG = {
         
       ],
       discordPerks: [
-        'Guardian hoisted Discord role',
+        'Sentinel hoisted Discord role',
         'Access VIP Chat',
         'Access VIP Lounge',
         'Access Leaks channel',
@@ -302,7 +302,7 @@ const STORE_CONFIG = {
           text: 'prefix in chat and tab list',
           image: 'images/Overlord_GameTag.png'  // ← Resident's own image
         },
-        'Access to /kit guardian',
+        'Access to /kit overlord',
         'Access to /hat to put any item/block on your head',
         'Access to /tpahere to bring players to you',
         'Access to all animation commands to sit, lie, or crawl anywhere',
@@ -333,7 +333,7 @@ const STORE_CONFIG = {
         
       ],
       discordPerks: [
-        'Guardian hoisted Discord role',
+        'Overlord hoisted Discord role',
         'Access VIP Chat',
         'Access VIP Lounge',
         'Access Leaks channel',
@@ -359,7 +359,7 @@ const STORE_CONFIG = {
       price: 15.00,
       priceDisplay: '$15.00',
       description: 'Get a random tier of the highest level farm',
-      modalDescription: 'Unlock a random tier of our highest-level farm! This key grants you access to premium farming capabilities that will accelerate your progression on the server.',
+      modalDescription: 'Unlock a random tier of our highest-level farm! This key grants you access to receive a farm that is over 20x better than the Level 1 Farm!',
       packageId: 7236791, // YOUR PACKAGE ID
       subscriptionId: null
     },
@@ -367,31 +367,18 @@ const STORE_CONFIG = {
       name: '(3x) Cash Crate #1 Key',
       icon: '💎',
       image: 'images/3DollarCrate1Key.png', // or 'images/rare_crate.png'
-      badge: 'Popular',
+      badge: 'Best Value',
       badgeClass: 'popular',
       price: 37.50,
       priceDisplay: '$37.50',
-      description: 'Buy more for less!',
-      modalDescription: 'Open this crate to discover rare items and valuable rewards! Perfect for players looking to boost their inventory with unique and powerful gear.',
-      packageId: 0,
-      subscriptionId: null
-    },
-    {
-      name: 'Legendary Crate Key',
-      icon: '⭐',
-      image: null, // or 'images/legendary_crate.png'
-      badge: 'Premium',
-      badgeClass: 'premium',
-      price: 10.00,
-      priceDisplay: '$10.00',
-      description: 'Epic loot and exclusive items',
-      modalDescription: 'The ultimate crate experience! Contains epic loot, exclusive items, and rewards you won\'t find anywhere else. For serious collectors and adventurers.',
-      packageId: 0,
+      description: 'Get more keys for over 15% off!',
+      modalDescription: 'Get more keys while saving over 15% on your purchase! These keys grants you access to receive a farm that is over 20x better than the Level 1 Farm!',
+      packageId: 7239282,
       subscriptionId: null
     }
   ],
 
-  cosmetics: [
+/*  cosmetics: [
     {
       name: 'Particle Effects',
       icon: '✨',
@@ -432,6 +419,9 @@ const STORE_CONFIG = {
       subscriptionId: null
     }
   ]
+
+*/
+
 };
 
 // Export for use in store.html

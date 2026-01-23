@@ -76,6 +76,7 @@
 
     /* Make sure Tebex content is scrollable on mobile */
     @media (max-width: 768px) {
+
       .tebex-checkout-modal,
       .tebex-checkout-wrapper {
         overflow-y: auto !important;
@@ -240,7 +241,7 @@
     <ul class="category-list">
       <li><a href="#ranks" class="category-item active" onclick="scrollToSection('ranks', event)">🎖️ Ranks</a></li>
       <li><a href="#crates" class="category-item" onclick="scrollToSection('crates', event)">📦 Crates</a></li>
-      <li><a href="#cosmetics" class="category-item" onclick="scrollToSection('cosmetics', event)">✨ Cosmetics</a></li>
+<!--      <li><a href="#cosmetics" class="category-item" onclick="scrollToSection('cosmetics', event)">✨ Cosmetics</a></li>   -->
     </ul>
   </nav>
 
@@ -260,8 +261,11 @@
 
     <!-- Crates Section -->
     <section id="crates" class="products-section">
-      <h2 class="section-title">Mystery Crates</h2>
-      <p class="section-subtitle">Random rewards and rare items</p>
+      <h2 class="section-title">Server Crates</h2>
+      <p class="section-subtitle">Support the server by purchasing a key to open higher level crates with the highest
+        level farms!<br>Your contibution covers an entire month's server maintence cost!<br>Click any item for full
+        details.</p>
+      </p>
 
       <div class="products-grid" id="crates-grid">
         <!-- Populated by JavaScript -->
@@ -269,17 +273,17 @@
     </section>
 
     <!-- Cosmetics Section -->
-    <section id="cosmetics" class="products-section">
+<!--    <section id="cosmetics" class="products-section">
       <h2 class="section-title">Cosmetics & Utilities</h2>
       <p class="section-subtitle">Visual effects and convenience items</p>
 
       <div class="products-grid" id="cosmetics-grid">
-        <!-- Populated by JavaScript -->
       </div>
     </section>
   </main>
-
+-->
   <!-- Modal for package details -->
+<!--
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <div id="modal-header" class="modal-header">
@@ -293,8 +297,9 @@
       <div id="modal-footer" class="modal-footer"></div>
     </div>
   </div>
-
+-->
   <!-- Custom Alert Dialog -->
+<!--
   <div class="custom-dialog-overlay" id="custom-alert">
     <div class="custom-dialog">
       <div class="custom-dialog-icon" id="alert-icon">⚠️</div>
@@ -305,8 +310,9 @@
       </div>
     </div>
   </div>
-
+-->
   <!-- Custom Prompt Dialog -->
+<!--  
   <div class="custom-dialog-overlay" id="custom-prompt">
     <div class="custom-dialog">
       <div class="custom-dialog-icon" id="prompt-icon">🎁</div>
@@ -319,8 +325,9 @@
       </div>
     </div>
   </div>
-
+-->
   <!-- Custom Confirm Dialog -->
+<!--  
   <div class="custom-dialog-overlay" id="custom-confirm">
     <div class="custom-dialog">
       <div class="custom-dialog-icon" id="confirm-icon">❓</div>
@@ -332,19 +339,7 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <img src="AA_Logo.png" alt="Logo" style="height: 32px;">
-          <span>Double A SMP</span>
-        </div>
-        <p class="footer-text">Support the server and unlock exclusive perks</p>
-      </div>
-    </div>
-  </footer>
+-->
 
   <script>
     // ========================================
@@ -795,10 +790,10 @@
       grid.innerHTML = STORE_CONFIG.crates.map(crate => `
         <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false, '${crate.image || ''}', '${crate.icon}', '${crate.modalDescription || crate.description}')">
           ${crate.badge ? `<span class="product-badge ${crate.badgeClass}">${crate.badge}</span>` : ''}
-          ${crate.image ? 
-            `<img src="${crate.image}" alt="${crate.name}" class="product-image">` : 
-            `<div class="product-icon">${crate.icon}</div>`
-          }
+          ${crate.image ?
+          `<img src="${crate.image}" alt="${crate.name}" class="product-image">` :
+          `<div class="product-icon">${crate.icon}</div>`
+        }
           <h3 class="product-title">${crate.name}</h3>
           <div class="product-price">${crate.priceDisplay}</div>
           <p class="product-description">${crate.description}</p>
@@ -812,10 +807,10 @@
       grid.innerHTML = STORE_CONFIG.cosmetics.map(item => `
         <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false, '${item.image || ''}', '${item.icon}', '${item.modalDescription || item.description}')">
           ${item.badge ? `<span class="product-badge ${item.badgeClass}">${item.badge}</span>` : ''}
-          ${item.image ? 
-            `<img src="${item.image}" alt="${item.name}" class="product-image">` : 
-            `<div class="product-icon">${item.icon}</div>`
-          }
+          ${item.image ?
+          `<img src="${item.image}" alt="${item.name}" class="product-image">` :
+          `<div class="product-icon">${item.icon}</div>`
+        }
           <h3 class="product-title">${item.name}</h3>
           <div class="product-price">${item.priceDisplay}</div>
           <p class="product-description">${item.description}</p>
@@ -831,10 +826,10 @@
       const modalHeader = document.getElementById('modal-header');
       const modalFooter = document.getElementById('modal-footer');
       const modalBody = document.getElementById('modal-body');
-      
+
       if (modalHeader) modalHeader.style.display = 'block';
       if (modalFooter) modalFooter.style.display = 'block';
-      
+
       // Restore modal-body padding for rank modals
       if (modalBody) modalBody.style.padding = '2rem';
 
@@ -963,10 +958,10 @@
       const modalHeader = document.getElementById('modal-header');
       const modalFooter = document.getElementById('modal-footer');
       const modalBody = document.getElementById('modal-body');
-      
+
       if (modalHeader) modalHeader.style.display = 'none';
       if (modalFooter) modalFooter.style.display = 'none';
-      
+
       // Remove modal-body padding to allow full-width separators
       if (modalBody) modalBody.style.padding = '0';
 
@@ -975,10 +970,10 @@
         <div style="text-align: center;">
           <!-- Icon/Image -->
           <div style="padding: 2rem 2rem 1rem;">
-            ${image ? 
-              `<img src="${image}" alt="${name}" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 1px solid var(--border);">` : 
-              `<div style="font-size: 5rem;">${icon}</div>`
-            }
+            ${image ?
+          `<img src="${image}" alt="${name}" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 1px solid var(--border);">` :
+          `<div style="font-size: 5rem;">${icon}</div>`
+        }
             <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">${name}</h2>
             <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">$${price.toFixed(2)}</div>
           </div>
