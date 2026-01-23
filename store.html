@@ -830,8 +830,13 @@
 
       const modalHeader = document.getElementById('modal-header');
       const modalFooter = document.getElementById('modal-footer');
+      const modalBody = document.getElementById('modal-body');
+      
       if (modalHeader) modalHeader.style.display = 'block';
       if (modalFooter) modalFooter.style.display = 'block';
+      
+      // Restore modal-body padding for rank modals
+      if (modalBody) modalBody.style.padding = '2rem';
 
       document.getElementById('modal-icon').innerHTML = rank.image ?
         `<img src="${rank.image}" class="modal-image">` :
@@ -957,8 +962,13 @@
     function openSimpleModal(name, packageId, price, isSub, image = '', icon = '', description = '') {
       const modalHeader = document.getElementById('modal-header');
       const modalFooter = document.getElementById('modal-footer');
+      const modalBody = document.getElementById('modal-body');
+      
       if (modalHeader) modalHeader.style.display = 'none';
       if (modalFooter) modalFooter.style.display = 'none';
+      
+      // Remove modal-body padding to allow full-width separators
+      if (modalBody) modalBody.style.padding = '0';
 
       // Build enhanced modal content with full-width separator lines
       const modalContent = `
