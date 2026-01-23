@@ -363,13 +363,13 @@ const STORE_CONFIG = {
       subscriptionId: null
     },
     {
-      name: 'Rare Crate Key',
+      name: '3x Cash Crate #1 Key',
       icon: '💎',
-      image: null, // or 'images/rare_crate.png'
+      image: 'images/3DollarCrate1_Logo.png', // or 'images/rare_crate.png'
       badge: 'Popular',
       badgeClass: 'popular',
-      price: 5.00,
-      priceDisplay: '$5.00',
+      price: 37.50,
+      priceDisplay: '$37.50',
       description: 'Better rewards and higher rare item chances',
       packageId: 0,
       subscriptionId: null
