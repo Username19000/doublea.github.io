@@ -359,6 +359,7 @@ const STORE_CONFIG = {
       price: 15.00,
       priceDisplay: '$15.00',
       description: 'Get a random tier of the highest level farm',
+      modalDescription: 'Unlock a random tier of our highest-level farm! This exclusive key grants you access to premium farming capabilities that will accelerate your progression on the server.',
       packageId: 7236791, // YOUR PACKAGE ID
       subscriptionId: null
     },
@@ -371,6 +372,7 @@ const STORE_CONFIG = {
       price: 37.50,
       priceDisplay: '$37.50',
       description: 'Better rewards and higher rare item chances',
+      modalDescription: 'Open this crate to discover rare items and valuable rewards! Perfect for players looking to boost their inventory with unique and powerful gear.',
       packageId: 0,
       subscriptionId: null
     },
@@ -383,6 +385,7 @@ const STORE_CONFIG = {
       price: 10.00,
       priceDisplay: '$10.00',
       description: 'Epic loot and exclusive items',
+      modalDescription: 'The ultimate crate experience! Contains epic loot, exclusive items, and rewards you won\'t find anywhere else. For serious collectors and adventurers.',
       packageId: 0,
       subscriptionId: null
     }
@@ -398,6 +401,7 @@ const STORE_CONFIG = {
       price: 5.00,
       priceDisplay: '$5.00',
       description: 'Unique visual effects that follow you',
+      modalDescription: 'Stand out with stunning particle effects! Choose from a variety of visual effects that follow you wherever you go, making your presence known on the server.',
       packageId: 0,
       subscriptionId: null
     },
@@ -410,6 +414,7 @@ const STORE_CONFIG = {
       price: 7.50,
       priceDisplay: '$7.50',
       description: 'Cosmetic pet that follows you around',
+      modalDescription: 'Never adventure alone! Get your own loyal cosmetic pet companion that will follow you on all your journeys. Choose from various adorable creatures.',
       packageId: 0,
       subscriptionId: null
     },
@@ -422,6 +427,7 @@ const STORE_CONFIG = {
       price: 3.00,
       priceDisplay: '$3.00',
       description: 'Custom chat color formatting',
+      modalDescription: 'Express yourself with custom chat colors! Make your messages stand out with unique color combinations and formatting options.',
       packageId: 0,
       subscriptionId: null
     }

@@ -361,7 +361,7 @@ body {
 
 .product-badge {
   position: absolute;
-  top: -0.5rem;
+  top: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
   display: inline-block;
@@ -807,7 +807,7 @@ body {
   .product-badge {
     padding: 0.25rem 1.25rem;
     font-size: 0.65rem;
-    top: -0.4rem;
+    top: 0.3rem;
   }
 
   .product-icon {
