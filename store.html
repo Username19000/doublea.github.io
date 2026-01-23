@@ -16,6 +16,9 @@
 
   <!-- Store Configuration -->
   <script src="store-config.js"></script>
+  
+  <!-- Components loader - load early to ensure header is ready -->
+  <script src="components.js"></script>
 
   <!-- External CSS -->
   <link rel="stylesheet" href="store.css">
@@ -85,14 +88,6 @@
     }
   </style>
 
-  <!-- 
-    Custom Dialog Styles
-    NOTE: These styles are inline because they define the custom modal dialogs
-    that replace Chrome's default alert/prompt/confirm. They need to be loaded
-    immediately with the page and have high z-index (10000) to overlay everything
-    including the Tebex checkout modal. If you want to move these to store.css,
-    make sure they're at the end of the file with !important on z-index.
-  -->
   <style>
     /* Custom Alert/Prompt Modals */
     .custom-dialog-overlay {
@@ -347,12 +342,14 @@
 
     // Custom Alert
     function customAlert(message, title = 'Alert', icon = '⚠️') {
+      console.log('customAlert called:', { message, title, icon });
       return new Promise((resolve) => {
         alertResolve = resolve;
         document.getElementById('alert-icon').textContent = icon;
         document.getElementById('alert-title').textContent = title;
         document.getElementById('alert-message').textContent = message;
         document.getElementById('custom-alert').classList.add('active');
+        console.log('customAlert modal should now be visible');
       });
     }
 
@@ -628,6 +625,17 @@
           if (isMobile) {
             // On mobile, redirect directly to checkout page (avoids popup blockers)
             console.log('Mobile detected, using redirect mode');
+            
+            // Store purchase info for when user returns
+            sessionStorage.setItem('pendingPurchase', JSON.stringify({
+              packageName: packageName,
+              price: price,
+              username: username,
+              isSubscription: isSubscription,
+              isGift: (forUsername && forUsername !== currentUsername),
+              timestamp: Date.now()
+            }));
+            
             const checkoutUrl = `https://checkout.tebex.io/checkout/${basket.ident}`;
             window.location.href = checkoutUrl;
           } else {
@@ -646,10 +654,19 @@
             // Success handler
             const isGift = (forUsername && forUsername !== currentUsername);
             const handler = function (event) {
+              console.log('✓ Tebex checkout complete event received');
               window.removeEventListener('tebex:checkout:complete', handler);
               showSuccessModal(packageName, price, username, isSubscription, isGift);
             };
             window.addEventListener('tebex:checkout:complete', handler);
+            
+            // Error handler
+            const errorHandler = function(event) {
+              console.error('Tebex checkout error:', event);
+              window.removeEventListener('tebex:checkout:error', errorHandler);
+              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
+            };
+            window.addEventListener('tebex:checkout:error', errorHandler);
           }
 
         } else {
@@ -684,6 +701,7 @@
     }
 
     function showSuccessModal(packageName, price, username, isSubscription, wasGift) {
+      console.log('showSuccessModal called:', { packageName, price, username, isSubscription, wasGift });
       const html = `
         <div style="text-align: center; padding: 2rem; animation: fadeInUp 0.5s ease;">
           <div style="font-size: 5rem; margin-bottom: 1rem; animation: bounceIn 0.8s ease;">${wasGift ? '🎁' : '🎉'}</div>
@@ -1065,6 +1083,34 @@
       renderCrates();
       renderCosmetics();
       
+      // Check for pending purchase (mobile users returning from Tebex)
+      const pendingPurchase = sessionStorage.getItem('pendingPurchase');
+      if (pendingPurchase) {
+        try {
+          const purchase = JSON.parse(pendingPurchase);
+          // Only show if it's recent (within last 5 minutes)
+          if (Date.now() - purchase.timestamp < 5 * 60 * 1000) {
+            sessionStorage.removeItem('pendingPurchase');
+            // Show success modal after a brief delay
+            setTimeout(() => {
+              showSuccessModal(
+                purchase.packageName,
+                purchase.price,
+                purchase.username,
+                purchase.isSubscription,
+                purchase.isGift
+              );
+            }, 500);
+          } else {
+            // Clear old pending purchase
+            sessionStorage.removeItem('pendingPurchase');
+          }
+        } catch (e) {
+          console.error('Error parsing pending purchase:', e);
+          sessionStorage.removeItem('pendingPurchase');
+        }
+      }
+      
       // Handle Enter key in prompt
       const promptInput = document.getElementById('prompt-input');
       if (promptInput) {
@@ -1086,7 +1132,6 @@
   </script>
 
   <div id="footer-placeholder"></div>
-  <script src="components.js"></script>
 </body>
 
 </html>

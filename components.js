@@ -19,8 +19,12 @@
 
   // Function to set active nav link based on current page
   function setActiveNavLink() {
+    // Get current page filename
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const pageName = currentPage.replace('.html', '');
+    // Remove .html extension to get page name
+    const pageName = currentPage.replace('.html', '') || 'index';
+    
+    console.log('Current page:', currentPage, 'Page name:', pageName); // Debug log
     
     // Wait a bit for the nav to load
     setTimeout(() => {
@@ -28,8 +32,15 @@
       navLinks.forEach(link => {
         link.classList.remove('active');
         const linkPage = link.getAttribute('data-page');
-        if (linkPage === pageName || (pageName === '' && linkPage === 'index')) {
+        
+        console.log('Checking link:', linkPage, 'against:', pageName); // Debug log
+        
+        // Match if data-page equals pageName, or if both are index/empty
+        if (linkPage === pageName || 
+            (pageName === '' && linkPage === 'index') ||
+            (pageName === 'index' && linkPage === 'index')) {
           link.classList.add('active');
+          console.log('Activated:', linkPage); // Debug log
         }
       });
     }, 100);
