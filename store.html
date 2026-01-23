@@ -412,13 +412,6 @@
       }
     }
 
-    // Handle Enter key in prompt
-    document.getElementById('prompt-input').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        closeCustomPrompt(true);
-      }
-    });
-
     // Close on overlay click
     document.querySelectorAll('.custom-dialog-overlay').forEach(overlay => {
       overlay.addEventListener('click', function (e) {
@@ -1039,10 +1032,24 @@
       renderRanks();
       renderCrates();
       renderCosmetics();
-    });
-
-    document.getElementById('modal').addEventListener('click', function (e) {
-      if (e.target === this) closeModal();
+      
+      // Handle Enter key in prompt
+      const promptInput = document.getElementById('prompt-input');
+      if (promptInput) {
+        promptInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+            closeCustomPrompt(true);
+          }
+        });
+      }
+      
+      // Handle modal overlay click
+      const modal = document.getElementById('modal');
+      if (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === this) closeModal();
+        });
+      }
     });
   </script>
 
