@@ -960,56 +960,43 @@
       if (modalHeader) modalHeader.style.display = 'none';
       if (modalFooter) modalFooter.style.display = 'none';
 
-      // Build enhanced modal content
+      // Build enhanced modal content with full-width separator lines
       const modalContent = `
-        <div style="text-align: center; padding: 2rem;">
+        <div style="text-align: center;">
           <!-- Icon/Image -->
-          <div style="margin-bottom: 1.5rem;">
+          <div style="padding: 2rem 2rem 1.5rem;">
             ${image ? 
               `<img src="${image}" alt="${name}" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 1px solid var(--border);">` : 
               `<div style="font-size: 5rem;">${icon}</div>`
             }
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">${name}</h2>
+            <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">$${price.toFixed(2)}</div>
           </div>
-
-          <!-- Title and Price -->
-          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">${name}</h2>
-          <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">$${price.toFixed(2)}</div>
           
-          ${description ? `<p style="color: var(--text-muted); font-size: 1.125rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">${description}</p>` : ''}
+          <!-- Full-width separator -->
+          <div style="border-bottom: 1px solid var(--border);"></div>
 
-          <!-- Info Box -->
-          <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
-            <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">📝 Purchase Details</h3>
-            <ul style="list-style: none; padding: 0;">
-              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
-                <span style="color: #10b981;">✓</span>
-                <span>Instant delivery to your account</span>
-              </li>
-              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
-                <span style="color: #10b981;">✓</span>
-                <span>Can be gifted to other players</span>
-              </li>
-              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem;">
-                <span style="color: #10b981;">✓</span>
-                <span>Secure payment via Tebex</span>
-              </li>
-              <li style="padding: 0.75rem 0; display: flex; gap: 0.75rem;">
-                <span style="color: var(--secondary);">🎮</span>
-                <span>Join <strong>${STORE_CONFIG.serverIp}</strong> to use!</span>
-              </li>
-            </ul>
+          <!-- Description -->
+          <div style="padding: 1.5rem 2rem;">
+            
+            ${description ? `<p style="color: var(--text-muted); font-size: 1.125rem; max-width: 500px; margin-left: auto; margin-right: auto;">${description}</p>` : ''}
           </div>
+
+          <!-- Full-width separator -->
+          <div style="border-bottom: 1px solid var(--border);"></div>
 
           <!-- Purchase Buttons -->
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button class="buy-btn" style="flex: 1; min-width: 200px;" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
-              Purchase $${price.toFixed(2)}
-            </button>
-            <button class="buy-btn" style="flex: 1; min-width: 200px; background: var(--secondary); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
-                    onclick="purchaseAsGift(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
-              <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
-              <span>Gift to Someone</span>
-            </button>
+          <div style="padding: 1.5rem 2rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button class="buy-btn" style="flex: 1; min-width: 200px;" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
+                Purchase $${price.toFixed(2)}
+              </button>
+              <button class="buy-btn" style="flex: 1; min-width: 200px; background: var(--secondary); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+                      onclick="purchaseAsGift(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
+                <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+                <span>Gift</span>
+              </button>
+            </div>
           </div>
         </div>
       `;
