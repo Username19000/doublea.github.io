@@ -766,6 +766,11 @@
 
     function renderRanks() {
       const grid = document.getElementById('ranks-grid');
+      if (!grid) return; // Grid doesn't exist
+      if (!STORE_CONFIG.ranks || STORE_CONFIG.ranks.length === 0) {
+        grid.innerHTML = ''; // No ranks to display
+        return;
+      }
       grid.innerHTML = STORE_CONFIG.ranks.map(rank => `
         <div class="product-card" onclick="openRankModal('${rank.name}')">
           ${rank.badge ? `<span class="product-badge ${rank.badgeClass}">${rank.badge}</span>` : ''}
@@ -780,6 +785,22 @@
 
     function renderCrates() {
       const grid = document.getElementById('crates-grid');
+      if (!grid) return; // Grid doesn't exist
+      
+      // If crates is undefined or commented out, hide the section
+      if (!STORE_CONFIG.crates) {
+        const cratesSection = document.getElementById('crates');
+        if (cratesSection) {
+          cratesSection.style.display = 'none';
+        }
+        return;
+      }
+      
+      if (STORE_CONFIG.crates.length === 0) {
+        grid.innerHTML = ''; // No crates to display
+        return;
+      }
+      
       grid.innerHTML = STORE_CONFIG.crates.map(crate => {
         const desc = (crate.modalDescription || crate.description).replace(/'/g, "&apos;");
         return `
@@ -799,6 +820,22 @@
 
     function renderCosmetics() {
       const grid = document.getElementById('cosmetics-grid');
+      if (!grid) return; // Grid doesn't exist
+      
+      // If cosmetics is undefined or commented out, hide the section
+      if (!STORE_CONFIG.cosmetics) {
+        const cosmeticsSection = document.getElementById('cosmetics');
+        if (cosmeticsSection) {
+          cosmeticsSection.style.display = 'none';
+        }
+        return;
+      }
+      
+      if (STORE_CONFIG.cosmetics.length === 0) {
+        grid.innerHTML = ''; // No cosmetics to display
+        return;
+      }
+      
       grid.innerHTML = STORE_CONFIG.cosmetics.map(item => {
         const desc = (item.modalDescription || item.description).replace(/'/g, "&apos;");
         return `
