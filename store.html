@@ -640,33 +640,68 @@
             window.location.href = checkoutUrl;
           } else {
             // On desktop, use modal
+            console.log('Initializing Tebex checkout modal...');
+            
+            const isGift = (forUsername && forUsername !== currentUsername);
+            
+            // Multiple event listeners for Tebex (different versions use different events)
+            const handleSuccess = function (event) {
+              console.log('✓ Tebex checkout complete event received', event);
+              // Remove all listeners
+              window.removeEventListener('tebex:checkout:complete', handleSuccess);
+              window.removeEventListener('TebexCheckout:complete', handleSuccess);
+              document.removeEventListener('tebex_checkout_complete', handleSuccess);
+              
+              showSuccessModal(packageName, price, username, isSubscription, isGift);
+            };
+            
+            // Listen to multiple possible event names
+            window.addEventListener('tebex:checkout:complete', handleSuccess);
+            window.addEventListener('TebexCheckout:complete', handleSuccess);
+            document.addEventListener('tebex_checkout_complete', handleSuccess);
+            
+            // Error handlers
+            const handleError = function(event) {
+              console.error('Tebex checkout error:', event);
+              window.removeEventListener('tebex:checkout:error', handleError);
+              window.removeEventListener('TebexCheckout:error', handleError);
+              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
+            };
+            
+            window.addEventListener('tebex:checkout:error', handleError);
+            window.addEventListener('TebexCheckout:error', handleError);
+            
+            // Close handler (when modal is closed without completing)
+            const handleClose = function(event) {
+              console.log('Tebex checkout closed', event);
+              window.removeEventListener('tebex:checkout:close', handleClose);
+              window.removeEventListener('TebexCheckout:close', handleClose);
+            };
+            
+            window.addEventListener('tebex:checkout:close', handleClose);
+            window.addEventListener('TebexCheckout:close', handleClose);
+            
+            // Initialize Tebex
             Tebex.checkout.init({
               ident: basket.ident,
               theme: 'dark',
               colors: [
                 { name: "primary", color: "#01a1a4" },
                 { name: "secondary", color: "#f2b841" }
-              ]
+              ],
+              // Callback-based approach (some Tebex versions use this)
+              onComplete: function() {
+                console.log('✓ Tebex onComplete callback fired');
+                showSuccessModal(packageName, price, username, isSubscription, isGift);
+              },
+              onError: function(error) {
+                console.error('Tebex onError callback:', error);
+                customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
+              }
             });
 
+            console.log('Launching Tebex checkout...');
             Tebex.checkout.launch();
-
-            // Success handler
-            const isGift = (forUsername && forUsername !== currentUsername);
-            const handler = function (event) {
-              console.log('✓ Tebex checkout complete event received');
-              window.removeEventListener('tebex:checkout:complete', handler);
-              showSuccessModal(packageName, price, username, isSubscription, isGift);
-            };
-            window.addEventListener('tebex:checkout:complete', handler);
-            
-            // Error handler
-            const errorHandler = function(event) {
-              console.error('Tebex checkout error:', event);
-              window.removeEventListener('tebex:checkout:error', errorHandler);
-              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
-            };
-            window.addEventListener('tebex:checkout:error', errorHandler);
           }
 
         } else {
