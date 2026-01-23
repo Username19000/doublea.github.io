@@ -351,27 +351,27 @@ const STORE_CONFIG = {
 
   crates: [
     {
-      name: 'Cash Crate #1 Key',
+      name: '(1x) Cash Crate #1 Key',
       icon: '📦',
-      image: 'images/DollarCrate1_Logo.png', // or 'images/common_crate.png'
-      badge: 'Best Farms',
-      badgeClass: 'premium',
+      image: 'images/DollarCrate1Key.png', // or 'images/common_crate.png'
+      badge: '',
+      badgeClass: '',
       price: 15.00,
       priceDisplay: '$15.00',
       description: 'Get a random tier of the highest level farm',
-      modalDescription: 'Unlock a random tier of our highest-level farm! This exclusive key grants you access to premium farming capabilities that will accelerate your progression on the server.',
+      modalDescription: 'Unlock a random tier of our highest-level farm! This key grants you access to premium farming capabilities that will accelerate your progression on the server.',
       packageId: 7236791, // YOUR PACKAGE ID
       subscriptionId: null
     },
     {
-      name: '3x Cash Crate #1 Key',
+      name: '(3x) Cash Crate #1 Key',
       icon: '💎',
-      image: 'images/3DollarCrate1_Logo.png', // or 'images/rare_crate.png'
+      image: 'images/3DollarCrate1Key.png', // or 'images/rare_crate.png'
       badge: 'Popular',
       badgeClass: 'popular',
       price: 37.50,
       priceDisplay: '$37.50',
-      description: 'Better rewards and higher rare item chances',
+      description: 'Buy more for less!',
       modalDescription: 'Open this crate to discover rare items and valuable rewards! Perfect for players looking to boost their inventory with unique and powerful gear.',
       packageId: 0,
       subscriptionId: null
