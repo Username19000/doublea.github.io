@@ -702,6 +702,40 @@
 
             console.log('Launching Tebex checkout...');
             Tebex.checkout.launch();
+            
+            // WORKAROUND: Poll for Tebex iframe closure
+            // If Tebex events don't fire, this catches successful purchases
+            let checkCount = 0;
+            const maxChecks = 120; // Check for up to 2 minutes
+            const checkInterval = setInterval(() => {
+              checkCount++;
+              
+              // Check if Tebex iframe still exists
+              const tebexIframe = document.querySelector('iframe[src*="checkout.tebex.io"], iframe[src*="pay.tebex.io"]');
+              const tebexModal = document.querySelector('.tebex-checkout-modal, [class*="tebex-checkout"]');
+              
+              // If modal was there but now it's gone, assume success
+              if (!tebexIframe && !tebexModal && checkCount > 2) {
+                console.log('⚠️ Tebex modal closed detected via polling');
+                clearInterval(checkInterval);
+                
+                // Wait a moment then show success (give time for events to fire first)
+                setTimeout(() => {
+                  // Only show if an event didn't already trigger it
+                  const modalAlreadyShown = document.getElementById('modal').classList.contains('active');
+                  if (!modalAlreadyShown) {
+                    console.log('✓ Showing success modal via polling fallback');
+                    showSuccessModal(packageName, price, username, isSubscription, isGift);
+                  }
+                }, 1000);
+              }
+              
+              // Stop checking after max time
+              if (checkCount >= maxChecks) {
+                console.log('Stopped polling for Tebex modal');
+                clearInterval(checkInterval);
+              }
+            }, 1000);
           }
 
         } else {
