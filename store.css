@@ -1126,10 +1126,8 @@ iframe[src*="checkout.tebex.io"] {
 .customer-skin {
   width: 80px;
   height: 80px;
-  object-fit: cover;
+  object-fit: contain;
   image-rendering: pixelated;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(1, 161, 164, 0.3);
 }
 
 .customer-username {
@@ -1165,7 +1163,7 @@ iframe[src*="checkout.tebex.io"] {
   border: none;
   border-radius: 50px;
   padding: 1rem 1.5rem;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(1, 161, 164, 0.4);
@@ -1555,8 +1553,8 @@ body > .footer,
 }
 
 .sidebar-card .customer-skin {
-  width: 64px;
-  height: 64px;
+  width: auto;
+  height: 150px;
   object-fit: contain;
   image-rendering: pixelated;
 }

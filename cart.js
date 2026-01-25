@@ -40,11 +40,11 @@ function addToCart(packageId, name, price, image, icon, isSubscription = false) 
       // For crate keys, increase quantity
       existing.quantity = (existing.quantity || 1) + 1;
       saveCart();
-      customAlert(`Added another ${name} to cart! (${existing.quantity}x)`, 'Quantity Updated', '🛒');
+      showToast(`Added another ${name}! (${existing.quantity}x)`, 'success');
       return;
     } else {
       // For regular items (ranks), don't allow duplicates
-      customAlert('This item is already in your cart!', 'Already Added', '🛒');
+      showToast('This item is already in your cart!', 'info');
       return;
     }
   }
@@ -61,8 +61,8 @@ function addToCart(packageId, name, price, image, icon, isSubscription = false) 
 
   saveCart();
 
-  // Show feedback
-  customAlert(`${name} added to cart!`, 'Added to Cart', '✅');
+  // Show feedback with toast
+  showToast(`${name} added to cart!`, 'success');
 
   // Animate cart button
   const cartBtn = document.querySelector('.cart-btn');
@@ -91,7 +91,7 @@ function addRankToCart(packageId, conflictPackageId, name, price, image, icon, i
   // Check if this exact item is already in cart
   const existing = cart.items.find(item => item.packageId === packageId);
   if (existing) {
-    customAlert('This item is already in your cart!', 'Already Added', '🛒');
+    showToast('This item is already in your cart!', 'info');
     return;
   }
 
@@ -108,8 +108,8 @@ function addRankToCart(packageId, conflictPackageId, name, price, image, icon, i
 
   saveCart();
 
-  // Show feedback
-  customAlert(`${name} added to cart!`, 'Added to Cart', '✅');
+  // Show feedback with toast
+  showToast(`${name} added to cart!`, 'success');
 
   // Animate cart button
   const cartBtn = document.querySelector('.cart-btn');
@@ -207,12 +207,12 @@ function updateCartUI() {
               ${quantity > 1 ? `<span style="color: var(--primary); font-weight: 700; margin-left: 0.5rem;">×${quantity}</span>` : ''}
             </div>
             <div class="cart-item-price">
-              $${itemTotal.toFixed(2)}
-              ${quantity > 1 ? `<span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">($${item.price.toFixed(2)} each)</span>` : ''}
+              $${itemTotal.toFixed(2)}${item.isSubscription ? '<span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">/month</span>' : ''}
+              ${quantity > 1 ? `<span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">($${item.price.toFixed(2)}${item.isSubscription ? '/mo' : ''} each)</span>` : ''}
             </div>
-            ${isCrateKey && quantity > 1 ? `
+            ${isCrateKey ? `
               <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
-                <button class="quantity-btn" onclick="decreaseQuantity(${item.packageId})" style="width: 24px; height: 24px; background: var(--border); border: none; border-radius: 4px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                ${quantity > 1 ? `<button class="quantity-btn" onclick="decreaseQuantity(${item.packageId})" style="width: 24px; height: 24px; background: var(--border); border: none; border-radius: 4px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>` : ''}
                 <button class="quantity-btn" onclick="increaseQuantity(${item.packageId})" style="width: 24px; height: 24px; background: var(--border); border: none; border-radius: 4px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
               </div>
             ` : ''}
@@ -553,12 +553,83 @@ async function proceedToCheckout() {
   }
 }
 
-// Add CSS animation for cart button bounce
+// ========================================
+// TOAST NOTIFICATIONS
+// ========================================
+
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+
+  // Add to body
+  document.body.appendChild(toast);
+
+  // Trigger animation
+  setTimeout(() => toast.classList.add('show'), 10);
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Add CSS animation for cart button bounce and toast
 const style = document.createElement('style');
 style.textContent = `
   @keyframes bounce {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
+  }
+  
+  .toast {
+    position: fixed;
+    top: 4.7rem;
+    right: 2rem;
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    max-width: 350px;
+  }
+  
+  .toast.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .toast-success {
+    border-left: 4px solid var(--primary);
+  }
+  
+  .toast-info {
+    border-left: 4px solid #3b82f6;
+  }
+  
+  .toast-warning {
+    border-left: 4px solid #f59e0b;
+  }
+  
+  .toast-error {
+    border-left: 4px solid #ef4444;
+  }
+  
+  @media (max-width: 640px) {
+    .toast {
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      max-width: none;
+    }
   }
 `;
 document.head.appendChild(style);
