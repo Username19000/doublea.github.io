@@ -644,8 +644,9 @@
             
             const isGift = (forUsername && forUsername !== currentUsername);
             
-            // Track whether payment was completed
+            // Track whether payment was completed and error handling
             let paymentCompleted = false;
+            let errorShown = false;
             
             // Initialize Tebex with proper event handlers (per Tebex.js documentation)
             Tebex.checkout.init({
@@ -664,9 +665,28 @@
               showSuccessModal(packageName, price, username, isSubscription, isGift);
             });
             
-            Tebex.checkout.on("payment:error", (event) => {
+            Tebex.checkout.on("payment:error", async (event) => {
               console.error('Tebex payment:error event received', event);
-              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Payment Error', '❌');
+              
+              // Prevent duplicate error alerts
+              if (errorShown) {
+                console.log('⚠️ Error already shown, ignoring duplicate event');
+                return;
+              }
+              errorShown = true;
+              
+              // Show custom error alert
+              await customAlert(
+                'Your payment was declined. Please try a different payment method or contact your bank.',
+                'Payment Declined',
+                '❌'
+              );
+              
+              // After user closes the alert, close the Tebex modal
+              console.log('Closing Tebex modal after error...');
+              if (typeof Tebex.checkout.close === 'function') {
+                Tebex.checkout.close();
+              }
             });
             
             Tebex.checkout.on("open", () => {
@@ -676,7 +696,7 @@
             Tebex.checkout.on("close", () => {
               console.log('Tebex checkout closed');
               // If modal closed without payment completion, user likely cancelled
-              if (!paymentCompleted) {
+              if (!paymentCompleted && !errorShown) {
                 console.log('ℹ️ Checkout closed without payment completion (likely cancelled)');
               }
             });
@@ -685,15 +705,24 @@
             Tebex.checkout.launch();
             
             // Keep polling fallback as backup (in case events don't fire)
+            // Wait longer before starting to poll (give Tebex time to fully load)
             let checkCount = 0;
             const maxChecks = 120;
+            const startPollingAfter = 5; // Don't start checking until 5 seconds in
+            
             const checkInterval = setInterval(() => {
               checkCount++;
+              
+              // Don't check too early - give modal time to load
+              if (checkCount < startPollingAfter) {
+                return;
+              }
               
               const tebexIframe = document.querySelector('iframe[src*="checkout.tebex.io"], iframe[src*="pay.tebex.io"]');
               const tebexModal = document.querySelector('.tebex-checkout-modal, [class*="tebex-checkout"]');
               
-              if (!tebexIframe && !tebexModal && checkCount > 2) {
+              // Only trigger if we've checked several times and modal is definitely gone
+              if (!tebexIframe && !tebexModal && checkCount > startPollingAfter + 2) {
                 console.log('⚠️ Tebex modal closed detected via polling (backup)');
                 clearInterval(checkInterval);
                 
@@ -703,7 +732,7 @@
                   if (!modalAlreadyShown && paymentCompleted) {
                     console.log('✓ Showing success modal via polling fallback (events did not fire)');
                     showSuccessModal(packageName, price, username, isSubscription, isGift);
-                  } else if (!paymentCompleted) {
+                  } else if (!paymentCompleted && !errorShown) {
                     console.log('ℹ️ Not showing success - payment was not completed (user cancelled)');
                   }
                 }, 1000);
@@ -1166,6 +1195,26 @@
           }
         });
       }
+      
+      // Handle ESC key to close dialogs
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          // Close custom dialogs
+          if (document.getElementById('custom-alert').classList.contains('active')) {
+            closeCustomAlert();
+          }
+          if (document.getElementById('custom-prompt').classList.contains('active')) {
+            closeCustomPrompt(false);
+          }
+          if (document.getElementById('custom-confirm').classList.contains('active')) {
+            closeCustomConfirm(false);
+          }
+          // Close main modal
+          if (document.getElementById('modal').classList.contains('active')) {
+            closeModal();
+          }
+        }
+      });
       
       // Handle modal overlay click
       const modal = document.getElementById('modal');
