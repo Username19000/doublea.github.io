@@ -1109,9 +1109,9 @@ iframe[src*="checkout.tebex.io"] {
 }
 
 .customer-skin {
-  width: 130px;
-  height: 100px;
-  object-fit: contain;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
   image-rendering: pixelated;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(1, 161, 164, 0.3);
@@ -1412,13 +1412,185 @@ iframe[src*="checkout.tebex.io"] {
   border-top: 1px solid var(--border);
 }
 
-/* Force footer to span full width - nuclear option */
-.footer {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  max-width: 100vw;
+
+/* Ensure footer borders span full viewport width on store page */
+body > .footer,
+#footer-placeholder > .footer {
+  box-sizing: border-box;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ========================================
+   SIDEBAR LAYOUT
+   ======================================== */
+
+/* Store layout container */
+.store-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 2rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+/* Main content area */
+.store-main {
+  min-width: 0; /* Prevents grid blowout */
+  width: 100%;
+  padding: 0 !important; /* Remove default container padding since layout handles it */
+  max-width: none !important; /* Override container max-width */
+  margin: 0 !important; /* Override container margin */
+}
+
+/* Sidebar */
+.store-sidebar {
+  width: 100%;
+  max-width: 320px;
+  position: sticky;
+  padding: 10px;
+  top: 15rem; /* Reduced from 2rem to prevent cutoff */
+  align-self: start;
+  height: fit-content;
+  max-height: calc(100vh - 2rem); /* Prevent sidebar from being taller than viewport */
+  overflow-y: auto; /* Allow scrolling if sidebar content is too tall */
+}
+
+.sidebar-sticky {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sidebar cards */
+.sidebar-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sidebar-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(1, 161, 164, 0.2);
+}
+
+.sidebar-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.sidebar-card-description {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+/* Goal progress in sidebar */
+.sidebar-card .goal-progress {
+  margin: 1rem 0;
+}
+
+.sidebar-card .goal-bar {
+  background: var(--border);
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-card .goal-fill {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  height: 100%;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.sidebar-card .goal-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sidebar-card .goal-text span {
+  color: var(--primary);
+}
+
+/* Top customer in sidebar */
+.sidebar-card .top-customer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 100px;
+  justify-content: center;
+}
+
+.sidebar-card .customer-skin {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(1, 161, 164, 0.3);
+}
+
+.sidebar-card .customer-username {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sidebar-card .loading-spinner {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Responsive: Mobile layout */
+@media (max-width: 1024px) {
+  .store-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .store-sidebar {
+    width: 100%;
+    max-width: 100%;
+    position: static; /* Remove sticky on mobile */
+    order: -1; /* Move sidebar above main content on mobile */
+  }
+  
+  .sidebar-sticky {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .store-layout {
+    padding: 0 1rem;
+  }
+  
+  .sidebar-sticky {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Hide old community stats section (now using sidebar) */
+.community-stats-section {
+  display: none !important;
 }

@@ -45,39 +45,6 @@
     </div>
   </section>
 
-  <!-- Community Stats Section -->
-  <section class="community-stats-section">
-    <div class="container">
-      <div class="community-stats-grid">
-        <!-- Monthly Goal -->
-        <div class="stat-card goal-card">
-          <div class="stat-icon">🎯</div>
-          <h3>Monthly Goal</h3>
-          <div class="goal-progress">
-            <div class="goal-bar">
-              <div class="goal-fill" id="goal-fill"></div>
-            </div>
-            <div class="goal-text">
-              <span id="goal-current">$0</span> / <span id="goal-target">$15</span>
-            </div>
-          </div>
-          <p class="stat-description">Hitting our monthly server maintenance goal allows us to keep the server running
-            smoothly and provide you with the best experience possible.</p>
-        </div>
-
-        <!-- Top Customer -->
-        <div class="stat-card customer-card">
-          <div class="stat-icon">👑</div>
-          <h3>Top Customer This Month</h3>
-          <div id="top-customer-display" class="top-customer-content">
-            <div class="loading-spinner">Loading...</div>
-          </div>
-          <p class="stat-description">Thank you for your support!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Category Navigation -->
   <nav class="category-nav">
     <ul class="category-list">
@@ -87,192 +54,225 @@
     </ul>
   </nav>
 
-  <!-- Main Content -->
-  <main class="container page-content">
-    <!-- Ranks Section -->
-    <section id="ranks" class="products-section">
-      <h2 class="section-title">Server Ranks</h2>
-      <p class="section-subtitle">Explore our various membership tiers, each packed with special perks and privileges
-        designed to make your gaming experience even more enjoyable.<br>Just looking to explore what each rank has to
-        offer? Pay by the month for a more affordable option!<br>Click any rank for full details.</p>
+  <!-- Main Content with Sidebar Layout -->
+  <div class="store-layout">
+    <main class="store-main page-content">
+      <!-- Ranks Section -->
+      <section id="ranks" class="products-section">
+        <h2 class="section-title">Server Ranks</h2>
+        <p class="section-subtitle">Explore our various membership tiers, each packed with special perks and privileges
+          designed to make your gaming experience even more enjoyable.<br>Just looking to explore what each rank has to
+          offer? Pay by the month for a more affordable option!<br>Click any rank for full details.</p>
 
-      <div class="products-grid" id="ranks-grid">
-        <!-- Populated by JavaScript -->
-      </div>
-    </section>
+        <div class="products-grid" id="ranks-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
 
-    <!-- Crates Section -->
-    <section id="crates" class="products-section">
-      <h2 class="section-title">Server Crates</h2>
-      <p class="section-subtitle">Support the server by purchasing a key to open higher level crates with the highest
-        level farms!<br>Your contibution covers an entire month's server maintence cost!<br>Click any item for full
-        details.</p>
-      </p>
+      <!-- Crates Section -->
+      <section id="crates" class="products-section">
+        <h2 class="section-title">Server Crates</h2>
+        <p class="section-subtitle">Support the server by purchasing a key to open higher level crates with the highest
+          level farms!<br>Your contibution covers an entire month's server maintence cost!<br>Click any item for full
+          details.</p>
+        </p>
 
-      <div class="products-grid" id="crates-grid">
-        <!-- Populated by JavaScript -->
-      </div>
-    </section>
+        <div class="products-grid" id="crates-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
 
-    <!-- Cosmetics Section -->
-    <!--    <section id="cosmetics" class="products-section">
+      <!-- Cosmetics Section -->
+      <!--    <section id="cosmetics" class="products-section">
       <h2 class="section-title">Cosmetics & Utilities</h2>
       <p class="section-subtitle">Visual effects and convenience items</p>
 
       <div class="products-grid" id="cosmetics-grid">
       </div>
-    </section>
-  </main>
+    </section> -->
+    </main>
+
+    <!-- Sidebar with Community Stats -->
+    <aside class="store-sidebar">
+      <div class="sidebar-sticky">
+        <!-- Monthly Goal -->
+        <div class="sidebar-card goal-card">
+          <div class="sidebar-card-icon"></div>
+          <h3 class="sidebar-card-title">🎯 Monthly Goal</h3>
+          <div class="goal-progress">
+            <div class="goal-bar">
+              <div class="goal-fill" id="goal-fill"></div>
+            </div>
+            <div class="goal-text">
+              <span id="goal-current">$0</span> / <span id="goal-target">$15</span>
+            </div>
+          </div>
+          <p class="sidebar-card-description">Hitting our monthly server maintenance goal allows us to keep the server running
+            smoothly and provide you with the best experience possible.</p>
+        </div>
+
+        <!-- Top Customer -->
+        <div class="sidebar-card customer-card">
+          <div class="sidebar-card-icon"></div>
+          <h3 class="sidebar-card-title">👑 Top Customer</h3>
+          <div id="top-customer-display" class="top-customer-content">
+            <div class="loading-spinner">Loading...</div>
+          </div>
+          <p class="sidebar-card-description">Thank you for supporting our server!</p>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <!-- Modal for package details -->
-    <div class="modal-overlay" id="modal">
-      <div class="modal-content">
-        <div id="modal-header" class="modal-header">
-          <button class="modal-close" onclick="closeModal()">&times;</button>
-          <div class="modal-icon" id="modal-icon"></div>
-          <h2 class="modal-title" id="modal-title"></h2>
-          <div class="modal-price" id="modal-price"></div>
-          <div class="modal-price-subtitle" id="modal-price-subtitle"></div>
-        </div>
-        <div class="modal-body" id="modal-body"></div>
-        <div id="modal-footer" class="modal-footer"></div>
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <div id="modal-header" class="modal-header">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-icon" id="modal-icon"></div>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-price" id="modal-price"></div>
+        <div class="modal-price-subtitle" id="modal-price-subtitle"></div>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div id="modal-footer" class="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- Custom Alert Dialog -->
+  <div class="custom-dialog-overlay" id="custom-alert">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="alert-icon">⚠️</div>
+      <div class="custom-dialog-title" id="alert-title">Alert</div>
+      <div class="custom-dialog-message" id="alert-message"></div>
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn primary" id="alert-ok-btn" onclick="closeCustomAlert()">OK</button>
       </div>
     </div>
+  </div>
 
-    <!-- Custom Alert Dialog -->
-    <div class="custom-dialog-overlay" id="custom-alert">
-      <div class="custom-dialog">
-        <div class="custom-dialog-icon" id="alert-icon">⚠️</div>
-        <div class="custom-dialog-title" id="alert-title">Alert</div>
-        <div class="custom-dialog-message" id="alert-message"></div>
-        <div class="custom-dialog-buttons">
-          <button class="custom-dialog-btn primary" id="alert-ok-btn" onclick="closeCustomAlert()">OK</button>
-        </div>
+  <!-- Custom Prompt Dialog -->
+  <div class="custom-dialog-overlay" id="custom-prompt">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="prompt-icon">🎁</div>
+      <div class="custom-dialog-title" id="prompt-title">Enter Information</div>
+      <div class="custom-dialog-message" id="prompt-message"></div>
+      <input type="text" class="custom-dialog-input" id="prompt-input" placeholder="">
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn secondary" onclick="closeCustomPrompt(false)">Cancel</button>
+        <button class="custom-dialog-btn primary" onclick="closeCustomPrompt(true)">OK</button>
       </div>
     </div>
+  </div>
 
-    <!-- Custom Prompt Dialog -->
-    <div class="custom-dialog-overlay" id="custom-prompt">
-      <div class="custom-dialog">
-        <div class="custom-dialog-icon" id="prompt-icon">🎁</div>
-        <div class="custom-dialog-title" id="prompt-title">Enter Information</div>
-        <div class="custom-dialog-message" id="prompt-message"></div>
-        <input type="text" class="custom-dialog-input" id="prompt-input" placeholder="">
-        <div class="custom-dialog-buttons">
-          <button class="custom-dialog-btn secondary" onclick="closeCustomPrompt(false)">Cancel</button>
-          <button class="custom-dialog-btn primary" onclick="closeCustomPrompt(true)">OK</button>
-        </div>
+  <!-- Custom Confirm Dialog -->
+  <div class="custom-dialog-overlay" id="custom-confirm">
+    <div class="custom-dialog">
+      <div class="custom-dialog-icon" id="confirm-icon">❓</div>
+      <div class="custom-dialog-title" id="confirm-title">Confirm</div>
+      <div class="custom-dialog-message" id="confirm-message"></div>
+      <div class="custom-dialog-buttons">
+        <button class="custom-dialog-btn secondary" onclick="closeCustomConfirm(false)">Cancel</button>
+        <button class="custom-dialog-btn primary" onclick="closeCustomConfirm(true)">OK</button>
       </div>
     </div>
+  </div>
 
-    <!-- Custom Confirm Dialog -->
-    <div class="custom-dialog-overlay" id="custom-confirm">
-      <div class="custom-dialog">
-        <div class="custom-dialog-icon" id="confirm-icon">❓</div>
-        <div class="custom-dialog-title" id="confirm-title">Confirm</div>
-        <div class="custom-dialog-message" id="confirm-message"></div>
-        <div class="custom-dialog-buttons">
-          <button class="custom-dialog-btn secondary" onclick="closeCustomConfirm(false)">Cancel</button>
-          <button class="custom-dialog-btn primary" onclick="closeCustomConfirm(true)">OK</button>
-        </div>
-      </div>
-    </div>
+  <script>
+    // ========================================
+    // CUSTOM DIALOG FUNCTIONS
+    // ========================================
 
-    <script>
-      // ========================================
-      // CUSTOM DIALOG FUNCTIONS
-      // ========================================
+    let alertResolve = null;
+    let promptResolve = null;
+    let confirmResolve = null;
 
-      let alertResolve = null;
-      let promptResolve = null;
-      let confirmResolve = null;
-
-      // Custom Alert
-      function customAlert(message, title = 'Alert', icon = '⚠️') {
-        console.log('customAlert called:', { message, title, icon });
-        return new Promise((resolve) => {
-          alertResolve = resolve;
-          document.getElementById('alert-icon').textContent = icon;
-          document.getElementById('alert-title').textContent = title;
-          document.getElementById('alert-message').textContent = message;
-          document.getElementById('custom-alert').classList.add('active');
-          console.log('customAlert modal should now be visible');
-        });
-      }
-
-      function closeCustomAlert() {
-        document.getElementById('custom-alert').classList.remove('active');
-        if (alertResolve) {
-          alertResolve();
-          alertResolve = null;
-        }
-      }
-
-      // Custom Prompt
-      function customPrompt(message, title = 'Enter Information', placeholder = '', icon = '🎁') {
-        return new Promise((resolve) => {
-          promptResolve = resolve;
-          document.getElementById('prompt-icon').textContent = icon;
-          document.getElementById('prompt-title').textContent = title;
-          document.getElementById('prompt-message').textContent = message;
-          const input = document.getElementById('prompt-input');
-          input.placeholder = placeholder;
-          input.value = '';
-          document.getElementById('custom-prompt').classList.add('active');
-          setTimeout(() => input.focus(), 100);
-        });
-      }
-
-      function closeCustomPrompt(confirmed) {
-        const value = confirmed ? document.getElementById('prompt-input').value : null;
-        document.getElementById('custom-prompt').classList.remove('active');
-        if (promptResolve) {
-          promptResolve(value);
-          promptResolve = null;
-        }
-      }
-
-      // Custom Confirm
-      function customConfirm(message, title = 'Confirm', icon = '❓') {
-        return new Promise((resolve) => {
-          confirmResolve = resolve;
-          document.getElementById('confirm-icon').textContent = icon;
-          document.getElementById('confirm-title').textContent = title;
-          document.getElementById('confirm-message').textContent = message;
-          document.getElementById('custom-confirm').classList.add('active');
-        });
-      }
-
-      function closeCustomConfirm(confirmed) {
-        document.getElementById('custom-confirm').classList.remove('active');
-        if (confirmResolve) {
-          confirmResolve(confirmed);
-          confirmResolve = null;
-        }
-      }
-
-      // Close on overlay click
-      document.querySelectorAll('.custom-dialog-overlay').forEach(overlay => {
-        overlay.addEventListener('click', function (e) {
-          if (e.target === this) {
-            if (this.id === 'custom-alert') closeCustomAlert();
-            if (this.id === 'custom-prompt') closeCustomPrompt(false);
-            if (this.id === 'custom-confirm') closeCustomConfirm(false);
-          }
-        });
+    // Custom Alert
+    function customAlert(message, title = 'Alert', icon = '⚠️') {
+      console.log('customAlert called:', { message, title, icon });
+      return new Promise((resolve) => {
+        alertResolve = resolve;
+        document.getElementById('alert-icon').textContent = icon;
+        document.getElementById('alert-title').textContent = title;
+        document.getElementById('alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.add('active');
+        console.log('customAlert modal should now be visible');
       });
+    }
 
-      // ========================================
-      // USERNAME MANAGEMENT
-      // ========================================
+    function closeCustomAlert() {
+      document.getElementById('custom-alert').classList.remove('active');
+      if (alertResolve) {
+        alertResolve();
+        alertResolve = null;
+      }
+    }
 
-      let currentUsername = localStorage.getItem('minecraft_username') || '';
+    // Custom Prompt
+    function customPrompt(message, title = 'Enter Information', placeholder = '', icon = '🎁') {
+      return new Promise((resolve) => {
+        promptResolve = resolve;
+        document.getElementById('prompt-icon').textContent = icon;
+        document.getElementById('prompt-title').textContent = title;
+        document.getElementById('prompt-message').textContent = message;
+        const input = document.getElementById('prompt-input');
+        input.placeholder = placeholder;
+        input.value = '';
+        document.getElementById('custom-prompt').classList.add('active');
+        setTimeout(() => input.focus(), 100);
+      });
+    }
 
-      function renderUsernameDisplay() {
-        const display = document.getElementById('username-display');
+    function closeCustomPrompt(confirmed) {
+      const value = confirmed ? document.getElementById('prompt-input').value : null;
+      document.getElementById('custom-prompt').classList.remove('active');
+      if (promptResolve) {
+        promptResolve(value);
+        promptResolve = null;
+      }
+    }
 
-        if (currentUsername) {
-          display.innerHTML = `
+    // Custom Confirm
+    function customConfirm(message, title = 'Confirm', icon = '❓') {
+      return new Promise((resolve) => {
+        confirmResolve = resolve;
+        document.getElementById('confirm-icon').textContent = icon;
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-message').textContent = message;
+        document.getElementById('custom-confirm').classList.add('active');
+      });
+    }
+
+    function closeCustomConfirm(confirmed) {
+      document.getElementById('custom-confirm').classList.remove('active');
+      if (confirmResolve) {
+        confirmResolve(confirmed);
+        confirmResolve = null;
+      }
+    }
+
+    // Close on overlay click
+    document.querySelectorAll('.custom-dialog-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === this) {
+          if (this.id === 'custom-alert') closeCustomAlert();
+          if (this.id === 'custom-prompt') closeCustomPrompt(false);
+          if (this.id === 'custom-confirm') closeCustomConfirm(false);
+        }
+      });
+    });
+
+    // ========================================
+    // USERNAME MANAGEMENT
+    // ========================================
+
+    let currentUsername = localStorage.getItem('minecraft_username') || '';
+
+    function renderUsernameDisplay() {
+      const display = document.getElementById('username-display');
+
+      if (currentUsername) {
+        display.innerHTML = `
           <div style="background: rgba(1, 161, 164, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 1rem; display: inline-block;">
             <span style="color: var(--text); font-weight: 600;">Signed in as: <strong style="color: var(--primary);">${currentUsername}</strong></span>
             <button onclick="signOut()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; cursor: pointer; font-weight: 600;">
@@ -280,8 +280,8 @@
             </button>
           </div>
         `;
-        } else {
-          display.innerHTML = `
+      } else {
+        display.innerHTML = `
           <div style="background: rgba(242, 184, 65, 0.1); border: 1px solid var(--secondary); border-radius: 12px; padding: 1rem; display: inline-block;">
             <span style="color: var(--text); margin-right: 1rem;">Enter your Minecraft username to get started:</span>
             <input type="text" id="username-signin-input" placeholder="Minecraft Username" style="padding: 0.5rem 1rem; background: var(--dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-right: 0.5rem;" />
@@ -290,150 +290,150 @@
             </button>
           </div>
         `;
-        }
+      }
+    }
+
+    async function signIn() {
+      const input = document.getElementById('username-signin-input');
+      const username = input.value.trim();
+
+      if (!username) {
+        await customAlert('Please enter your Minecraft username', 'Username Required', '⚠️');
+        return;
       }
 
-      async function signIn() {
-        const input = document.getElementById('username-signin-input');
-        const username = input.value.trim();
+      currentUsername = username;
+      localStorage.setItem('minecraft_username', username);
+      renderUsernameDisplay();
+    }
 
-        if (!username) {
-          await customAlert('Please enter your Minecraft username', 'Username Required', '⚠️');
+    async function signOut() {
+      const confirmed = await customConfirm(
+        'Sign out? You\'ll need to be signed in for purchases.',
+        'Sign Out',
+        '👋'
+      );
+
+      if (confirmed) {
+        currentUsername = '';
+        localStorage.removeItem('minecraft_username');
+        renderUsernameDisplay();
+      }
+    }
+
+    // ========================================
+    // HEADLESS API (PURCHASE ONLY)
+    // ========================================
+
+    async function createBasket(username) {
+      const response = await fetch(
+        `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            complete_url: window.location.href,
+            cancel_url: window.location.href,
+            complete_auto_redirect: false,
+            username: username
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to create basket: ${error}`);
+      }
+
+      const data = await response.json();
+      return data.data;
+    }
+
+    async function addPackageToBasket(basketIdent, packageId) {
+      // First get basket to check for username_id
+      const basketResponse = await fetch(
+        `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets/${basketIdent}`,
+        { headers: { 'Accept': 'application/json' } }
+      );
+      const basketData = await basketResponse.json();
+      const basket = basketData.data;
+
+      const requestBody = {
+        package_id: parseInt(packageId),
+        quantity: 1
+      };
+
+      if (basket.username_id) {
+        requestBody.variable_data = {
+          username_id: basket.username_id
+        };
+      }
+
+      const response = await fetch(
+        `https://headless.tebex.io/api/baskets/${basketIdent}/packages`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        }
+      );
+
+      if (!response.ok) {
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorData = await response.json();
+
+          // Extract error from Tebex response
+          if (errorData.detail) {
+            errorMessage = errorData.detail;
+          } else if (errorData.error_message) {
+            errorMessage = errorData.error_message;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          } else if (errorData.title) {
+            errorMessage = errorData.title;
+          }
+        } catch (e) {
+          errorMessage = `${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      return await response.json();
+    }
+
+    async function purchasePackage(packageId, packageName, price, isSubscription, forUsername = null) {
+      try {
+        // Determine username
+        let username = forUsername;
+
+        // If no username passed, current user must be signed in
+        if (!username && !currentUsername) {
+          // Close any open modal first
+          closeModal();
+          // Prompt user to sign in
+          await customAlert('Please sign in with your Minecraft username first!', 'Sign In Required', '⚠️');
+          // Open sign-in
+          signIn();
           return;
         }
 
-        currentUsername = username;
-        localStorage.setItem('minecraft_username', username);
-        renderUsernameDisplay();
-      }
-
-      async function signOut() {
-        const confirmed = await customConfirm(
-          'Sign out? You\'ll need to be signed in for purchases.',
-          'Sign Out',
-          '👋'
-        );
-
-        if (confirmed) {
-          currentUsername = '';
-          localStorage.removeItem('minecraft_username');
-          renderUsernameDisplay();
-        }
-      }
-
-      // ========================================
-      // HEADLESS API (PURCHASE ONLY)
-      // ========================================
-
-      async function createBasket(username) {
-        const response = await fetch(
-          `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              complete_url: window.location.href,
-              cancel_url: window.location.href,
-              complete_auto_redirect: false,
-              username: username
-            })
-          }
-        );
-
-        if (!response.ok) {
-          const error = await response.text();
-          throw new Error(`Failed to create basket: ${error}`);
+        // Use current user's username if not a gift
+        if (!username) {
+          username = currentUsername;
         }
 
-        const data = await response.json();
-        return data.data;
-      }
+        console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
 
-      async function addPackageToBasket(basketIdent, packageId) {
-        // First get basket to check for username_id
-        const basketResponse = await fetch(
-          `https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/baskets/${basketIdent}`,
-          { headers: { 'Accept': 'application/json' } }
-        );
-        const basketData = await basketResponse.json();
-        const basket = basketData.data;
-
-        const requestBody = {
-          package_id: parseInt(packageId),
-          quantity: 1
-        };
-
-        if (basket.username_id) {
-          requestBody.variable_data = {
-            username_id: basket.username_id
-          };
-        }
-
-        const response = await fetch(
-          `https://headless.tebex.io/api/baskets/${basketIdent}/packages`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-          }
-        );
-
-        if (!response.ok) {
-          let errorMessage = `HTTP ${response.status}`;
-          try {
-            const errorData = await response.json();
-
-            // Extract error from Tebex response
-            if (errorData.detail) {
-              errorMessage = errorData.detail;
-            } else if (errorData.error_message) {
-              errorMessage = errorData.error_message;
-            } else if (errorData.message) {
-              errorMessage = errorData.message;
-            } else if (errorData.title) {
-              errorMessage = errorData.title;
-            }
-          } catch (e) {
-            errorMessage = `${response.status}: ${response.statusText}`;
-          }
-          throw new Error(errorMessage);
-        }
-
-        return await response.json();
-      }
-
-      async function purchasePackage(packageId, packageName, price, isSubscription, forUsername = null) {
-        try {
-          // Determine username
-          let username = forUsername;
-
-          // If no username passed, current user must be signed in
-          if (!username && !currentUsername) {
-            // Close any open modal first
-            closeModal();
-            // Prompt user to sign in
-            await customAlert('Please sign in with your Minecraft username first!', 'Sign In Required', '⚠️');
-            // Open sign-in
-            signIn();
-            return;
-          }
-
-          // Use current user's username if not a gift
-          if (!username) {
-            username = currentUsername;
-          }
-
-          console.log(`Starting purchase for package ${packageId}... (Username: ${username})`);
-
-          // Show loading overlay
-          const loadingOverlay = document.createElement('div');
-          loadingOverlay.style.cssText = `
+        // Show loading overlay
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
@@ -445,166 +445,166 @@
           justify-content: center;
           z-index: 10001;
         `;
-          loadingOverlay.innerHTML = `
+        loadingOverlay.innerHTML = `
           <div style="text-align: center; color: var(--text);">
             <div style="font-size: 3rem; margin-bottom: 1rem;">⏳</div>
             <p style="font-size: 1.25rem;">Preparing checkout...</p>
           </div>
         `;
-          document.body.appendChild(loadingOverlay);
+        document.body.appendChild(loadingOverlay);
 
-          // Close modal if open
-          const modal = document.getElementById('modal');
-          const wasModalOpen = modal.classList.contains('active');
-          if (wasModalOpen) closeModal();
+        // Close modal if open
+        const modal = document.getElementById('modal');
+        const wasModalOpen = modal.classList.contains('active');
+        if (wasModalOpen) closeModal();
 
-          // Create basket
-          const basket = await createBasket(username);
-          console.log('✓ Basket created:', basket.ident);
+        // Create basket
+        const basket = await createBasket(username);
+        console.log('✓ Basket created:', basket.ident);
 
-          // Add package
-          await addPackageToBasket(basket.ident, packageId);
-          console.log('✓ Package added');
+        // Add package
+        await addPackageToBasket(basket.ident, packageId);
+        console.log('✓ Package added');
 
-          // Detect if mobile
-          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        // Detect if mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
-          // Remove loading overlay
-          document.body.removeChild(loadingOverlay);
+        // Remove loading overlay
+        document.body.removeChild(loadingOverlay);
 
-          // Launch checkout
-          if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
-            if (isMobile) {
-              // On mobile, redirect directly to checkout page (avoids popup blockers)
-              console.log('Mobile detected, using redirect mode');
+        // Launch checkout
+        if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
+          if (isMobile) {
+            // On mobile, redirect directly to checkout page (avoids popup blockers)
+            console.log('Mobile detected, using redirect mode');
 
-              // Store purchase info for when user returns
-              sessionStorage.setItem('pendingPurchase', JSON.stringify({
-                packageName: packageName,
-                price: price,
-                username: username,
-                isSubscription: isSubscription,
-                isGift: (forUsername && forUsername !== currentUsername),
-                timestamp: Date.now()
-              }));
+            // Store purchase info for when user returns
+            sessionStorage.setItem('pendingPurchase', JSON.stringify({
+              packageName: packageName,
+              price: price,
+              username: username,
+              isSubscription: isSubscription,
+              isGift: (forUsername && forUsername !== currentUsername),
+              timestamp: Date.now()
+            }));
 
-              const checkoutUrl = `https://checkout.tebex.io/checkout/${basket.ident}`;
-              window.location.href = checkoutUrl;
-            } else {
-              // On desktop, use modal
-              console.log('Initializing Tebex checkout modal...');
-
-              const isGift = (forUsername && forUsername !== currentUsername);
-
-              // Track whether payment was completed
-              let paymentCompleted = false;
-              let errorHandled = false;
-
-              // Initialize Tebex with proper event handlers (per Tebex.js documentation)
-              Tebex.checkout.init({
-                ident: basket.ident,
-                theme: STORE_CONFIG.tebexTheme.theme,
-                colors: STORE_CONFIG.tebexTheme.colors
-              });
-
-              // Use official Tebex.checkout.on() method for events
-              Tebex.checkout.on("payment:complete", (event) => {
-                console.log('✓ Tebex payment:complete event received', event);
-                paymentCompleted = true;
-                showSuccessModal(packageName, price, username, isSubscription, isGift);
-              });
-
-              Tebex.checkout.on("payment:error", (event) => {
-                console.error('Tebex payment:error event received', event);
-
-                // Prevent duplicate error handling
-                if (errorHandled) {
-                  console.log('⚠️ Error already handled, ignoring duplicate event');
-                  return;
-                }
-                errorHandled = true;
-
-                console.log('Payment declined - adding click-outside listener to Tebex modal...');
-
-                // Wait for Tebex modal to be in the DOM
-                setTimeout(() => {
-                  // Find the Tebex lightbox overlay
-                  const tebexLightbox = document.querySelector('.tebex-js-lightbox');
-
-                  if (tebexLightbox) {
-                    console.log('✓ Found Tebex lightbox, adding click-outside handler');
-
-                    // Click outside handler - click on the overlay (not the holder)
-                    const clickHandler = (e) => {
-                      // Only close if clicking directly on the lightbox overlay, not the holder
-                      if (e.target === tebexLightbox) {
-                        console.log('Clicked outside modal - closing Tebex');
-                        if (typeof Tebex.checkout.close === 'function') {
-                          Tebex.checkout.close();
-                        }
-                        tebexLightbox.removeEventListener('click', clickHandler);
-                      }
-                    };
-                    tebexLightbox.addEventListener('click', clickHandler);
-
-                    console.log('✓ Click-outside handler active (click the dark area to close)');
-                  } else {
-                    console.warn('Could not find Tebex modal elements');
-                  }
-                }, 500);
-              });
-
-              Tebex.checkout.on("open", () => {
-                console.log('Tebex checkout opened');
-              });
-
-              Tebex.checkout.on("close", () => {
-                console.log('Tebex checkout closed');
-
-                // If modal closed without payment completion, user likely cancelled or had error
-                if (!paymentCompleted) {
-                  console.log('ℹ️ Checkout closed without payment completion');
-                }
-              });
-
-              console.log('Launching Tebex checkout...');
-              Tebex.checkout.launch();
-            }
-
+            const checkoutUrl = `https://checkout.tebex.io/checkout/${basket.ident}`;
+            window.location.href = checkoutUrl;
           } else {
-            throw new Error('Tebex.js not loaded');
+            // On desktop, use modal
+            console.log('Initializing Tebex checkout modal...');
+
+            const isGift = (forUsername && forUsername !== currentUsername);
+
+            // Track whether payment was completed
+            let paymentCompleted = false;
+            let errorHandled = false;
+
+            // Initialize Tebex with proper event handlers (per Tebex.js documentation)
+            Tebex.checkout.init({
+              ident: basket.ident,
+              theme: STORE_CONFIG.tebexTheme.theme,
+              colors: STORE_CONFIG.tebexTheme.colors
+            });
+
+            // Use official Tebex.checkout.on() method for events
+            Tebex.checkout.on("payment:complete", (event) => {
+              console.log('✓ Tebex payment:complete event received', event);
+              paymentCompleted = true;
+              showSuccessModal(packageName, price, username, isSubscription, isGift);
+            });
+
+            Tebex.checkout.on("payment:error", (event) => {
+              console.error('Tebex payment:error event received', event);
+
+              // Prevent duplicate error handling
+              if (errorHandled) {
+                console.log('⚠️ Error already handled, ignoring duplicate event');
+                return;
+              }
+              errorHandled = true;
+
+              console.log('Payment declined - adding click-outside listener to Tebex modal...');
+
+              // Wait for Tebex modal to be in the DOM
+              setTimeout(() => {
+                // Find the Tebex lightbox overlay
+                const tebexLightbox = document.querySelector('.tebex-js-lightbox');
+
+                if (tebexLightbox) {
+                  console.log('✓ Found Tebex lightbox, adding click-outside handler');
+
+                  // Click outside handler - click on the overlay (not the holder)
+                  const clickHandler = (e) => {
+                    // Only close if clicking directly on the lightbox overlay, not the holder
+                    if (e.target === tebexLightbox) {
+                      console.log('Clicked outside modal - closing Tebex');
+                      if (typeof Tebex.checkout.close === 'function') {
+                        Tebex.checkout.close();
+                      }
+                      tebexLightbox.removeEventListener('click', clickHandler);
+                    }
+                  };
+                  tebexLightbox.addEventListener('click', clickHandler);
+
+                  console.log('✓ Click-outside handler active (click the dark area to close)');
+                } else {
+                  console.warn('Could not find Tebex modal elements');
+                }
+              }, 500);
+            });
+
+            Tebex.checkout.on("open", () => {
+              console.log('Tebex checkout opened');
+            });
+
+            Tebex.checkout.on("close", () => {
+              console.log('Tebex checkout closed');
+
+              // If modal closed without payment completion, user likely cancelled or had error
+              if (!paymentCompleted) {
+                console.log('ℹ️ Checkout closed without payment completion');
+              }
+            });
+
+            console.log('Launching Tebex checkout...');
+            Tebex.checkout.launch();
           }
 
-        } catch (error) {
-          console.error('Purchase error:', error);
-          // Remove loading overlay if it exists
-          const loadingOverlay = document.querySelector('div[style*="z-index: 10001"]');
-          if (loadingOverlay) {
-            document.body.removeChild(loadingOverlay);
-          }
-          await customAlert(error.message, 'Failed to Start Checkout', '❌');
-        }
-      }
-
-      async function purchaseAsGift(packageId, packageName, price, isSubscription) {
-        const recipientUsername = await customPrompt(
-          'Enter the recipient\'s Minecraft username:',
-          'Gift Purchase',
-          'Minecraft Username',
-          '🎁'
-        );
-
-        if (!recipientUsername || !recipientUsername.trim()) {
-          return;
+        } else {
+          throw new Error('Tebex.js not loaded');
         }
 
-        // Call purchase with recipient's username
-        purchasePackage(packageId, packageName, price, isSubscription, recipientUsername.trim());
+      } catch (error) {
+        console.error('Purchase error:', error);
+        // Remove loading overlay if it exists
+        const loadingOverlay = document.querySelector('div[style*="z-index: 10001"]');
+        if (loadingOverlay) {
+          document.body.removeChild(loadingOverlay);
+        }
+        await customAlert(error.message, 'Failed to Start Checkout', '❌');
+      }
+    }
+
+    async function purchaseAsGift(packageId, packageName, price, isSubscription) {
+      const recipientUsername = await customPrompt(
+        'Enter the recipient\'s Minecraft username:',
+        'Gift Purchase',
+        'Minecraft Username',
+        '🎁'
+      );
+
+      if (!recipientUsername || !recipientUsername.trim()) {
+        return;
       }
 
-      function showSuccessModal(packageName, price, username, isSubscription, wasGift) {
-        console.log('showSuccessModal called:', { packageName, price, username, isSubscription, wasGift });
-        const html = `
+      // Call purchase with recipient's username
+      purchasePackage(packageId, packageName, price, isSubscription, recipientUsername.trim());
+    }
+
+    function showSuccessModal(packageName, price, username, isSubscription, wasGift) {
+      console.log('showSuccessModal called:', { packageName, price, username, isSubscription, wasGift });
+      const html = `
         <div style="text-align: center; padding: 2rem; animation: fadeInUp 0.5s ease;">
           <div style="font-size: 5rem; margin-bottom: 1rem; animation: bounceIn 0.8s ease;">${wasGift ? '🎁' : '🎉'}</div>
           <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">
@@ -655,27 +655,27 @@
         
       `;
 
-        const modalHeader = document.getElementById('modal-header');
-        const modalFooter = document.getElementById('modal-footer');
-        if (modalHeader) modalHeader.style.display = 'none';
-        if (modalFooter) modalFooter.style.display = 'none';
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      if (modalHeader) modalHeader.style.display = 'none';
+      if (modalFooter) modalFooter.style.display = 'none';
 
-        document.getElementById('modal-body').innerHTML = html;
-        document.getElementById('modal').classList.add('active');
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    // ========================================
+    // RENDER YOUR CUSTOM CARDS
+    // ========================================
+
+    function renderRanks() {
+      const grid = document.getElementById('ranks-grid');
+      if (!grid) return; // Grid doesn't exist
+      if (!STORE_CONFIG.ranks || STORE_CONFIG.ranks.length === 0) {
+        grid.innerHTML = ''; // No ranks to display
+        return;
       }
-
-      // ========================================
-      // RENDER YOUR CUSTOM CARDS
-      // ========================================
-
-      function renderRanks() {
-        const grid = document.getElementById('ranks-grid');
-        if (!grid) return; // Grid doesn't exist
-        if (!STORE_CONFIG.ranks || STORE_CONFIG.ranks.length === 0) {
-          grid.innerHTML = ''; // No ranks to display
-          return;
-        }
-        grid.innerHTML = STORE_CONFIG.ranks.map(rank => `
+      grid.innerHTML = STORE_CONFIG.ranks.map(rank => `
         <div class="product-card" onclick="openRankModal('${rank.name}')">
           ${rank.badge ? `<span class="product-badge ${rank.badgeClass}">${rank.badge}</span>` : ''}
           ${rank.image ? `<img src="${rank.image}" alt="${rank.name}" class="product-image">` : `<div class="product-icon">${rank.icon}</div>`}
@@ -685,177 +685,177 @@
           <div class="view-details-text">View Full Details →</div>
         </div>
       `).join('');
+    }
+
+    function renderCrates() {
+      const grid = document.getElementById('crates-grid');
+      if (!grid) return; // Grid doesn't exist
+
+      // If crates is undefined or commented out, hide the section
+      if (!STORE_CONFIG.crates) {
+        const cratesSection = document.getElementById('crates');
+        if (cratesSection) {
+          cratesSection.style.display = 'none';
+        }
+        return;
       }
 
-      function renderCrates() {
-        const grid = document.getElementById('crates-grid');
-        if (!grid) return; // Grid doesn't exist
+      if (STORE_CONFIG.crates.length === 0) {
+        grid.innerHTML = ''; // No crates to display
+        return;
+      }
 
-        // If crates is undefined or commented out, hide the section
-        if (!STORE_CONFIG.crates) {
-          const cratesSection = document.getElementById('crates');
-          if (cratesSection) {
-            cratesSection.style.display = 'none';
-          }
-          return;
-        }
-
-        if (STORE_CONFIG.crates.length === 0) {
-          grid.innerHTML = ''; // No crates to display
-          return;
-        }
-
-        grid.innerHTML = STORE_CONFIG.crates.map(crate => {
-          const desc = (crate.modalDescription || crate.description).replace(/'/g, "&apos;");
-          return `
+      grid.innerHTML = STORE_CONFIG.crates.map(crate => {
+        const desc = (crate.modalDescription || crate.description).replace(/'/g, "&apos;");
+        return `
         <div class="product-card" onclick="openSimpleModal('${crate.name}', ${crate.packageId}, ${crate.price}, false, '${crate.image || ''}', '${crate.icon}', '${desc}')">
           ${crate.badge ? `<span class="product-badge ${crate.badgeClass}">${crate.badge}</span>` : ''}
           ${crate.image ?
-              `<img src="${crate.image}" alt="${crate.name}" class="product-image">` :
-              `<div class="product-icon">${crate.icon}</div>`
-            }
+            `<img src="${crate.image}" alt="${crate.name}" class="product-image">` :
+            `<div class="product-icon">${crate.icon}</div>`
+          }
           <h3 class="product-title">${crate.name}</h3>
           <div class="product-price">${crate.priceDisplay}</div>
           <p class="product-description">${crate.description}</p>
           <div class="view-details-text">View Full Details →</div>
         </div>
       `}).join('');
+    }
+
+    function renderCosmetics() {
+      const grid = document.getElementById('cosmetics-grid');
+      if (!grid) return; // Grid doesn't exist
+
+      // If cosmetics is undefined or commented out, hide the section
+      if (!STORE_CONFIG.cosmetics) {
+        const cosmeticsSection = document.getElementById('cosmetics');
+        if (cosmeticsSection) {
+          cosmeticsSection.style.display = 'none';
+        }
+        return;
       }
 
-      function renderCosmetics() {
-        const grid = document.getElementById('cosmetics-grid');
-        if (!grid) return; // Grid doesn't exist
+      if (STORE_CONFIG.cosmetics.length === 0) {
+        grid.innerHTML = ''; // No cosmetics to display
+        return;
+      }
 
-        // If cosmetics is undefined or commented out, hide the section
-        if (!STORE_CONFIG.cosmetics) {
-          const cosmeticsSection = document.getElementById('cosmetics');
-          if (cosmeticsSection) {
-            cosmeticsSection.style.display = 'none';
-          }
-          return;
-        }
-
-        if (STORE_CONFIG.cosmetics.length === 0) {
-          grid.innerHTML = ''; // No cosmetics to display
-          return;
-        }
-
-        grid.innerHTML = STORE_CONFIG.cosmetics.map(item => {
-          const desc = (item.modalDescription || item.description).replace(/'/g, "&apos;");
-          return `
+      grid.innerHTML = STORE_CONFIG.cosmetics.map(item => {
+        const desc = (item.modalDescription || item.description).replace(/'/g, "&apos;");
+        return `
         <div class="product-card" onclick="openSimpleModal('${item.name}', ${item.packageId}, ${item.price}, false, '${item.image || ''}', '${item.icon}', '${desc}')">
           ${item.badge ? `<span class="product-badge ${item.badgeClass}">${item.badge}</span>` : ''}
           ${item.image ?
-              `<img src="${item.image}" alt="${item.name}" class="product-image">` :
-              `<div class="product-icon">${item.icon}</div>`
-            }
+            `<img src="${item.image}" alt="${item.name}" class="product-image">` :
+            `<div class="product-icon">${item.icon}</div>`
+          }
           <h3 class="product-title">${item.name}</h3>
           <div class="product-price">${item.priceDisplay}</div>
           <p class="product-description">${item.description}</p>
           <div class="view-details-text">View Full Details →</div>
         </div>
       `}).join('');
-      }
+    }
 
-      function openRankModal(rankName) {
-        const rank = STORE_CONFIG.ranks.find(r => r.name === rankName);
-        if (!rank) return;
+    function openRankModal(rankName) {
+      const rank = STORE_CONFIG.ranks.find(r => r.name === rankName);
+      if (!rank) return;
 
-        const modalHeader = document.getElementById('modal-header');
-        const modalFooter = document.getElementById('modal-footer');
-        const modalBody = document.getElementById('modal-body');
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      const modalBody = document.getElementById('modal-body');
 
-        if (modalHeader) modalHeader.style.display = 'block';
-        if (modalFooter) modalFooter.style.display = 'block';
+      if (modalHeader) modalHeader.style.display = 'block';
+      if (modalFooter) modalFooter.style.display = 'block';
 
-        // Restore modal-body padding for rank modals
-        if (modalBody) modalBody.style.padding = '2rem';
+      // Restore modal-body padding for rank modals
+      if (modalBody) modalBody.style.padding = '2rem';
 
-        document.getElementById('modal-icon').innerHTML = rank.image ?
-          `<img src="${rank.image}" class="modal-image">` :
-          `<div style="font-size: 4rem;">${rank.icon}</div>`;
-        document.getElementById('modal-title').textContent = rank.name;
-        document.getElementById('modal-price').textContent = rank.subscriptionId ?
-          `${rank.priceDisplay} or ${rank.priceSubscriptionDisplay}` : rank.priceDisplay;
-        document.getElementById('modal-price-subtitle').textContent =
-          rank.subscriptionId ? 'One-time purchase OR monthly subscription' : 'One-time purchase';
+      document.getElementById('modal-icon').innerHTML = rank.image ?
+        `<img src="${rank.image}" class="modal-image">` :
+        `<div style="font-size: 4rem;">${rank.icon}</div>`;
+      document.getElementById('modal-title').textContent = rank.name;
+      document.getElementById('modal-price').textContent = rank.subscriptionId ?
+        `${rank.priceDisplay} or ${rank.priceSubscriptionDisplay}` : rank.priceDisplay;
+      document.getElementById('modal-price-subtitle').textContent =
+        rank.subscriptionId ? 'One-time purchase OR monthly subscription' : 'One-time purchase';
 
-        let bodyHtml = '';
+      let bodyHtml = '';
 
-        if (rank.inGamePerks) {
-          bodyHtml += `
+      if (rank.inGamePerks) {
+        bodyHtml += `
           <div class="perk-section">
             <h3 class="perk-section-title">In-Game Perks</h3>
             <ul class="perk-list">
               ${rank.inGamePerks.map(p => {
-            // If perk is an object with image
-            if (typeof p === 'object' && p.text) {
-              return `
+          // If perk is an object with image
+          if (typeof p === 'object' && p.text) {
+            return `
                     <li style="display: flex; align-items: center; gap: 0.75rem;">
                     <span class="perk-icon">✓</span>
                     <span style="line-height: 1.5; display: flex; align-items: center;">
                     ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image-inline" style="width: auto; height: 16px; margin-top: 4px; margin-right: 4px; border-radius: 4px; flex-shrink: 0;">` : ''} ${p.text} </span>
                     </li>
                   `;
-            }
-            // Simple text perk
-            return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
-          }).join('')}
+          }
+          // Simple text perk
+          return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
+        }).join('')}
             </ul>
           </div>
         `;
-        }
+      }
 
-        if (rank.landPerks) {
-          bodyHtml += `
+      if (rank.landPerks) {
+        bodyHtml += `
           <div class="perk-section landPerks">
             <h3 class="perk-section-title">Land Perks</h3>
             <ul class="perk-list">
               ${rank.landPerks.map(p => {
-            if (typeof p === 'object' && p.text) {
-              return `
+          if (typeof p === 'object' && p.text) {
+            return `
                     <li style="display: flex; align-items: center; gap: 0.75rem;">
                     <span class="perk-icon">✓</span>
                     <span style="line-height: 1.5; display: flex; align-items: center;">
                     ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image-inline" style="width: auto; height: 16px; margin-top: 4px; margin-right: 4px; border-radius: 4px; flex-shrink: 0;">` : ''} ${p.text} </span>
                     </li>
                   `;
-            }
-            return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
-          }).join('')}
+          }
+          return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
+        }).join('')}
             </ul>
           </div>
         `;
-        }
+      }
 
-        if (rank.discordPerks) {
-          bodyHtml += `
+      if (rank.discordPerks) {
+        bodyHtml += `
           <div class="perk-section">
             <h3 class="perk-section-title">Discord Perks</h3>
             <ul class="perk-list">
               ${rank.discordPerks.map(p => {
-            if (typeof p === 'object' && p.text) {
-              return `
+          if (typeof p === 'object' && p.text) {
+            return `
                     <li style="display: flex; align-items: center; gap: 0.75rem;">
                     <span class="perk-icon">✓</span>
                     <span style="line-height: 1.5; display: flex; align-items: center;">
                     ${p.image ? `<img src="${p.image}" alt="${p.text}" class="perk-image-inline" style="width: auto; height: 16px; margin-top: 4px; margin-right: 4px; border-radius: 4px; flex-shrink: 0;">` : ''} ${p.text} </span>
                     </li>
                   `;
-            }
-            return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
-          }).join('')}
+          }
+          return `<li><span class="perk-icon">✓</span><span>${p}</span></li>`;
+        }).join('')}
             </ul>
           </div>
         `;
-        }
+      }
 
-        document.getElementById('modal-body').innerHTML = bodyHtml;
+      document.getElementById('modal-body').innerHTML = bodyHtml;
 
-        let footerHtml = '';
-        if (rank.subscriptionId) {
-          // Dual buttons with cart option - subscriptions can't be added to cart
-          footerHtml = `
+      let footerHtml = '';
+      if (rank.subscriptionId) {
+        // Dual buttons with cart option - subscriptions can't be added to cart
+        footerHtml = `
           <div class="button-group">
             <button class="buy-btn" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();" style="background: var(--secondary);">
               <span class="btn-label">🛒 Add One-Time to Cart</span>
@@ -877,9 +877,9 @@
             </button>
           </div>
         `;
-        } else {
-          // Single button with add to cart option
-          footerHtml = `
+      } else {
+        // Single button with add to cart option
+        footerHtml = `
           <div style="display: flex; gap: 1rem;">
             <button class="buy-btn" style="flex: 1; background: var(--secondary);" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();">
               🛒 Add to Cart
@@ -894,32 +894,32 @@
             <span>Gift This Purchase</span>
           </button>
         `;
-        }
-
-        document.getElementById('modal-footer').innerHTML = footerHtml;
-        document.getElementById('modal').classList.add('active');
       }
 
-      function openSimpleModal(name, packageId, price, isSub, image = '', icon = '', description = '') {
-        const modalHeader = document.getElementById('modal-header');
-        const modalFooter = document.getElementById('modal-footer');
-        const modalBody = document.getElementById('modal-body');
+      document.getElementById('modal-footer').innerHTML = footerHtml;
+      document.getElementById('modal').classList.add('active');
+    }
 
-        if (modalHeader) modalHeader.style.display = 'none';
-        if (modalFooter) modalFooter.style.display = 'none';
+    function openSimpleModal(name, packageId, price, isSub, image = '', icon = '', description = '') {
+      const modalHeader = document.getElementById('modal-header');
+      const modalFooter = document.getElementById('modal-footer');
+      const modalBody = document.getElementById('modal-body');
 
-        // Remove modal-body padding to allow full-width separators
-        if (modalBody) modalBody.style.padding = '0';
+      if (modalHeader) modalHeader.style.display = 'none';
+      if (modalFooter) modalFooter.style.display = 'none';
 
-        // Build enhanced modal content with full-width separator lines
-        const modalContent = `
+      // Remove modal-body padding to allow full-width separators
+      if (modalBody) modalBody.style.padding = '0';
+
+      // Build enhanced modal content with full-width separator lines
+      const modalContent = `
         <div style="text-align: center;">
           <!-- Icon/Image -->
           <div style="padding: 2rem 2rem 1rem;">
             ${image ?
-            `<img src="${image}" alt="${name}" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 1px solid var(--border);">` :
-            `<div style="font-size: 5rem;">${icon}</div>`
-          }
+          `<img src="${image}" alt="${name}" style="max-width: 200px; max-height: 200px; border-radius: 12px; border: 1px solid var(--border);">` :
+          `<div style="font-size: 5rem;">${icon}</div>`
+        }
             <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">${name}</h2>
             <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">$${price.toFixed(2)}</div>
           </div>
@@ -955,294 +955,295 @@
         </div>
       `;
 
-        document.getElementById('modal-body').innerHTML = modalContent;
-        document.getElementById('modal').classList.add('active');
+      document.getElementById('modal-body').innerHTML = modalContent;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function scrollToSection(id, event) {
+      event.preventDefault();
+      const el = document.getElementById(id);
+      if (el) {
+        const offset = 150;
+        window.scrollTo({ top: el.offsetTop - offset, behavior: 'smooth' });
       }
 
-      function closeModal() {
-        document.getElementById('modal').classList.remove('active');
+      document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // ========================================
+    // COMMUNITY STATS
+    // ========================================
+
+    async function loadCommunityStats() {
+      // Check if community stats are enabled
+      if (!STORE_CONFIG.communityStats || !STORE_CONFIG.communityStats.enabled) {
+        const statsSection = document.querySelector('.community-stats-section');
+        if (statsSection) {
+          statsSection.style.display = 'none';
+        }
+        return;
       }
 
-      function scrollToSection(id, event) {
-        event.preventDefault();
-        const el = document.getElementById(id);
-        if (el) {
-          const offset = 150;
-          window.scrollTo({ top: el.offsetTop - offset, behavior: 'smooth' });
+      try {
+        // Fetch sidebar modules from Tebex API
+        const response = await fetch(`https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/sidebar`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch sidebar data');
         }
 
-        document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
-        event.target.classList.add('active');
-      }
+        const sidebarData = await response.json();
+        console.log('Sidebar data:', sidebarData);
 
-      // ========================================
-      // COMMUNITY STATS
-      // ========================================
+        // Find the modules we need
+        const topCustomerModule = sidebarData.data?.find(module => module.type === 'top_customer');
+        const communityGoalModule = sidebarData.data?.find(module => module.type === 'community_goal');
+        const paymentGoalModule = sidebarData.data?.find(module => module.type === 'payment_goal');
 
-      async function loadCommunityStats() {
-        // Check if community stats are enabled
-        if (!STORE_CONFIG.communityStats || !STORE_CONFIG.communityStats.enabled) {
-          const statsSection = document.querySelector('.community-stats-section');
-          if (statsSection) {
-            statsSection.style.display = 'none';
-          }
-          return;
-        }
+        // Use community_goal or payment_goal (whichever is available)
+        const goalModule = communityGoalModule || paymentGoalModule;
 
-        try {
-          // Fetch sidebar modules from Tebex API
-          const response = await fetch(`https://headless.tebex.io/api/accounts/${STORE_CONFIG.tebexPublicToken}/sidebar`);
+        // Load top customer from API
+        const topCustomerDisplay = document.getElementById('top-customer-display');
+        if (topCustomerDisplay) {
+          if (topCustomerModule && topCustomerModule.data) {
+            const username = topCustomerModule.data.username;
+            const usernameId = topCustomerModule.data.username_id;
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch sidebar data');
-          }
+            // Use username_id for skin if available, otherwise username
+            const skinIdentifier = usernameId || username;
+            const skinUrl = `https://mc-heads.net/body/${skinIdentifier}`;
 
-          const sidebarData = await response.json();
-          console.log('Sidebar data:', sidebarData);
-
-          // Find the modules we need
-          const topCustomerModule = sidebarData.data?.find(module => module.type === 'top_customer');
-          const paymentGoalModule = sidebarData.data?.find(module => module.type === 'payment_goal');
-
-          // Use community_goal or payment_goal (whichever is available)
-          const goalModule = paymentGoalModule;
-
-          // Load top customer from API
-          const topCustomerDisplay = document.getElementById('top-customer-display');
-          if (topCustomerDisplay) {
-            if (topCustomerModule && topCustomerModule.data) {
-              const username = topCustomerModule.data.username;
-              const usernameId = topCustomerModule.data.username_id;
-
-              // Use username_id for skin if available, otherwise username
-              const skinIdentifier = usernameId || username;
-              const skinUrl = `https://mc-heads.net/body/${skinIdentifier}`;
-
-              topCustomerDisplay.innerHTML = `
+            topCustomerDisplay.innerHTML = `
               <img src="${skinUrl}" 
                    alt="${username}" 
                    class="customer-skin"
-                   onerror="this.src='https://mc-heads.net/body/MCH_Steve'">
+                   onerror="this.src='https://mc-heads.net/body/steve'">
               <div class="customer-username">${username}</div>
             `;
-            } else {
-              // Fallback to config if API doesn't provide data
-              const stats = STORE_CONFIG.communityStats;
-              if (stats.topCustomer) {
-                const skinUrl = stats.topCustomer.uuid
-                  ? `https://mc-heads.net/body/${stats.topCustomer.uuid}`
-                  : `https://mc-heads.net/body/${stats.topCustomer.username}`;
-
-                topCustomerDisplay.innerHTML = `
-                <img src="${skinUrl}" 
-                     alt="${stats.topCustomer.username}" 
-                     class="customer-skin"
-                     onerror="this.src='https://mc-heads.net/body/MCH_Steve'">
-                <div class="customer-username">${stats.topCustomer.username}</div>
-              `;
-              } else {
-                topCustomerDisplay.innerHTML = '<div class="loading-spinner">No data available</div>';
-              }
-            }
-          }
-
-          // Update goal progress from API
-          const goalFill = document.getElementById('goal-fill');
-          const goalCurrentEl = document.getElementById('goal-current');
-          const goalTargetEl = document.getElementById('goal-target');
-
-          if (goalModule && goalModule.data) {
-            const percentage = Math.min(goalModule.data.percentage || 0, 100); // Cap at 100%
-            const target = goalModule.data.target || STORE_CONFIG.communityStats.monthlyGoal || 15;
-
-            // Calculate current amount from percentage and target
-            const current = (percentage / 100) * target;
-
-            if (goalFill) {
-              goalFill.style.width = `${percentage}%`;
-            }
-
-            if (goalCurrentEl) {
-              goalCurrentEl.textContent = `$${current.toFixed(2)}`;
-            }
-
-            if (goalTargetEl) {
-              goalTargetEl.textContent = `$${target.toFixed(2)}`;
-            }
           } else {
-            // Fallback to config values
+            // Fallback to config if API doesn't provide data
             const stats = STORE_CONFIG.communityStats;
-            const goalCurrent = stats.currentProgress || 0;
-            const goalTarget = stats.monthlyGoal || 15;
-            const goalPercent = Math.min((goalCurrent / goalTarget) * 100, 100);
-
-            if (goalFill) {
-              goalFill.style.width = `${goalPercent}%`;
-            }
-            if (goalCurrentEl) {
-              goalCurrentEl.textContent = `$${goalCurrent.toFixed(2)}`;
-            }
-            if (goalTargetEl) {
-              goalTargetEl.textContent = `$${goalTarget.toFixed(2)}`;
-            }
-          }
-        } catch (error) {
-          console.error('Error loading community stats:', error);
-
-          // Fallback to config on error
-          try {
-            const stats = STORE_CONFIG.communityStats;
-
-            const topCustomerDisplay = document.getElementById('top-customer-display');
-            if (topCustomerDisplay && stats.topCustomer) {
+            if (stats.topCustomer) {
               const skinUrl = stats.topCustomer.uuid
                 ? `https://mc-heads.net/body/${stats.topCustomer.uuid}`
                 : `https://mc-heads.net/body/${stats.topCustomer.username}`;
 
               topCustomerDisplay.innerHTML = `
+                <img src="${skinUrl}" 
+                     alt="${stats.topCustomer.username}" 
+                     class="customer-skin"
+                     onerror="this.src='https://mc-heads.net/body/steve'">
+                <div class="customer-username">${stats.topCustomer.username}</div>
+              `;
+            } else {
+              topCustomerDisplay.innerHTML = '<div class="loading-spinner">No data available</div>';
+            }
+          }
+        }
+
+        // Update goal progress from API
+        const goalFill = document.getElementById('goal-fill');
+        const goalCurrentEl = document.getElementById('goal-current');
+        const goalTargetEl = document.getElementById('goal-target');
+
+        if (goalModule && goalModule.data) {
+          const percentage = Math.min(goalModule.data.percentage || 0, 100); // Cap at 100%
+          const target = goalModule.data.target || STORE_CONFIG.communityStats.monthlyGoal || 15;
+
+          // Calculate current amount from percentage and target
+          const current = (percentage / 100) * target;
+
+          if (goalFill) {
+            goalFill.style.width = `${percentage}%`;
+          }
+
+          if (goalCurrentEl) {
+            goalCurrentEl.textContent = `$${current.toFixed(2)}`;
+          }
+
+          if (goalTargetEl) {
+            goalTargetEl.textContent = `$${target.toFixed(2)}`;
+          }
+        } else {
+          // Fallback to config values
+          const stats = STORE_CONFIG.communityStats;
+          const goalCurrent = stats.currentProgress || 0;
+          const goalTarget = stats.monthlyGoal || 15;
+          const goalPercent = Math.min((goalCurrent / goalTarget) * 100, 100);
+
+          if (goalFill) {
+            goalFill.style.width = `${goalPercent}%`;
+          }
+          if (goalCurrentEl) {
+            goalCurrentEl.textContent = `$${goalCurrent.toFixed(2)}`;
+          }
+          if (goalTargetEl) {
+            goalTargetEl.textContent = `$${goalTarget.toFixed(2)}`;
+          }
+        }
+      } catch (error) {
+        console.error('Error loading community stats:', error);
+
+        // Fallback to config on error
+        try {
+          const stats = STORE_CONFIG.communityStats;
+
+          const topCustomerDisplay = document.getElementById('top-customer-display');
+          if (topCustomerDisplay && stats.topCustomer) {
+            const skinUrl = stats.topCustomer.uuid
+              ? `https://mc-heads.net/body/${stats.topCustomer.uuid}`
+              : `https://mc-heads.net/body/${stats.topCustomer.username}`;
+
+            topCustomerDisplay.innerHTML = `
               <img src="${skinUrl}" 
                    alt="${stats.topCustomer.username}" 
                    class="customer-skin"
-                   onerror="this.src='https://mc-heads.net/body/MCH_Steve'">
+                   onerror="this.src='https://mc-heads.net/body/steve'">
               <div class="customer-username">${stats.topCustomer.username}</div>
             `;
-            }
+          }
 
-            const goalCurrent = stats.currentProgress || 0;
-            const goalTarget = stats.monthlyGoal || 15;
-            const goalPercent = Math.min((goalCurrent / goalTarget) * 100, 100);
+          const goalCurrent = stats.currentProgress || 0;
+          const goalTarget = stats.monthlyGoal || 15;
+          const goalPercent = Math.min((goalCurrent / goalTarget) * 100, 100);
 
-            const goalFill = document.getElementById('goal-fill');
-            const goalCurrentEl = document.getElementById('goal-current');
-            const goalTargetEl = document.getElementById('goal-target');
+          const goalFill = document.getElementById('goal-fill');
+          const goalCurrentEl = document.getElementById('goal-current');
+          const goalTargetEl = document.getElementById('goal-target');
 
-            if (goalFill) {
-              goalFill.style.width = `${goalPercent}%`;
-            }
-            if (goalCurrentEl) {
-              goalCurrentEl.textContent = `$${goalCurrent.toFixed(2)}`;
-            }
-            if (goalTargetEl) {
-              goalTargetEl.textContent = `$${goalTarget.toFixed(2)}`;
-            }
-          } catch (fallbackError) {
-            console.error('Fallback also failed:', fallbackError);
-            const topCustomerDisplay = document.getElementById('top-customer-display');
-            if (topCustomerDisplay) {
-              topCustomerDisplay.innerHTML = '<div class="loading-spinner">Stats unavailable</div>';
-            }
+          if (goalFill) {
+            goalFill.style.width = `${goalPercent}%`;
+          }
+          if (goalCurrentEl) {
+            goalCurrentEl.textContent = `$${goalCurrent.toFixed(2)}`;
+          }
+          if (goalTargetEl) {
+            goalTargetEl.textContent = `$${goalTarget.toFixed(2)}`;
+          }
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+          const topCustomerDisplay = document.getElementById('top-customer-display');
+          if (topCustomerDisplay) {
+            topCustomerDisplay.innerHTML = '<div class="loading-spinner">Stats unavailable</div>';
           }
         }
       }
+    }
 
-      // ========================================
-      // INITIALIZE
-      // ========================================
+    // ========================================
+    // INITIALIZE
+    // ========================================
 
-      window.addEventListener('DOMContentLoaded', function () {
-        renderUsernameDisplay();
-        renderRanks();
-        renderCrates();
-        renderCosmetics();
-        loadCommunityStats();
+    window.addEventListener('DOMContentLoaded', function () {
+      renderUsernameDisplay();
+      renderRanks();
+      renderCrates();
+      renderCosmetics();
+      loadCommunityStats();
 
-        // Check for pending purchase (mobile users returning from Tebex)
-        const pendingPurchase = sessionStorage.getItem('pendingPurchase');
-        if (pendingPurchase) {
-          try {
-            const purchase = JSON.parse(pendingPurchase);
-            // Only show if it's recent (within last 5 minutes)
-            if (Date.now() - purchase.timestamp < 5 * 60 * 1000) {
-              sessionStorage.removeItem('pendingPurchase');
-              // Show success modal after a brief delay
-              setTimeout(() => {
-                showSuccessModal(
-                  purchase.packageName,
-                  purchase.price,
-                  purchase.username,
-                  purchase.isSubscription,
-                  purchase.isGift
-                );
-              }, 500);
-            } else {
-              // Clear old pending purchase
-              sessionStorage.removeItem('pendingPurchase');
-            }
-          } catch (e) {
-            console.error('Error parsing pending purchase:', e);
+      // Check for pending purchase (mobile users returning from Tebex)
+      const pendingPurchase = sessionStorage.getItem('pendingPurchase');
+      if (pendingPurchase) {
+        try {
+          const purchase = JSON.parse(pendingPurchase);
+          // Only show if it's recent (within last 5 minutes)
+          if (Date.now() - purchase.timestamp < 5 * 60 * 1000) {
+            sessionStorage.removeItem('pendingPurchase');
+            // Show success modal after a brief delay
+            setTimeout(() => {
+              showSuccessModal(
+                purchase.packageName,
+                purchase.price,
+                purchase.username,
+                purchase.isSubscription,
+                purchase.isGift
+              );
+            }, 500);
+          } else {
+            // Clear old pending purchase
             sessionStorage.removeItem('pendingPurchase');
           }
+        } catch (e) {
+          console.error('Error parsing pending purchase:', e);
+          sessionStorage.removeItem('pendingPurchase');
         }
+      }
 
-        // Handle Enter key in prompt
-        const promptInput = document.getElementById('prompt-input');
-        if (promptInput) {
-          promptInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-              closeCustomPrompt(true);
-            }
-          });
-        }
-
-        // Handle ESC key to close dialogs
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape' || e.key === 'Esc') {
-            // Close custom dialogs
-            if (document.getElementById('custom-alert').classList.contains('active')) {
-              closeCustomAlert();
-            }
-            if (document.getElementById('custom-prompt').classList.contains('active')) {
-              closeCustomPrompt(false);
-            }
-            if (document.getElementById('custom-confirm').classList.contains('active')) {
-              closeCustomConfirm(false);
-            }
-            // Close main modal
-            if (document.getElementById('modal').classList.contains('active')) {
-              closeModal();
-            }
+      // Handle Enter key in prompt
+      const promptInput = document.getElementById('prompt-input');
+      if (promptInput) {
+        promptInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+            closeCustomPrompt(true);
           }
         });
+      }
 
-        // Handle modal overlay click
-        const modal = document.getElementById('modal');
-        if (modal) {
-          modal.addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
-          });
+      // Handle ESC key to close dialogs
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          // Close custom dialogs
+          if (document.getElementById('custom-alert').classList.contains('active')) {
+            closeCustomAlert();
+          }
+          if (document.getElementById('custom-prompt').classList.contains('active')) {
+            closeCustomPrompt(false);
+          }
+          if (document.getElementById('custom-confirm').classList.contains('active')) {
+            closeCustomConfirm(false);
+          }
+          // Close main modal
+          if (document.getElementById('modal').classList.contains('active')) {
+            closeModal();
+          }
         }
       });
-    </script>
 
-    <!-- Shopping Cart Sidebar -->
-    <div id="cart-sidebar" class="cart-sidebar">
-      <div class="cart-header">
-        <h3>🛒 Shopping Cart</h3>
-        <button onclick="closeCart()" class="cart-close-btn">✕</button>
-      </div>
-      <div class="cart-content" id="cart-items-container">
-        <!-- Cart items will be inserted here -->
-      </div>
-      <div class="cart-footer">
-        <div class="cart-total">
-          <span>Total:</span>
-          <span id="cart-total-price">$0.00</span>
-        </div>
-        <button id="checkout-btn" class="cart-checkout-btn" onclick="proceedToCheckout()">
-          Proceed to Checkout
-        </button>
-      </div>
+      // Handle modal overlay click
+      const modal = document.getElementById('modal');
+      if (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === this) closeModal();
+        });
+      }
+    });
+  </script>
+
+  <!-- Shopping Cart Sidebar -->
+  <div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3>🛒 Shopping Cart</h3>
+      <button onclick="closeCart()" class="cart-close-btn">✕</button>
     </div>
+    <div class="cart-content" id="cart-items-container">
+      <!-- Cart items will be inserted here -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total-price">$0.00</span>
+      </div>
+      <button id="checkout-btn" class="cart-checkout-btn" onclick="proceedToCheckout()">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
 
-    <!-- Cart Overlay -->
-    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+  <!-- Cart Overlay -->
+  <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
-    <!-- Cart Button (floating) -->
-    <button id="cart-button" class="cart-float-button" onclick="openCart()">
-      🛒 <span id="cart-count" class="cart-badge">0</span>
-    </button>
+  <!-- Cart Button (floating) -->
+  <button id="cart-button" class="cart-float-button" onclick="openCart()">
+    🛒 <span id="cart-count" class="cart-badge">0</span>
+  </button>
 
-    <div id="footer-placeholder"></div>
+  <div id="footer-placeholder"></div>
 </body>
 
 </html>
