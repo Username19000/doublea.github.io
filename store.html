@@ -675,32 +675,15 @@
               }
               errorHandled = true;
               
-              console.log('Payment declined - adding close listeners to Tebex modal...');
+              console.log('Payment declined - adding click-outside listener to Tebex modal...');
               
               // Wait for Tebex modal to be in the DOM
               setTimeout(() => {
-                // Find the Tebex lightbox overlay and holder
+                // Find the Tebex lightbox overlay
                 const tebexLightbox = document.querySelector('.tebex-js-lightbox');
-                const tebexHolder = document.querySelector('.tebex-js-lightbox__holder');
                 
-                if (tebexLightbox && tebexHolder) {
-                  console.log('✓ Found Tebex elements, adding close handlers');
-                  
-                  // ESC key handler - use capture phase and stopPropagation
-                  const escHandler = (e) => {
-                    if (e.key === 'Escape' || e.key === 'Esc') {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      e.stopImmediatePropagation();
-                      console.log('ESC pressed - closing Tebex modal');
-                      if (typeof Tebex.checkout.close === 'function') {
-                        Tebex.checkout.close();
-                      }
-                      window.removeEventListener('keydown', escHandler, true);
-                    }
-                  };
-                  // Use capture phase to intercept before Tebex
-                  window.addEventListener('keydown', escHandler, true);
+                if (tebexLightbox) {
+                  console.log('✓ Found Tebex lightbox, adding click-outside handler');
                   
                   // Click outside handler - click on the overlay (not the holder)
                   const clickHandler = (e) => {
@@ -711,12 +694,11 @@
                         Tebex.checkout.close();
                       }
                       tebexLightbox.removeEventListener('click', clickHandler);
-                      window.removeEventListener('keydown', escHandler, true);
                     }
                   };
                   tebexLightbox.addEventListener('click', clickHandler);
                   
-                  console.log('✓ ESC (capture phase) and click-outside handlers active');
+                  console.log('✓ Click-outside handler active (click the dark area to close)');
                 } else {
                   console.warn('Could not find Tebex modal elements');
                 }
