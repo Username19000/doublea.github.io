@@ -675,44 +675,23 @@
               }
               errorHandled = true;
               
-              console.log('Payment declined - waiting for user to close Tebex modal...');
+              console.log('Payment declined - showing custom error message...');
               
-              // Add click listener to close Tebex when user clicks anywhere on the error screen
-              setTimeout(() => {
-                const tebexIframe = document.querySelector('iframe[src*="checkout.tebex.io"], iframe[src*="pay.tebex.io"]');
-                if (tebexIframe) {
-                  console.log('Click anywhere or press ESC to close the checkout');
-                  
-                  // Close on ESC key
-                  const escHandler = (e) => {
-                    if (e.key === 'Escape' || e.key === 'Esc') {
-                      console.log('ESC pressed - closing Tebex modal');
-                      if (typeof Tebex.checkout.close === 'function') {
-                        Tebex.checkout.close();
-                      }
-                      document.removeEventListener('keydown', escHandler);
-                    }
-                  };
-                  document.addEventListener('keydown', escHandler);
-                  
-                  // Close on overlay click
-                  const overlayHandler = (e) => {
-                    // Check if click is outside the iframe
-                    if (!tebexIframe.contains(e.target)) {
-                      console.log('Clicked outside - closing Tebex modal');
-                      if (typeof Tebex.checkout.close === 'function') {
-                        Tebex.checkout.close();
-                      }
-                      document.removeEventListener('click', overlayHandler);
-                      document.removeEventListener('keydown', escHandler);
-                    }
-                  };
-                  // Delay slightly to avoid immediate trigger
-                  setTimeout(() => {
-                    document.addEventListener('click', overlayHandler);
-                  }, 100);
+              // Give user 2 seconds to see Tebex's error, then show our custom alert
+              setTimeout(async () => {
+                // Close Tebex modal first
+                if (typeof Tebex.checkout.close === 'function') {
+                  Tebex.checkout.close();
+                  console.log('Tebex modal closed');
                 }
-              }, 500);
+                
+                // Show our custom error alert
+                await customAlert(
+                  'Your payment was declined. Please check your payment details and try again, or use a different payment method.',
+                  'Payment Declined',
+                  '❌'
+                );
+              }, 2000);
             });
             
             Tebex.checkout.on("open", () => {
