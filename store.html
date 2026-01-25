@@ -644,6 +644,9 @@
             
             const isGift = (forUsername && forUsername !== currentUsername);
             
+            // Track whether payment was completed
+            let paymentCompleted = false;
+            
             // Initialize Tebex with proper event handlers (per Tebex.js documentation)
             Tebex.checkout.init({
               ident: basket.ident,
@@ -657,6 +660,7 @@
             // Use official Tebex.checkout.on() method for events
             Tebex.checkout.on("payment:complete", (event) => {
               console.log('✓ Tebex payment:complete event received', event);
+              paymentCompleted = true;
               showSuccessModal(packageName, price, username, isSubscription, isGift);
             });
             
@@ -671,6 +675,10 @@
             
             Tebex.checkout.on("close", () => {
               console.log('Tebex checkout closed');
+              // If modal closed without payment completion, user likely cancelled
+              if (!paymentCompleted) {
+                console.log('ℹ️ Checkout closed without payment completion (likely cancelled)');
+              }
             });
 
             console.log('Launching Tebex checkout...');
@@ -691,9 +699,12 @@
                 
                 setTimeout(() => {
                   const modalAlreadyShown = document.getElementById('modal').classList.contains('active');
-                  if (!modalAlreadyShown) {
+                  // Only show success if payment was completed AND modal not already shown
+                  if (!modalAlreadyShown && paymentCompleted) {
                     console.log('✓ Showing success modal via polling fallback (events did not fire)');
                     showSuccessModal(packageName, price, username, isSubscription, isGift);
+                  } else if (!paymentCompleted) {
+                    console.log('ℹ️ Not showing success - payment was not completed (user cancelled)');
                   }
                 }, 1000);
               }
