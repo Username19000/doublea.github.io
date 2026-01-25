@@ -675,23 +675,51 @@
               }
               errorHandled = true;
               
-              console.log('Payment declined - showing custom error message...');
+              console.log('Payment declined - adding close button overlay...');
               
-              // Give user 2 seconds to see Tebex's error, then show our custom alert
-              setTimeout(async () => {
-                // Close Tebex modal first
-                if (typeof Tebex.checkout.close === 'function') {
-                  Tebex.checkout.close();
-                  console.log('Tebex modal closed');
-                }
+              // Wait for Tebex modal to fully render error screen
+              setTimeout(() => {
+                // Create a close button overlay
+                const closeButton = document.createElement('div');
+                closeButton.id = 'tebex-close-overlay';
+                closeButton.innerHTML = `
+                  <button style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    background: #ef4444;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    font-family: 'Outfit', sans-serif;
+                    transition: all 0.3s ease;
+                  " onmouseover="this.style.background='#dc2626'; this.style.transform='translateY(-2px)'" 
+                     onmouseout="this.style.background='#ef4444'; this.style.transform='translateY(0)'">
+                    ✕ Close Checkout
+                  </button>
+                `;
                 
-                // Show our custom error alert
-                await customAlert(
-                  'Your payment was declined. Please check your payment details and try again, or use a different payment method.',
-                  'Payment Declined',
-                  '❌'
-                );
-              }, 2000);
+                const button = closeButton.querySelector('button');
+                button.addEventListener('click', () => {
+                  console.log('Close button clicked - closing Tebex modal');
+                  if (typeof Tebex.checkout.close === 'function') {
+                    Tebex.checkout.close();
+                  }
+                  // Remove the button
+                  if (closeButton.parentNode) {
+                    closeButton.parentNode.removeChild(closeButton);
+                  }
+                });
+                
+                document.body.appendChild(closeButton);
+                console.log('Close button added - click the red button in top-right to close');
+              }, 500);
             });
             
             Tebex.checkout.on("open", () => {
@@ -700,6 +728,14 @@
             
             Tebex.checkout.on("close", () => {
               console.log('Tebex checkout closed');
+              
+              // Remove close button overlay if it exists
+              const closeButton = document.getElementById('tebex-close-overlay');
+              if (closeButton && closeButton.parentNode) {
+                closeButton.parentNode.removeChild(closeButton);
+                console.log('Close button overlay removed');
+              }
+              
               // If modal closed without payment completion, user likely cancelled or had error
               if (!paymentCompleted) {
                 console.log('ℹ️ Checkout closed without payment completion');
