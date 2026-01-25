@@ -107,8 +107,8 @@
               <span id="goal-current">$0</span> / <span id="goal-target">$15</span>
             </div>
           </div>
-          <p class="sidebar-card-description">Hitting our monthly server maintenance goal allows us to keep the server running
-            smoothly and provide you with the best experience possible.</p>
+          <p class="sidebar-card-description">Hitting our monthly server maintenance goal allows us to keep the server
+            running smoothly and provide you with the best experience possible.</p>
         </div>
 
         <!-- Top Customer -->
@@ -873,6 +873,11 @@
             <button class="buy-btn" style="flex: 1; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                     onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
               <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+              <span>🛒 Add to Cart</span>
+            </button>
+            <button class="buy-btn" style="flex: 1; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${subscriptionPrice || rank.price}, true)">
+              <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
               <span>Gift</span>
             </button>
           </div>
@@ -880,15 +885,12 @@
       } else {
         // Single button with add to cart option
         footerHtml = `
-          <div style="display: flex; gap: 1rem;">
+          <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
             <button class="buy-btn" style="flex: 1; background: var(--secondary);" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();">
               🛒 Add to Cart
             </button>
-            <button class="buy-btn" style="flex: 1;" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-              Buy Now ${rank.priceDisplay}
-            </button>
           </div>
-          <button class="buy-btn" style="background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+          <button class="buy-btn" style="width: 100%; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                   onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
             <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
             <span>Gift This Purchase</span>
@@ -938,14 +940,9 @@
 
           <!-- Purchase Buttons -->
           <div style="padding: 1.5rem 2rem;">
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
-              <button class="buy-btn" style="flex: 1; min-width: 200px; background: var(--secondary);" onclick="addToCart(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, '${image}', '${icon}', false); closeModal();">
-                🛒 Add to Cart
-              </button>
-              <button class="buy-btn" style="flex: 1; min-width: 200px;" onclick="purchasePackage(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
-                Buy Now $${price.toFixed(2)}
-              </button>
-            </div>
+            <button class="buy-btn" style="width: 100%; background: var(--secondary); margin-bottom: 1rem;" onclick="addToCart(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, '${image}', '${icon}', false); closeModal();">
+              🛒 Add to Cart
+            </button>
             <button class="buy-btn" style="width: 100%; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                     onclick="purchaseAsGift(${packageId}, '${name.replace(/'/g, "\\'")}', ${price}, false)">
               <span style="font-size: 1.2rem; line-height: 1;">🎁</span>

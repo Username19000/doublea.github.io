@@ -135,6 +135,150 @@ function closeCart() {
 }
 
 // Proceed to checkout
+// ========================================
+// CHECKOUT SIGN-IN MODAL
+// ========================================
+
+async function showCheckoutSignInModal() {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10002;
+      animation: fadeIn 0.3s ease;
+    `;
+    
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width: 400px; animation: slideUp 0.3s ease;">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 1.5rem; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔐</div>
+          <h2 style="margin: 0; color: white;">Sign In Required</h2>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+          <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text);">
+            Please enter your Minecraft username to continue with checkout.
+          </p>
+          <input 
+            type="text" 
+            id="checkout-username-input" 
+            placeholder="Your Minecraft Username"
+            style="
+              width: 100%;
+              padding: 0.75rem;
+              border: 1px solid var(--border);
+              border-radius: 8px;
+              background: var(--card-bg);
+              color: var(--text);
+              font-size: 1rem;
+              margin-bottom: 1.5rem;
+            "
+          />
+          <div style="display: flex; gap: 0.75rem;">
+            <button 
+              onclick="this.closest('.modal-overlay').remove()" 
+              style="
+                flex: 1;
+                padding: 0.75rem 1.5rem;
+                background: var(--border);
+                color: var(--text);
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.2s;
+              "
+              onmouseover="this.style.background='#3a4a5a'"
+              onmouseout="this.style.background='var(--border)'"
+            >
+              Cancel
+            </button>
+            <button 
+              id="checkout-signin-confirm"
+              style="
+                flex: 1;
+                padding: 0.75rem 1.5rem;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 600;
+                transition: all 0.2s;
+              "
+              onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(1, 161, 164, 0.4)'"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const input = document.getElementById('checkout-username-input');
+    const confirmBtn = document.getElementById('checkout-signin-confirm');
+    
+    // Focus input
+    setTimeout(() => input.focus(), 100);
+    
+    // Handle confirm
+    confirmBtn.onclick = async () => {
+      const username = input.value.trim();
+      if (!username) {
+        input.style.borderColor = '#ef4444';
+        input.placeholder = 'Username required!';
+        return;
+      }
+      
+      // Save username
+      currentUsername = username;
+      localStorage.setItem('minecraft_username', username);
+      
+      // Update display
+      updateUsernameDisplay();
+      
+      // Remove modal
+      modal.remove();
+      
+      // Proceed with checkout
+      proceedToCheckout();
+      resolve();
+    };
+    
+    // Handle enter key
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        confirmBtn.click();
+      }
+    });
+    
+    // Handle escape key
+    document.addEventListener('keydown', function escapeHandler(e) {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', escapeHandler);
+        resolve();
+      }
+    });
+  });
+}
+
+// ========================================
+// CHECKOUT
+// ========================================
+
 async function proceedToCheckout() {
   if (cart.items.length === 0) {
     await customAlert('Your cart is empty!', 'Empty Cart', '🛒');
@@ -143,10 +287,8 @@ async function proceedToCheckout() {
   
   // Check if user is signed in
   if (!currentUsername) {
-    closeCart();
-    await customAlert('Please sign in with your Minecraft username before checking out!', 'Sign In Required', '⚠️');
-    // Open the sign-in modal
-    signIn();
+    // Show sign-in modal without closing cart
+    await showCheckoutSignInModal();
     return;
   }
   

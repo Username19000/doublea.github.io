@@ -285,10 +285,25 @@ body {
   transform: translateY(-2px);
 }
 
-/* Products Section */
+/* Products Section
+ * 
+ * SPACING ADJUSTMENTS:
+ * - .products-section padding: top/bottom spacing around each section (currently 2rem = 32px)
+ * - .products-section:first-child padding-top: spacing between category nav and first section (currently 1.5rem = 24px)
+ * - .section-subtitle margin-bottom: spacing between subtitle and product grid (currently 2rem = 32px)
+ * 
+ * To adjust spacing:
+ * 1. Between category nav and "Server Ranks" title: change .products-section:first-child padding-top
+ * 2. Between rank packages and "Server Crates" title: change .products-section padding (top value)
+ * 3. Between crate packages and footer: change .products-section padding (bottom value)
+ */
 .products-section {
-  padding: 4rem 2rem;
+  padding: 2rem 2rem; /* Reduced from 4rem to 2rem */
   animation: fadeInUp 0.8s ease;
+}
+
+.products-section:first-child {
+  padding-top: 1.5rem; /* Even less padding for first section after category nav */
 }
 
 .section-title {
@@ -301,7 +316,7 @@ body {
 .section-subtitle {
   color: var(--text-muted);
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem; /* Reduced from 3rem to 2rem */
   font-size: 1.125rem;
 }
 
@@ -1544,8 +1559,6 @@ body > .footer,
   height: 64px;
   object-fit: contain;
   image-rendering: pixelated;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(1, 161, 164, 0.3);
 }
 
 .sidebar-card .customer-username {
