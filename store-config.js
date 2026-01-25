@@ -10,6 +10,28 @@ const STORE_CONFIG = {
   serverIp: 'play.doubleasmp.net',
   discordInvite: 'https://discord.com/invite/h2jQRcEYvs',
 
+
+  // Community Stats Configuration
+  communityStats: {
+    enabled: true, // Set to false to hide the community stats section
+    monthlyGoal: 15.00, // Monthly server maintenance goal in dollars
+    // Update these values manually or connect to your backend
+    currentProgress: 0.00, // Current month's progress towards goal
+    topCustomer: {
+      username: 'Example_User', // Top customer's Minecraft username
+      // Minecraft UUID for skin rendering (optional, will use username if not provided)
+      uuid: '8667ba71b85a4004af54457a9734eed7'
+    }
+  },
+
+  // Tebex Checkout Theme
+  tebexTheme: {
+    theme: 'dark',
+    colors: [
+      { name: "primary", color: "#01a1a4" },
+      { name: "secondary", color: "#f2b841" }
+    ]
+  },
   // Define YOUR packages with YOUR layout
   ranks: [
     {

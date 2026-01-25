@@ -1,0 +1,109 @@
+<!-- HEADER -->
+<template id="header-template">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="AA_Logo.png" alt="Logo" style="height: 32px;">
+                <span class="logo-text">Double A SMP</span>
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html" data-page="index">Home</a></li>
+                <li><a href="rules.html" data-page="rules">Rules</a></li>
+                <li><a href="guides.html" data-page="guides">Guides</a></li>
+                <li><a href="changelog.html" data-page="changelog">Changelog</a></li>
+                <li><a href="store.html" data-page="store">Store</a></li>
+            </ul>
+        </div>
+    </nav>
+</template>
+
+<!-- FOOTER -->
+<template id="footer-template">
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="AA_Logo.png" alt="Logo" style="height: 32px;">
+                    <span>Double A SMP</span>
+                </div>
+                <div class="footer-text" style="margin-top: 1rem;">
+                    <p>&copy; 2025 Double A SMP. All rights reserved.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="privacy.html"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Privacy Policy</a> |
+                        <a href="terms.html"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Terms of Service</a>
+                        |
+                        <a href="mailto:support@doubleasmp.net"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Contact</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</template>
+
+<!-- STORE FOOTER (with Tebex attribution) -->
+<template id="store-footer-template">
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="AA_Logo.png" alt="Logo" style="height: 32px;">
+                    <span>Double A SMP</span>
+                </div>
+                <div class="footer-text" style="margin-top: 1rem;">
+                    <p>&copy; 2025 Double A SMP. All rights reserved.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="privacy.html"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Privacy Policy</a> |
+                        <a href="terms.html"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Terms of Service</a>
+                        |
+                        <a href="mailto:support@doubleasmp.net"
+                            style="color: var(--primary); text-decoration: none; margin: 0 0.5rem;">Contact</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tebex Attribution -->
+            <div class="tebex-attribution"
+                style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="https://www.tebex.io" target="_blank" rel="noopener noreferrer">
+                        <img src="images/TebexLogo.png" alt="Tebex" style="height: 39px; opacity: 0.8;">
+                    </a>
+                    <span style="color: #7f7f7f; font-size: 0.875rem; text-align: center;">
+                        This website's checkout process is operated by our online reseller & Merchant of Record,
+                        <a href="https://www.tebex.io" target="_blank" rel="noopener noreferrer"
+                            style="color: #409092; text-decoration: none;">Tebex Limited</a>,
+                        who also handles billing support, refunds, and all other order-related inquiries.
+                    </span>
+                </div>
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; font-size: 0.875rem; flex-wrap: wrap;">
+                    <a href="https://checkout.tebex.io/impressum" target="_blank" rel="noopener noreferrer"
+                        style="color: var(--text-muted); text-decoration: none; transition: color 0.2s;">Tebex
+                        Impressum</a>
+                    <a href="https://checkout.tebex.io/terms" target="_blank" rel="noopener noreferrer"
+                        style="color: var(--text-muted); text-decoration: none; transition: color 0.2s;">Tebex Terms &
+                        Conditions</a>
+                    <a href="https://checkout.tebex.io/privacy" target="_blank" rel="noopener noreferrer"
+                        style="color: var(--text-muted); text-decoration: none; transition: color 0.2s;">Tebex Privacy
+                        Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .tebex-attribution a:hover {
+            color: var(--primary) !important;
+        }
+    </style>
+</template>
