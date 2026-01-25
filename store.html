@@ -644,95 +644,61 @@
             
             const isGift = (forUsername && forUsername !== currentUsername);
             
-            // Multiple event listeners for Tebex (different versions use different events)
-            const handleSuccess = function (event) {
-              console.log('✓ Tebex checkout complete event received', event);
-              // Remove all listeners
-              window.removeEventListener('tebex:checkout:complete', handleSuccess);
-              window.removeEventListener('TebexCheckout:complete', handleSuccess);
-              document.removeEventListener('tebex_checkout_complete', handleSuccess);
-              
-              showSuccessModal(packageName, price, username, isSubscription, isGift);
-            };
-            
-            // Listen to multiple possible event names
-            window.addEventListener('tebex:checkout:complete', handleSuccess);
-            window.addEventListener('TebexCheckout:complete', handleSuccess);
-            document.addEventListener('tebex_checkout_complete', handleSuccess);
-            
-            // Error handlers
-            const handleError = function(event) {
-              console.error('Tebex checkout error:', event);
-              window.removeEventListener('tebex:checkout:error', handleError);
-              window.removeEventListener('TebexCheckout:error', handleError);
-              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
-            };
-            
-            window.addEventListener('tebex:checkout:error', handleError);
-            window.addEventListener('TebexCheckout:error', handleError);
-            
-            // Close handler (when modal is closed without completing)
-            const handleClose = function(event) {
-              console.log('Tebex checkout closed', event);
-              window.removeEventListener('tebex:checkout:close', handleClose);
-              window.removeEventListener('TebexCheckout:close', handleClose);
-            };
-            
-            window.addEventListener('tebex:checkout:close', handleClose);
-            window.addEventListener('TebexCheckout:close', handleClose);
-            
-            // Initialize Tebex
+            // Initialize Tebex with proper event handlers (per Tebex.js documentation)
             Tebex.checkout.init({
               ident: basket.ident,
               theme: 'dark',
               colors: [
                 { name: "primary", color: "#01a1a4" },
                 { name: "secondary", color: "#f2b841" }
-              ],
-              // Callback-based approach (some Tebex versions use this)
-              onComplete: function() {
-                console.log('✓ Tebex onComplete callback fired');
-                showSuccessModal(packageName, price, username, isSubscription, isGift);
-              },
-              onError: function(error) {
-                console.error('Tebex onError callback:', error);
-                customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Checkout Error', '❌');
-              }
+              ]
+            });
+            
+            // Use official Tebex.checkout.on() method for events
+            Tebex.checkout.on("payment:complete", (event) => {
+              console.log('✓ Tebex payment:complete event received', event);
+              showSuccessModal(packageName, price, username, isSubscription, isGift);
+            });
+            
+            Tebex.checkout.on("payment:error", (event) => {
+              console.error('Tebex payment:error event received', event);
+              customAlert('There was an issue processing your payment. Please contact support if your payment went through.', 'Payment Error', '❌');
+            });
+            
+            Tebex.checkout.on("open", () => {
+              console.log('Tebex checkout opened');
+            });
+            
+            Tebex.checkout.on("close", () => {
+              console.log('Tebex checkout closed');
             });
 
             console.log('Launching Tebex checkout...');
             Tebex.checkout.launch();
             
-            // WORKAROUND: Poll for Tebex iframe closure
-            // If Tebex events don't fire, this catches successful purchases
+            // Keep polling fallback as backup (in case events don't fire)
             let checkCount = 0;
-            const maxChecks = 120; // Check for up to 2 minutes
+            const maxChecks = 120;
             const checkInterval = setInterval(() => {
               checkCount++;
               
-              // Check if Tebex iframe still exists
               const tebexIframe = document.querySelector('iframe[src*="checkout.tebex.io"], iframe[src*="pay.tebex.io"]');
               const tebexModal = document.querySelector('.tebex-checkout-modal, [class*="tebex-checkout"]');
               
-              // If modal was there but now it's gone, assume success
               if (!tebexIframe && !tebexModal && checkCount > 2) {
-                console.log('⚠️ Tebex modal closed detected via polling');
+                console.log('⚠️ Tebex modal closed detected via polling (backup)');
                 clearInterval(checkInterval);
                 
-                // Wait a moment then show success (give time for events to fire first)
                 setTimeout(() => {
-                  // Only show if an event didn't already trigger it
                   const modalAlreadyShown = document.getElementById('modal').classList.contains('active');
                   if (!modalAlreadyShown) {
-                    console.log('✓ Showing success modal via polling fallback');
+                    console.log('✓ Showing success modal via polling fallback (events did not fire)');
                     showSuccessModal(packageName, price, username, isSubscription, isGift);
                   }
                 }, 1000);
               }
               
-              // Stop checking after max time
               if (checkCount >= maxChecks) {
-                console.log('Stopped polling for Tebex modal');
                 clearInterval(checkInterval);
               }
             }, 1000);
