@@ -18,9 +18,9 @@ const STORE_CONFIG = {
     // Update these values manually or connect to your backend
     currentProgress: 0.00, // Current month's progress towards goal
     topCustomer: {
-      username: 'Example_User', // Top customer's Minecraft username
+      username: 'No Purchases Yet', // Top customer's Minecraft username
       // Minecraft UUID for skin rendering (optional, will use username if not provided)
-      uuid: '8667ba71b85a4004af54457a9734eed7'
+      uuid: '00000000-0000-0000-0000-000000000000'
     }
   },
 
@@ -71,7 +71,7 @@ const STORE_CONFIG = {
         'Have up to 7 areas in your land',
         'Have up to 9 roles in your land',
         'Grant 7 additional claimable chunks to each land you are in'
-        
+
       ],
       discordPerks: [
         'Resident hoisted Discord role',
@@ -117,7 +117,7 @@ const STORE_CONFIG = {
         'Have up to 7 areas in your land',
         'Have up to 9 roles in your land',
         'Grant 7 additional claimable chunks to each land you are in'
-        
+
       ],
       discordPerks: [
         'Merchant hoisted Discord role',
@@ -169,7 +169,7 @@ const STORE_CONFIG = {
         'Have up to 10 areas in your land',
         'Have up to 18 roles in your land',
         'Grant 10 additional claimable chunks to each land you are in'
-        
+
       ],
       discordPerks: [
         'Pioneer hoisted Discord role',
@@ -227,7 +227,7 @@ const STORE_CONFIG = {
         'Have up to 10 areas in your land',
         'Have up to 18 roles in your land',
         'Grant 10 additional claimable chunks to each land you are in'
-        
+
       ],
       discordPerks: [
         'Guardian hoisted Discord role',
@@ -289,7 +289,7 @@ const STORE_CONFIG = {
         'Have up to 10 areas in your land',
         'Have up to 18 roles in your land',
         'Grant 13 additional claimable chunks to each land you are in'
-        
+
       ],
       discordPerks: [
         'Sentinel hoisted Discord role',
@@ -352,7 +352,7 @@ const STORE_CONFIG = {
         'Have up to 18 roles in your land',
         'Grant 15 additional claimable chunks to each land you are in',
         'Rule over two lands simultaneously'
-        
+
       ],
       discordPerks: [
         'Overlord hoisted Discord role',
@@ -400,49 +400,49 @@ const STORE_CONFIG = {
     }
   ],
 
-/*  cosmetics: [
-    {
-      name: 'Particle Effects',
-      icon: '✨',
-      image: null, // or 'images/particles.png'
-      badge: null,
-      badgeClass: '',
-      price: 5.00,
-      priceDisplay: '$5.00',
-      description: 'Unique visual effects that follow you',
-      modalDescription: 'Stand out with stunning particle effects! Choose from a variety of visual effects that follow you wherever you go, making your presence known on the server.',
-      packageId: 0,
-      subscriptionId: null
-    },
-    {
-      name: 'Pet Companion',
-      icon: '🐾',
-      image: null, // or 'images/pet.png'
-      badge: 'Popular',
-      badgeClass: 'popular',
-      price: 7.50,
-      priceDisplay: '$7.50',
-      description: 'Cosmetic pet that follows you around',
-      modalDescription: 'Never adventure alone! Get your own loyal cosmetic pet companion that will follow you on all your journeys. Choose from various adorable creatures.',
-      packageId: 0,
-      subscriptionId: null
-    },
-    {
-      name: 'Chat Colors',
-      icon: '🎨',
-      image: null, // or 'images/chat_colors.png'
-      badge: null,
-      badgeClass: '',
-      price: 3.00,
-      priceDisplay: '$3.00',
-      description: 'Custom chat color formatting',
-      modalDescription: 'Express yourself with custom chat colors! Make your messages stand out with unique color combinations and formatting options.',
-      packageId: 0,
-      subscriptionId: null
-    }
-  ]
-
-*/
+  /*  cosmetics: [
+      {
+        name: 'Particle Effects',
+        icon: '✨',
+        image: null, // or 'images/particles.png'
+        badge: null,
+        badgeClass: '',
+        price: 5.00,
+        priceDisplay: '$5.00',
+        description: 'Unique visual effects that follow you',
+        modalDescription: 'Stand out with stunning particle effects! Choose from a variety of visual effects that follow you wherever you go, making your presence known on the server.',
+        packageId: 0,
+        subscriptionId: null
+      },
+      {
+        name: 'Pet Companion',
+        icon: '🐾',
+        image: null, // or 'images/pet.png'
+        badge: 'Popular',
+        badgeClass: 'popular',
+        price: 7.50,
+        priceDisplay: '$7.50',
+        description: 'Cosmetic pet that follows you around',
+        modalDescription: 'Never adventure alone! Get your own loyal cosmetic pet companion that will follow you on all your journeys. Choose from various adorable creatures.',
+        packageId: 0,
+        subscriptionId: null
+      },
+      {
+        name: 'Chat Colors',
+        icon: '🎨',
+        image: null, // or 'images/chat_colors.png'
+        badge: null,
+        badgeClass: '',
+        price: 3.00,
+        priceDisplay: '$3.00',
+        description: 'Custom chat color formatting',
+        modalDescription: 'Express yourself with custom chat colors! Make your messages stand out with unique color combinations and formatting options.',
+        packageId: 0,
+        subscriptionId: null
+      }
+    ]
+  
+  */
 
 };
 
