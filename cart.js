@@ -62,12 +62,60 @@ function addToCart(packageId, name, price, image, icon, isSubscription = false) 
   saveCart();
 
   // Show feedback
-  const cartBtn = document.getElementById('cart-button');
+  customAlert(`${name} added to cart!`, 'Added to Cart', '✅');
+
+  // Animate cart button
+  const cartBtn = document.querySelector('.cart-btn');
   if (cartBtn) {
-    cartBtn.style.animation = 'none';
-    setTimeout(() => {
-      cartBtn.style.animation = 'bounce 0.5s ease';
-    }, 10);
+    cartBtn.classList.add('bounce');
+    setTimeout(() => cartBtn.classList.remove('bounce'), 500);
+  }
+}
+
+// Add rank to cart with subscription conflict check
+function addRankToCart(packageId, conflictPackageId, name, price, image, icon, isSubscription = false) {
+  // Check if the conflicting version (lifetime vs subscription) is already in cart
+  const conflict = cart.items.find(item => item.packageId === conflictPackageId);
+
+  if (conflict) {
+    const conflictType = conflict.isSubscription ? 'subscription' : 'lifetime';
+    const attemptType = isSubscription ? 'subscription' : 'lifetime';
+    customAlert(
+      `You already have the ${conflictType} version of this rank in your cart!\n\nPlease remove it first if you want to add the ${attemptType} version instead.`,
+      'Conflicting Purchase',
+      '⚠️'
+    );
+    return;
+  }
+
+  // Check if this exact item is already in cart
+  const existing = cart.items.find(item => item.packageId === packageId);
+  if (existing) {
+    customAlert('This item is already in your cart!', 'Already Added', '🛒');
+    return;
+  }
+
+  // Add to cart
+  cart.items.push({
+    packageId,
+    name,
+    price,
+    image,
+    icon,
+    isSubscription,
+    quantity: 1
+  });
+
+  saveCart();
+
+  // Show feedback
+  customAlert(`${name} added to cart!`, 'Added to Cart', '✅');
+
+  // Animate cart button
+  const cartBtn = document.querySelector('.cart-btn');
+  if (cartBtn) {
+    cartBtn.classList.add('bounce');
+    setTimeout(() => cartBtn.classList.remove('bounce'), 500);
   }
 }
 

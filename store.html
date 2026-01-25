@@ -854,43 +854,31 @@
 
       let footerHtml = '';
       if (rank.subscriptionId) {
-        // Dual buttons with cart option - subscriptions can't be added to cart
+        // Three buttons: Add Lifetime to Cart, Add Subscription to Cart, Gift Lifetime Purchase
         footerHtml = `
-          <div class="button-group">
-            <button class="buy-btn" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();" style="background: var(--secondary);">
-              <span class="btn-label">🛒 Add One-Time to Cart</span>
+          <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <button class="buy-btn" style="flex: 1; background: var(--primary-dark);" onclick="addRankToCart(${rank.packageId}, ${rank.subscriptionId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();">
+              🛒 Add Lifetime to Cart
             </button>
-            <button class="buy-btn" onclick="purchasePackage(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-              <span class="btn-label">Buy One-Time Now</span>
-              ${rank.priceDisplay}
-            </button>
-          </div>
-          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-            <button class="buy-btn subscription" style="flex: 1;" onclick="purchasePackage(${rank.subscriptionId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.priceSubscription}, true)">
-              <span class="btn-label">Buy Subscription</span>
-              ${rank.priceSubscriptionDisplay}
-            </button>
-            <button class="buy-btn" style="flex: 1; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
-                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
-              <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
-              <span>🛒 Add to Cart</span>
-            </button>
-            <button class="buy-btn" style="flex: 1; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
-                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.priceSubscription || rank.price}, true)">
-              <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
-              <span>Gift</span>
+            <button class="buy-btn" style="flex: 1; background: var(--primary-dark);" onclick="addRankToCart(${rank.subscriptionId}, ${rank.packageId}, '${rank.name.replace(/'/g, "\\'")} (Subscription)', ${rank.priceSubscription}, '${rank.image || ''}', '${rank.icon}', true); closeModal();">
+              🛒 Add Subscription to Cart
             </button>
           </div>
+          <button class="buy-btn" style="width: 100%; background: #e6a622; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+                  onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
+            <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
+            <span>Gift Lifetime Purchase</span>
+          </button>
         `;
       } else {
         // Single button with add to cart option
         footerHtml = `
           <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-            <button class="buy-btn" style="flex: 1; background: var(--secondary);" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();">
+            <button class="buy-btn" style="flex: 1; background: var(--primary-dark);" onclick="addToCart(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, '${rank.image || ''}', '${rank.icon}', false); closeModal();">
               🛒 Add to Cart
             </button>
           </div>
-          <button class="buy-btn" style="width: 100%; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
+          <button class="buy-btn" style="width: 100%; background: #e6a622; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
                   onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.price}, false)">
             <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
             <span>Gift This Purchase</span>
