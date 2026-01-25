@@ -1,19 +1,39 @@
 // Component Loader - Dynamically loads header and footer
 (function() {
-  // Function to load HTML component
-  async function loadComponent(elementId, filePath) {
+  // Function to load HTML from template
+  async function loadComponentsFile() {
     try {
-      const response = await fetch(filePath);
+      const response = await fetch('components.html');
       if (!response.ok) {
-        throw new Error(`Failed to load ${filePath}`);
+        throw new Error('Failed to load components.html');
       }
       const html = await response.text();
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.innerHTML = html;
-      }
+      
+      // Create a temporary container to parse the HTML
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      
+      return temp;
     } catch (error) {
-      console.error('Error loading component:', error);
+      console.error('Error loading components:', error);
+      return null;
+    }
+  }
+
+  // Function to load specific component from templates
+  async function loadComponent(elementId, templateId) {
+    const container = await loadComponentsFile();
+    if (!container) return;
+    
+    const template = container.querySelector(`#${templateId}`);
+    if (!template) {
+      console.error(`Template ${templateId} not found`);
+      return;
+    }
+    
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.innerHTML = template.innerHTML;
     }
   }
 
@@ -85,21 +105,25 @@
   // Load components when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', async () => {
-      await loadComponent('header-placeholder', 'header.html');
+      await loadComponent('header-placeholder', 'header-template');
+      
       // Use store-footer for store page, regular footer for others
       const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-      const footerFile = currentPage === 'store.html' ? 'store-footer.html' : 'footer.html';
-      await loadComponent('footer-placeholder', footerFile);
+      const footerTemplate = currentPage === 'store.html' ? 'store-footer-template' : 'footer-template';
+      await loadComponent('footer-placeholder', footerTemplate);
+      
       setActiveNavLink();
       initMobileMenu();
     });
   } else {
     (async () => {
-      await loadComponent('header-placeholder', 'header.html');
+      await loadComponent('header-placeholder', 'header-template');
+      
       // Use store-footer for store page, regular footer for others
       const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-      const footerFile = currentPage === 'store.html' ? 'store-footer.html' : 'footer.html';
-      await loadComponent('footer-placeholder', footerFile);
+      const footerTemplate = currentPage === 'store.html' ? 'store-footer-template' : 'footer-template';
+      await loadComponent('footer-placeholder', footerTemplate);
+      
       setActiveNavLink();
       initMobileMenu();
     })();
