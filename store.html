@@ -675,61 +675,47 @@
               }
               errorHandled = true;
               
-              console.log('Payment declined - adding close button overlay...');
+              console.log('Payment declined - adding close listeners to Tebex modal...');
               
-              // Wait for Tebex modal to fully render error screen
+              // Wait for Tebex modal to be in the DOM
               setTimeout(() => {
-                // Create a close button overlay
-                const closeButton = document.createElement('div');
-                closeButton.id = 'tebex-close-overlay';
-                closeButton.style.cssText = `
-                  position: fixed;
-                  top: 0;
-                  left: 0;
-                  width: 100%;
-                  height: 100%;
-                  z-index: 999999;
-                  pointer-events: none;
-                  display: flex;
-                  justify-content: flex-end;
-                  align-items: flex-start;
-                  padding: 20px;
-                `;
+                // Find the Tebex lightbox overlay and holder
+                const tebexLightbox = document.querySelector('.tebex-js-lightbox');
+                const tebexHolder = document.querySelector('.tebex-js-lightbox__holder');
                 
-                closeButton.innerHTML = `
-                  <button style="
-                    background: #ef4444;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 12px 24px;
-                    font-size: 16px;
-                    font-weight: 700;
-                    cursor: pointer;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                    font-family: 'Outfit', sans-serif;
-                    transition: all 0.3s ease;
-                    pointer-events: auto;
-                  " onmouseover="this.style.background='#dc2626'; this.style.transform='scale(1.05)'" 
-                     onmouseout="this.style.background='#ef4444'; this.style.transform='scale(1)'">
-                    ✕ Close Checkout
-                  </button>
-                `;
-                
-                const button = closeButton.querySelector('button');
-                button.addEventListener('click', () => {
-                  console.log('Close button clicked - closing Tebex modal');
-                  if (typeof Tebex.checkout.close === 'function') {
-                    Tebex.checkout.close();
-                  }
-                  // Remove the button
-                  if (closeButton.parentNode) {
-                    closeButton.parentNode.removeChild(closeButton);
-                  }
-                });
-                
-                document.body.appendChild(closeButton);
-                console.log('Close button added - click the red button in top-right to close');
+                if (tebexLightbox && tebexHolder) {
+                  console.log('✓ Found Tebex elements, adding close handlers');
+                  
+                  // ESC key handler
+                  const escHandler = (e) => {
+                    if (e.key === 'Escape' || e.key === 'Esc') {
+                      console.log('ESC pressed - closing Tebex modal');
+                      if (typeof Tebex.checkout.close === 'function') {
+                        Tebex.checkout.close();
+                      }
+                      document.removeEventListener('keydown', escHandler);
+                    }
+                  };
+                  document.addEventListener('keydown', escHandler);
+                  
+                  // Click outside handler - click on the overlay (not the holder)
+                  const clickHandler = (e) => {
+                    // Only close if clicking directly on the lightbox overlay, not the holder
+                    if (e.target === tebexLightbox) {
+                      console.log('Clicked outside modal - closing Tebex');
+                      if (typeof Tebex.checkout.close === 'function') {
+                        Tebex.checkout.close();
+                      }
+                      tebexLightbox.removeEventListener('click', clickHandler);
+                      document.removeEventListener('keydown', escHandler);
+                    }
+                  };
+                  tebexLightbox.addEventListener('click', clickHandler);
+                  
+                  console.log('✓ ESC and click-outside handlers active');
+                } else {
+                  console.warn('Could not find Tebex modal elements');
+                }
               }, 500);
             });
             
@@ -739,13 +725,6 @@
             
             Tebex.checkout.on("close", () => {
               console.log('Tebex checkout closed');
-              
-              // Remove close button overlay if it exists
-              const closeButton = document.getElementById('tebex-close-overlay');
-              if (closeButton && closeButton.parentNode) {
-                closeButton.parentNode.removeChild(closeButton);
-                console.log('Close button overlay removed');
-              }
               
               // If modal closed without payment completion, user likely cancelled or had error
               if (!paymentCompleted) {
