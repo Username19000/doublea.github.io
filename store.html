@@ -686,17 +686,21 @@
                 if (tebexLightbox && tebexHolder) {
                   console.log('✓ Found Tebex elements, adding close handlers');
                   
-                  // ESC key handler
+                  // ESC key handler - use capture phase and stopPropagation
                   const escHandler = (e) => {
                     if (e.key === 'Escape' || e.key === 'Esc') {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      e.stopImmediatePropagation();
                       console.log('ESC pressed - closing Tebex modal');
                       if (typeof Tebex.checkout.close === 'function') {
                         Tebex.checkout.close();
                       }
-                      document.removeEventListener('keydown', escHandler);
+                      window.removeEventListener('keydown', escHandler, true);
                     }
                   };
-                  document.addEventListener('keydown', escHandler);
+                  // Use capture phase to intercept before Tebex
+                  window.addEventListener('keydown', escHandler, true);
                   
                   // Click outside handler - click on the overlay (not the holder)
                   const clickHandler = (e) => {
@@ -707,12 +711,12 @@
                         Tebex.checkout.close();
                       }
                       tebexLightbox.removeEventListener('click', clickHandler);
-                      document.removeEventListener('keydown', escHandler);
+                      window.removeEventListener('keydown', escHandler, true);
                     }
                   };
                   tebexLightbox.addEventListener('click', clickHandler);
                   
-                  console.log('✓ ESC and click-outside handlers active');
+                  console.log('✓ ESC (capture phase) and click-outside handlers active');
                 } else {
                   console.warn('Could not find Tebex modal elements');
                 }
