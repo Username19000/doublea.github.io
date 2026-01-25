@@ -86,14 +86,20 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', async () => {
       await loadComponent('header-placeholder', 'header.html');
-      await loadComponent('footer-placeholder', 'footer.html');
+      // Use store-footer for store page, regular footer for others
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      const footerFile = currentPage === 'store.html' ? 'store-footer.html' : 'footer.html';
+      await loadComponent('footer-placeholder', footerFile);
       setActiveNavLink();
       initMobileMenu();
     });
   } else {
     (async () => {
       await loadComponent('header-placeholder', 'header.html');
-      await loadComponent('footer-placeholder', 'footer.html');
+      // Use store-footer for store page, regular footer for others
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      const footerFile = currentPage === 'store.html' ? 'store-footer.html' : 'footer.html';
+      await loadComponent('footer-placeholder', footerFile);
       setActiveNavLink();
       initMobileMenu();
     })();
