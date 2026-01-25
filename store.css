@@ -1394,3 +1394,29 @@ iframe[src*="checkout.tebex.io"] {
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
 }
+
+/* Force footer borders to be full-width */
+.footer {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--border);
+}
+
+
+/* Ensure footer borders span full viewport width on store page */
+body > .footer,
+#footer-placeholder > .footer {
+  box-sizing: border-box;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
