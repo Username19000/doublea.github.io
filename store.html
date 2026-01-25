@@ -876,7 +876,7 @@
               <span>🛒 Add to Cart</span>
             </button>
             <button class="buy-btn" style="flex: 1; background: linear-gradient(135deg, #e76f51 0%, #d64f35 100%); display: flex; align-items: center; justify-content: center; gap: 0.5rem;" 
-                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${subscriptionPrice || rank.price}, true)">
+                    onclick="purchaseAsGift(${rank.packageId}, '${rank.name.replace(/'/g, "\\'")}', ${rank.priceSubscription || rank.price}, true)">
               <span style="font-size: 1.2rem; line-height: 1;">🎁</span>
               <span>Gift</span>
             </button>

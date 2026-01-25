@@ -29,24 +29,38 @@ function saveCart() {
 
 // Add item to cart
 function addToCart(packageId, name, price, image, icon, isSubscription = false) {
+  // Check if it's a crate key (contains "key" or "crate" in name)
+  const isCrateKey = name.toLowerCase().includes('key') || name.toLowerCase().includes('crate');
+
   // Check if item already in cart
   const existing = cart.items.find(item => item.packageId === packageId);
+
   if (existing) {
-    customAlert('This item is already in your cart!', 'Already Added', '🛒');
-    return;
+    if (isCrateKey) {
+      // For crate keys, increase quantity
+      existing.quantity = (existing.quantity || 1) + 1;
+      saveCart();
+      customAlert(`Added another ${name} to cart! (${existing.quantity}x)`, 'Quantity Updated', '🛒');
+      return;
+    } else {
+      // For regular items (ranks), don't allow duplicates
+      customAlert('This item is already in your cart!', 'Already Added', '🛒');
+      return;
+    }
   }
-  
+
   cart.items.push({
     packageId,
     name,
     price,
     image,
     icon,
-    isSubscription
+    isSubscription,
+    quantity: 1
   });
-  
+
   saveCart();
-  
+
   // Show feedback
   const cartBtn = document.getElementById('cart-button');
   if (cartBtn) {
@@ -63,6 +77,29 @@ function removeFromCart(packageId) {
   saveCart();
 }
 
+// Increase quantity
+function increaseQuantity(packageId) {
+  const item = cart.items.find(item => item.packageId === packageId);
+  if (item) {
+    item.quantity = (item.quantity || 1) + 1;
+    saveCart();
+  }
+}
+
+// Decrease quantity
+function decreaseQuantity(packageId) {
+  const item = cart.items.find(item => item.packageId === packageId);
+  if (item) {
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+      saveCart();
+    } else {
+      // If quantity is 1, remove the item
+      removeFromCart(packageId);
+    }
+  }
+}
+
 // Clear cart
 function clearCart() {
   cart = { items: [], basketIdent: null };
@@ -76,21 +113,25 @@ function updateCartUI() {
   const totalPrice = document.getElementById('cart-total-price');
   const container = document.getElementById('cart-items-container');
   const checkoutBtn = document.getElementById('checkout-btn');
-  
+
+  // Calculate total item count (including quantities)
+  const totalItems = cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
   if (countBadge) {
-    countBadge.textContent = cart.items.length;
-    countBadge.style.display = cart.items.length > 0 ? 'inline-flex' : 'none';
+    countBadge.textContent = totalItems;
+    countBadge.style.display = totalItems > 0 ? 'inline-flex' : 'none';
   }
-  
-  const total = cart.items.reduce((sum, item) => sum + item.price, 0);
+
+  // Calculate total price (including quantities)
+  const total = cart.items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
   if (totalPrice) {
     totalPrice.textContent = `$${total.toFixed(2)}`;
   }
-  
+
   if (checkoutBtn) {
     checkoutBtn.disabled = cart.items.length === 0;
   }
-  
+
   if (container) {
     if (cart.items.length === 0) {
       container.innerHTML = `
@@ -101,21 +142,39 @@ function updateCartUI() {
         </div>
       `;
     } else {
-      container.innerHTML = cart.items.map(item => `
+      container.innerHTML = cart.items.map(item => {
+        const quantity = item.quantity || 1;
+        const itemTotal = item.price * quantity;
+        const isCrateKey = item.name.toLowerCase().includes('key') || item.name.toLowerCase().includes('crate');
+
+        return `
         <div class="cart-item">
-          ${item.image ? 
+          ${item.image ?
             `<img src="${item.image}" alt="${item.name}" class="cart-item-image">` :
             `<div class="cart-item-icon">${item.icon}</div>`
           }
           <div class="cart-item-details">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+            <div class="cart-item-name">
+              ${item.name}
+              ${quantity > 1 ? `<span style="color: var(--primary); font-weight: 700; margin-left: 0.5rem;">×${quantity}</span>` : ''}
+            </div>
+            <div class="cart-item-price">
+              $${itemTotal.toFixed(2)}
+              ${quantity > 1 ? `<span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">($${item.price.toFixed(2)} each)</span>` : ''}
+            </div>
+            ${isCrateKey && quantity > 1 ? `
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                <button class="quantity-btn" onclick="decreaseQuantity(${item.packageId})" style="width: 24px; height: 24px; background: var(--border); border: none; border-radius: 4px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                <button class="quantity-btn" onclick="increaseQuantity(${item.packageId})" style="width: 24px; height: 24px; background: var(--border); border: none; border-radius: 4px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+              </div>
+            ` : ''}
           </div>
           <button class="cart-item-remove" onclick="removeFromCart(${item.packageId})" title="Remove">
             ✕
           </button>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
   }
 }
@@ -156,7 +215,7 @@ async function showCheckoutSignInModal() {
       z-index: 10002;
       animation: fadeIn 0.3s ease;
     `;
-    
+
     modal.innerHTML = `
       <div class="modal-content" style="max-width: 400px; animation: slideUp 0.3s ease;">
         <div class="modal-header" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 1.5rem; text-align: center;">
@@ -224,15 +283,15 @@ async function showCheckoutSignInModal() {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     const input = document.getElementById('checkout-username-input');
     const confirmBtn = document.getElementById('checkout-signin-confirm');
-    
+
     // Focus input
     setTimeout(() => input.focus(), 100);
-    
+
     // Handle confirm
     confirmBtn.onclick = async () => {
       const username = input.value.trim();
@@ -241,29 +300,31 @@ async function showCheckoutSignInModal() {
         input.placeholder = 'Username required!';
         return;
       }
-      
+
       // Save username
       currentUsername = username;
       localStorage.setItem('minecraft_username', username);
-      
-      // Update display
-      updateUsernameDisplay();
-      
+
+      // Update display (function is defined in store.html)
+      if (typeof renderUsernameDisplay === 'function') {
+        renderUsernameDisplay();
+      }
+
       // Remove modal
       modal.remove();
-      
+
       // Proceed with checkout
       proceedToCheckout();
       resolve();
     };
-    
+
     // Handle enter key
     input.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         confirmBtn.click();
       }
     });
-    
+
     // Handle escape key
     document.addEventListener('keydown', function escapeHandler(e) {
       if (e.key === 'Escape') {
@@ -284,14 +345,14 @@ async function proceedToCheckout() {
     await customAlert('Your cart is empty!', 'Empty Cart', '🛒');
     return;
   }
-  
+
   // Check if user is signed in
   if (!currentUsername) {
     // Show sign-in modal without closing cart
     await showCheckoutSignInModal();
     return;
   }
-  
+
   try {
     // Show loading overlay
     const loadingOverlay = document.createElement('div');
@@ -314,30 +375,58 @@ async function proceedToCheckout() {
       </div>
     `;
     document.body.appendChild(loadingOverlay);
-    
+
     // Create basket
     const basket = await createBasket(currentUsername);
     console.log('✓ Basket created:', basket.ident);
-    
+
     // Add all items to basket
     for (const item of cart.items) {
-      await addPackageToBasket(basket.ident, item.packageId);
-      console.log(`✓ Added ${item.name} to basket`);
+      try {
+        const quantity = item.quantity || 1;
+        // Add package multiple times based on quantity
+        for (let i = 0; i < quantity; i++) {
+          await addPackageToBasket(basket.ident, item.packageId);
+        }
+        console.log(`✓ Added ${item.name} to basket${quantity > 1 ? ` (×${quantity})` : ''}`);
+      } catch (itemError) {
+        // Remove loading overlay on error
+        if (document.body.contains(loadingOverlay)) {
+          document.body.removeChild(loadingOverlay);
+        }
+
+        // Check if it's an "already purchased" error
+        const errorMsg = itemError.message.toLowerCase();
+        if (errorMsg.includes('purchased too many times') || errorMsg.includes('already purchased')) {
+          await customAlert(
+            `"${item.name}" has already been purchased the maximum number of times.\n\nPlease remove it from your cart and try again.`,
+            'Item Already Purchased',
+            '⚠️'
+          );
+        } else {
+          await customAlert(
+            `Failed to add "${item.name}" to checkout.\n\nError: ${itemError.message}`,
+            'Checkout Error',
+            '❌'
+          );
+        }
+        throw itemError; // Re-throw to trigger outer catch
+      }
     }
-    
+
     // Detect if mobile
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
+
     // Remove loading overlay
     document.body.removeChild(loadingOverlay);
     closeCart();
-    
+
     // Launch checkout
     if (typeof Tebex !== 'undefined' && typeof Tebex.checkout !== 'undefined') {
       if (isMobile) {
         // On mobile, redirect directly to checkout page
         console.log('Mobile detected, using redirect mode');
-        
+
         // Store purchase info for when user returns
         sessionStorage.setItem('pendingPurchase', JSON.stringify({
           packageName: 'Cart Items',
@@ -347,19 +436,19 @@ async function proceedToCheckout() {
           isGift: false,
           timestamp: Date.now()
         }));
-        
+
         // Clear cart before redirect
         clearCart();
-        
+
         const checkoutUrl = `https://checkout.tebex.io/checkout/${basket.ident}`;
         window.location.href = checkoutUrl;
       } else {
         // On desktop, use modal
         console.log('Initializing Tebex checkout modal...');
-        
+
         // Track whether payment was completed
         let paymentCompleted = false;
-        
+
         // Initialize Tebex with proper event handlers
         Tebex.checkout.init({
           ident: basket.ident,
@@ -369,19 +458,19 @@ async function proceedToCheckout() {
             { name: "secondary", color: "#f2b841" }
           ]
         });
-        
+
         // Launch checkout
         Tebex.checkout.launch();
-        
+
         // Listen for checkout complete event
         window.addEventListener('message', function checkoutListener(event) {
           if (event.data && event.data.type === 'tebex:checkout:complete') {
             paymentCompleted = true;
             window.removeEventListener('message', checkoutListener);
-            
+
             // Clear cart on successful purchase
             clearCart();
-            
+
             // Show success modal
             showSuccessModal(
               'Cart Items',
@@ -398,11 +487,21 @@ async function proceedToCheckout() {
     }
   } catch (error) {
     console.error('Checkout error:', error);
-    await customAlert(
-      'Failed to initialize checkout. Please try again or contact support.',
-      'Checkout Error',
-      '❌'
-    );
+
+    // Make sure loading overlay is removed
+    const existingOverlay = document.querySelector('[style*="Preparing checkout"]')?.parentElement;
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+
+    // Only show generic error if we haven't already shown a specific error
+    if (!error.message.includes('purchased too many times') && !error.message.includes('already purchased')) {
+      await customAlert(
+        'Failed to initialize checkout. Please try again or contact support.',
+        'Checkout Error',
+        '❌'
+      );
+    }
   }
 }
 
